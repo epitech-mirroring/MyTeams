@@ -5,7 +5,6 @@ pipeline {
         PRIVATE_KEY = credentials('EPITECH_SSH_KEY')
         PUBLIC_KEY = credentials('EPITECH_SSH_PUBKEY')
         MIRROR_URL = 'git@github.com:EpitechPromo2027/B-NWP-400-NAN-4-1-myteams-marius.pain.git'
-        BIN_NAMES = ['myteams_server', 'myteams_cli']
     }
     stages {
         stage('🕵️ Lint') {
@@ -63,6 +62,8 @@ pipeline {
 
                     // Check file presence (e.g. binary, library, etc.)
                     script {
+                        def BIN_NAMES = ['myteams_server', 'myteams_cli']
+
                         for (BIN_NAME in BIN_NAMES) {
                             if (!fileExists(BIN_NAME)) {
                                 error "The binary file ${BIN_NAME} does not exist"
