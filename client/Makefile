@@ -4,6 +4,7 @@
 ## File description:
 ## This is the Makefile for the MyTeams project
 ## This is only for the client part
+##
 
 # All the source files
 SOURCES			= 	src/main.c

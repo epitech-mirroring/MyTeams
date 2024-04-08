@@ -4,6 +4,7 @@
 ## File description:
 ## This is the Makefile for the MyTeams project
 ## This manages the compilation of the project
+##
 
 # All the source files
 LIBRARIES		=
@@ -38,7 +39,8 @@ all:	$(LIBRARIES) $(SERVER) $(CLIENT)
 			printf "$(SUCCESS)$(GREEN)  🎉  myteams_cli built \
 successfully$(RESET)\n";\
 		else \
-			printf "$(FAILURE)$(RED)  🚨  myteams_cli build failed$(RESET)\n"; \
+			printf "$(FAILURE)$(RED)  🚨  \
+myteams_cli build failed$(RESET)\n"; \
 			cat $(LOG); \
 			exit 1; \
 		fi
@@ -61,7 +63,8 @@ $(LIBRARIES):
 			printf "\r$(SKIPPED)\n"; \
 		else \
 			make -C $@ >> $(LOG) 2>&1 \
-			&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n" && exit 1);\
+			&& printf "\r$(SUCCESS)\n" || \
+			(printf "\r$(FAILURE)\n" && exit 1); \
 			printf "$(RUNNING) $(BLUE) 📦  Moving built binary$(RESET)"; \
 			mv libs/$${LIB_NAME} . >> $(LOG) 2>&1 \
 			&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
@@ -216,7 +219,8 @@ clean_test:
 	&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 # Clean the tests for the libraries
 	@for lib in $(LIBRARIES); do \
-		printf "$(RUNNING) $(RED) 🗑️   Deleting tests for $${lib}$(RESET)"; \
+		printf "$(RUNNING) $(RED) 🗑️   \
+Deleting tests for $${lib}$(RESET)";\
 		make -C $${lib} clean_test >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 	done
