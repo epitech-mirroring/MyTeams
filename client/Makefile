@@ -55,7 +55,8 @@ $(OBJS):	%.o: %.c
 # Compile the source file
 		@printf "$(RUNNING) $(BLUE) 🔨  $$(basename $<)$(RESET)"
 		@$(CC) -o $@ -c $< $(FLAGS) >> $(LOG) 2>&1 \
-		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
+		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n" && cat $(LOG) \
+		&& exit 1)
 
 clean:
 # Delete all the object files

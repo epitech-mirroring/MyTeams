@@ -17,7 +17,7 @@ CLIENT 			=   client/
 LOG				=	./build.log
 
 .PHONY: all clean fclean re tests_run clean_test \
-	$(LIBRARIES) $(SERVER) $(CLIENT)
+	$(LIBRARIES) $(SERVER) $(CLIENT) libraries
 
 # Colors and formatting
 GREEN =		\033[1;32m
@@ -33,7 +33,7 @@ SUCCESS = [$(GREEN)✔$(RESET)]
 FAILURE = [$(RED)✘$(RESET)]
 SKIPPED = [$(MAGENTA)@$(RESET)]
 
-all:	$(LIBRARIES) $(SERVER) $(CLIENT)
+all:	libraries $(SERVER) $(CLIENT)
 # Check presence of server and client
 		@if [ -f 'myteams_cli' ]; then \
 			printf "$(SUCCESS)$(GREEN)  🎉  myteams_cli built \
@@ -54,37 +54,50 @@ failed$(RESET)\n"; \
 			exit 1; \
 		fi
 
-$(LIBRARIES):
-        @LOWERCASE_DIR=$$(echo $@ | sed 's:.*/::' \
-		| tr '[:upper:]' '[:lower:]') ; \
-		LIB_NAME=$${LOWERCASE_DIR}.a ; \
-		printf "$(RUNNING) $(BLUE) 🧱  Building $@$(RESET)"; \
-		if [ -f libs/$${LIB_NAME} ]; then \
-			printf "\r$(SKIPPED)\n"; \
-		else \
-			make -C $@ >> $(LOG) 2>&1 \
-			&& printf "\r$(SUCCESS)\n" || \
-			(printf "\r$(FAILURE)\n" && exit 1); \
-			printf "$(RUNNING) $(BLUE) 📦  Moving built binary$(RESET)"; \
-			mv libs/$${LIB_NAME} . >> $(LOG) 2>&1 \
-			&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
-		fi;
+libraries: $(LIBRARIES)
 
-$(SERVER):	$(LIBRARIES)
+$(LIBRARIES):
+	@LOWERCASE_DIR=$$(echo $@ | sed 's:.*/::' \
+	| tr '[:upper:]' '[:lower:]') ; \
+	LIB_NAME=lib$${LOWERCASE_DIR}.a ; \
+	printf "$(RUNNING) $(BLUE) 🧱  Building $@$(RESET)"; \
+	if [ -f libs/$${LIB_NAME} ]; then \
+		printf "\r$(SKIPPED)\n"; \
+	else \
+		make -C $@ >> $(LOG) 2>&1 \
+		&& printf "\r$(SUCCESS)\n" || \
+		(printf "\r$(FAILURE)\n" && cat $(LOG) && exit 1); \
+		printf "$(RUNNING) $(BLUE) 📦  Moving built binary (\
+$@/$${LIB_NAME})$(RESET)"; \
+		cp $@/$${LIB_NAME} libs/ >> $(LOG) 2>&1 \
+		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n"); \
+	fi; \
+	printf "$(RUNNING) $(BLUE) 📦  Linking include/\
+$${LOWERCASE_DIR}$(RESET)"; \
+	if [ -d include/$${LOWERCASE_DIR} ]; then \
+		printf "\r$(SKIPPED)\n"; \
+	else \
+		ln -s $(shell pwd)/$@/include/* include/ \
+		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
+	fi;
+
+$(SERVER):
 		@printf "$(RUNNING) $(BLUE) 🧱  Building $@$(RESET)"
 		@make -C $@ >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 		@printf "$(RUNNING) $(BLUE) 📦  Moving built binary$(RESET)"
 		@mv $@/myteams_server . >> $(LOG) 2>&1 \
-		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
+		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n" && cat $(LOG) \
+		&& exit 1)
 
-$(CLIENT):	$(LIBRARIES)
+$(CLIENT):
 		@printf "$(RUNNING) $(BLUE) 🧱  Building $@$(RESET)"
 		@make -C $@ >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 		@printf "$(RUNNING) $(BLUE) 📦  Moving built binary$(RESET)"
 		@mv $@/myteams_cli . >> $(LOG) 2>&1 \
-		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
+		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n" && cat $(LOG) \
+		&& exit 1)
 
 clean:
 # Delete all the object files
@@ -117,12 +130,21 @@ fclean: clean clean_test
 		@make -C $(CLIENT) fclean >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 		@for lib in $(LIBRARIES); do \
-			@LOWERCASE_DIR=$$(echo $@ | sed 's:.*/::' \
+			LOWERCASE_DIR=$$(echo $${lib} | sed 's:.*/::' \
 			| tr '[:upper:]' '[:lower:]') ; \
-			LIB_NAME=$${LOWERCASE_DIR}.a ; \
-			printf "$(RUNNING) $(RED) 🗑️   Deleting $${lib}$(RESET)"; \
+			LIB_NAME=lib$${LOWERCASE_DIR}.a ; \
+			printf "$(RUNNING) $(RED) 🗑️   Deleting libs/$${LIB_NAME}\
+$(RESET)"; \
 			if [ -f libs/$${LIB_NAME} ]; then \
 				rm -f libs/$${LIB_NAME} >> $(LOG) 2>&1 \
+				&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
+			else \
+				printf "\r$(SKIPPED)\n"; \
+			fi; \
+			printf "$(RUNNING) $(RED) 🗑️   Deleting \
+include/$${LOWERCASE_DIR}$(RESET)"; \
+			if [ -d include/$${LOWERCASE_DIR} ]; then \
+				rm -f include/$${LOWERCASE_DIR} >> $(LOG) 2>&1 \
 				&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 			else \
 				printf "\r$(SKIPPED)\n"; \
@@ -142,18 +164,19 @@ fclean: clean clean_test
 
 re:			fclean all
 
-tests_run: fclean
+tests_run: fclean $(LIBRARIES)
 # Run tests for the server
-		@printf "$(RUNNING) $(BLUE) 🧪  Running tests$(RESET)"
+		@printf "$(RUNNING) $(BLUE) 🧪  Running server tests$(RESET)"
 		@make -C $(SERVER) tests_run >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 # Run tests for the client
-		@printf "$(RUNNING) $(BLUE) 🧪  Running tests$(RESET)"
+		@printf "$(RUNNING) $(BLUE) 🧪  Running client tests$(RESET)"
 		@make -C $(CLIENT) tests_run >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 # Run tests for the libraries
 		@for lib in $(LIBRARIES); do \
-			printf "$(RUNNING) $(BLUE) 🧪  Running tests$(RESET)"; \
+			printf "$(RUNNING) $(BLUE) 🧪  Running tests for \
+$${lib}$(RESET)"; \
 			make -C $${lib} tests_run >> $(LOG) 2>&1 \
 			&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 		done
