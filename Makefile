@@ -7,7 +7,8 @@
 ##
 
 # All the source files
-LIBRARIES		=
+LIBRARIES		=	common/my		\
+					common/json
 
 TESTS			=
 
