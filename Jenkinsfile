@@ -62,7 +62,7 @@ pipeline {
 
                     // Check file presence (e.g. binary, library, etc.)
                     script {
-                        def BIN_NAMES = ['myteams_server', 'myteams_cli']
+                        def BIN_NAMES = ['myteams_server', 'myteams_cli', 'libs/libjson.a', 'libs/libmy.a']
 
                         for (BIN_NAME in BIN_NAMES) {
                             if (!fileExists(BIN_NAME)) {
