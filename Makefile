@@ -73,7 +73,7 @@ $@/$${LIB_NAME})$(RESET)"; \
 		cp $@/$${LIB_NAME} libs/ >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n"); \
 	fi; \
-	printf "$(RUNNING) $(BLUE) 📦  Linking include/\
+	printf "$(RUNNING) $(BLUE) 🖇️   Linking include/\
 $${LOWERCASE_DIR}$(RESET)"; \
 	if [ -d include/$${LOWERCASE_DIR} ]; then \
 		printf "\r$(SKIPPED)\n"; \
