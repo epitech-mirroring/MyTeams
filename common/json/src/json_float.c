@@ -7,10 +7,13 @@
 */
 
 #include "json/json_float.h"
-#include "json/json.h"
 #include <stdlib.h>
+#ifndef __APPLE__
+#define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <string.h>
+
 
 json_float_t *json_float_create(const char *key, double value)
 {

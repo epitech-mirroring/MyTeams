@@ -9,6 +9,9 @@
 #include "json/json_null.h"
 #include <stdlib.h>
 #include <string.h>
+#ifndef __APPLE__
+#define _GNU_SOURCE
+#endif
 #include <stdio.h>
 
 json_null_t *json_null_create(const char *key)

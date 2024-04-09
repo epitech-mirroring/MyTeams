@@ -9,6 +9,9 @@
 #include "json/json.h"
 #include <stdlib.h>
 #include <string.h>
+#ifndef __APPLE__
+#define _GNU_SOURCE
+#endif
 #include <stdio.h>
 
 json_serializer_t json_get_serializer(json_object_type_t type)

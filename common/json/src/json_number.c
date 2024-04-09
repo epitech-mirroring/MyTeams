@@ -7,8 +7,10 @@
 */
 
 #include "json/json_number.h"
-#include "json/json.h"
 #include <stdlib.h>
+#ifndef __APPLE__
+#define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <string.h>
 
