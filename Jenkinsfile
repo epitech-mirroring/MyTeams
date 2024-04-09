@@ -90,7 +90,7 @@ pipeline {
 
                     // Display the tests results in a graph using the JUnit plugin
                     script {
-                        def dirs = ['server', 'client']
+                        def dirs = ['server', 'client', 'common/json', 'common/my']
 
                         for (dir in dirs) {
                             junit(testResults: "${dir}/criterion.xml", allowEmptyResults : true)
