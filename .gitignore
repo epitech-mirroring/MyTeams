@@ -189,3 +189,6 @@ Temporary Items
 .apdisk
 
 **/.idea
+*.gcno
+*.gcda
+*.log
