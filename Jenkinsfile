@@ -62,7 +62,7 @@ pipeline {
 
                     // Check file presence (e.g. binary, library, etc.)
                     script {
-                        def BIN_NAMES = ['myteams_server', 'myteams_cli', 'libs/libjson.a', 'libs/libmy.a']
+                        def BIN_NAMES = ['myteams_server', 'myteams_cli', 'libs/libjson.a', 'libs/libmy.a', 'libs/libnetwork.a']
 
                         for (BIN_NAME in BIN_NAMES) {
                             if (!fileExists(BIN_NAME)) {
@@ -90,7 +90,7 @@ pipeline {
 
                     // Display the tests results in a graph using the JUnit plugin
                     script {
-                        def dirs = ['server', 'client', 'common/json', 'common/my']
+                        def dirs = ['server', 'client', 'common/json', 'common/my', 'common/network']
 
                         for (dir in dirs) {
                             junit(testResults: "${dir}/criterion.xml", allowEmptyResults : true)
