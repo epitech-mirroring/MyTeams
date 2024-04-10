@@ -42,7 +42,7 @@ void json_save_to_file(json_t *json, const char *path)
         free(content);
         return;
     }
-    fwrite(content, 1, strlen(content), file);
+    fwrite(content, strlen(content), 1, file);
     fclose(file);
     free(content);
 }

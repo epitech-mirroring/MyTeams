@@ -286,3 +286,16 @@ Test(json_parser, json_empty_array)
     // Delete the file
     remove("../../tests/json/json_empty_array.json");
 }
+
+Test(json, safety_checks)
+{
+    json_destroy(NULL);
+    cr_assert(true);
+    cr_assert_null(json_serialize(NULL));
+    json_object_t *obj = json_object_create(NULL);
+    cr_assert_null(json_object_get(obj, "key"));
+    json_boolean_t *b = json_boolean_create(NULL, false);
+    json_destroy((json_t *) b);
+    json_destroy((json_t *) obj);
+    cr_assert(true);
+}

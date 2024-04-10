@@ -9,6 +9,7 @@
 #include "json/json_float.h"
 #include <stdlib.h>
 #ifndef __APPLE__
+#define __USE_GNU
 #define _GNU_SOURCE
 #endif
 #include <stdio.h>
@@ -28,6 +29,7 @@ json_float_t *json_float_create(const char *key, double value)
 json_float_t *json_float_parse(const char *content)
 {
     double value = strtod(content, NULL);
+
     return json_float_create(NULL, value);
 }
 

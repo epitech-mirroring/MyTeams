@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #ifndef __APPLE__
+#define __USE_GNU
 #define _GNU_SOURCE
 #endif
 #include <stdio.h>
@@ -40,6 +41,7 @@ char *json_object_serialize(json_object_t *json)
     char *tmp = NULL;
 
     res[0] = '{';
+    res[1] = '\0';
     for (int i = 0; json->values[i] != NULL; i++) {
         asprintf(&tmp, "\"%s\":%s", json->values[i]->key,
             json_serialize(json->values[i]));
@@ -59,6 +61,7 @@ char *json_array_serialize(json_array_t *json)
     char *tmp = NULL;
 
     res[0] = '[';
+    res[1] = '\0';
     for (int i = 0; json->values[i] != NULL; i++) {
         asprintf(&tmp, "%s", json_serialize(json->values[i]));
         res = realloc(res, sizeof(char) * (strlen(res) + strlen(tmp) + 3));

@@ -58,6 +58,8 @@ json_array_t *json_array_parse(const char *content)
 
     while (lines[i] != NULL) {
         tmp = json_parse(lines[i]->value);
+        if (tmp->key != NULL)
+            free(tmp->key);
         tmp->key = lines[i]->key;
         json_array_add(new, tmp);
         i++;

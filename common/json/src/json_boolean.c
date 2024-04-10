@@ -9,6 +9,7 @@
 #include "json/json_boolean.h"
 #include <stdlib.h>
 #ifndef __APPLE__
+#define __USE_GNU
 #define _GNU_SOURCE
 #endif
 #include <stdio.h>
@@ -27,6 +28,7 @@ json_boolean_t *json_boolean_create(const char *key, bool value)
 json_boolean_t *json_boolean_parse(const char *content)
 {
     bool value = strcmp(content, "true") == 0;
+
     return json_boolean_create(NULL, value);
 }
 

@@ -63,7 +63,8 @@ json_object_t *json_object_parse(const char *content)
 
     while (lines[i] != NULL) {
         tmp = json_parse(lines[i]->value);
-        free(tmp->key);
+        if (tmp->key != NULL)
+            free(tmp->key);
         tmp->key = strdup(lines[i]->key);
         json_object_add(new, tmp);
         i++;

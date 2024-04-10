@@ -42,7 +42,7 @@ static size_t find_end(const char *content, size_t i)
 static char *get_json_value(const char *content)
 {
     size_t end = find_end(content, 0);
-    char *value = malloc(sizeof(char) * (end + 2));
+    char *value = calloc(end + 2, sizeof(char));
 
     strncpy(value, content, end + 1);
     value[end + 1] = '\0';
@@ -64,7 +64,7 @@ static char *get_json_key(const char *content, size_t start)
     if (content[i] != '"')
         return NULL;
     start_of_name = i;
-    key = malloc(sizeof(char) * (end_of_name - start_of_name));
+    key = calloc((end_of_name - start_of_name), sizeof(char));
     strncpy(key, content + start_of_name + 1, end_of_name - start_of_name - 1);
     key[end_of_name - start_of_name - 1] = '\0';
     return key;

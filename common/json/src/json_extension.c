@@ -58,13 +58,13 @@ char *json_strip(const char *str)
 
     if (res == NULL)
         return NULL;
+    res[0] = '\0';
     for (size_t i = 0; i < end; i++) {
         if (str[i] == '"' && (i == 0 || str[i - 1] != '\\'))
             in_string = !in_string;
         if (in_string || (str[i] != ' ' && str[i] != '\t' && str[i] != '\n')) {
             res = realloc(res, sizeof(char) * (strlen(res) + 2));
-            res[strlen(res)] = str[i];
-            res[strlen(res) + 1] = '\0';
+            strncat(res, str + i, 1);
         }
     }
     return res;

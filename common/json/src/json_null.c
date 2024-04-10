@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #ifndef __APPLE__
+#define __USE_GNU
 #define _GNU_SOURCE
 #endif
 #include <stdio.h>
@@ -19,13 +20,14 @@ json_null_t *json_null_create(const char *key)
     json_null_t *new = malloc(sizeof(json_null_t));
 
     new->base.type = JSON_OBJECT_TYPE_NULL;
-    new->base.key = strdup(key);
+    new->base.key = strdup(key == NULL ? "root" : key);
     return new;
 }
 
 json_null_t *json_null_parse(const char *content)
 {
-    return json_null_create(content);
+    (void) content;
+    return json_null_create(NULL);
 }
 
 void json_null_destroy(json_null_t *json)

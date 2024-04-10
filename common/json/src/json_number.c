@@ -9,6 +9,7 @@
 #include "json/json_number.h"
 #include <stdlib.h>
 #ifndef __APPLE__
+#define __USE_GNU
 #define _GNU_SOURCE
 #endif
 #include <stdio.h>
@@ -27,6 +28,7 @@ json_number_t *json_number_create(const char *key, long value)
 json_number_t *json_number_parse(const char *content)
 {
     long value = strtol(content, NULL, 10);
+
     return json_number_create(NULL, value);
 }
 

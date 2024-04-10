@@ -27,7 +27,7 @@ NAME 			=   libjson.a
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
 					-lmy -I../../include $(shell [ uname != "Darwin" ] \
-					&& echo "--std=gnu99")
+					&& echo "--std=gnu99 -D__GNU_SOURCE")
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
