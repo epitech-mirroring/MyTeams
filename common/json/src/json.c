@@ -109,6 +109,7 @@ split_t **json_split(const char *content, bool is_array)
     size_t count = 0;
     bool in_string = false;
 
+    split[0] = NULL;
     for (size_t i = 0; i < strlen(content); i++) {
         if (is_array) {
             json_split_array_consumer(content, &count, &split, &i);

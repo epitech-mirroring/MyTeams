@@ -80,9 +80,11 @@ void json_object_destroy(json_object_t *json)
 
     while (json->values[i] != NULL) {
         json_destroy(json->values[i]);
+        free(json->values[i]);
         i++;
     }
-    free(json->values);
-    free(json->base.key);
-    free(json);
+    if (json->values != NULL)
+        free(json->values);
+    if (json->base.key != NULL)
+        free(json->base.key);
 }

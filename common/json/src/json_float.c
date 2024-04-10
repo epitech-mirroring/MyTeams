@@ -31,8 +31,8 @@ json_float_t *json_float_parse(const char *content)
 
 void json_float_destroy(json_float_t *json)
 {
-    free(json->base.key);
-    free(json);
+    if (json->base.key != NULL)
+        free(json->base.key);
 }
 
 char *json_float_serialize(json_float_t *json)

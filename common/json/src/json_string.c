@@ -32,9 +32,10 @@ json_string_t *json_string_parse(const char *content)
 
 void json_string_destroy(json_string_t *json)
 {
-    free(json->base.key);
-    free(json->value);
-    free(json);
+    if (json->base.key != NULL)
+        free(json->base.key);
+    if (json->value != NULL)
+        free(json->value);
 }
 
 char *json_string_serialize(json_string_t *json)

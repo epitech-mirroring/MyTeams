@@ -30,8 +30,8 @@ json_boolean_t *json_boolean_parse(const char *content)
 
 void json_boolean_destroy(json_boolean_t *json)
 {
-    free(json->base.key);
-    free(json);
+    if (json->base.key != NULL)
+        free(json->base.key);
 }
 
 char *json_boolean_serialize(json_boolean_t *json)

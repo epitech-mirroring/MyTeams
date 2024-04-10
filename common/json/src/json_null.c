@@ -28,8 +28,8 @@ json_null_t *json_null_parse(const char *content)
 
 void json_null_destroy(json_null_t *json)
 {
-    free(json->base.key);
-    free(json);
+    if (json->base.key != NULL)
+        free(json->base.key);
 }
 
 char *json_null_serialize(json_null_t *json)

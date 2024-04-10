@@ -70,13 +70,12 @@ json_array_t *json_array_parse(const char *content)
 
 void json_array_destroy(json_array_t *json)
 {
-    size_t i = 0;
-
-    while (json->values[i] != NULL) {
+    for (size_t i = 0; i < json->size; i++) {
         json_destroy(json->values[i]);
-        i++;
+        free(json->values[i]);
     }
-    free(json->values);
-    free(json->base.key);
-    free(json);
+    if (json->values != NULL)
+        free(json->values);
+    if (json->base.key != NULL)
+        free(json->base.key);
 }

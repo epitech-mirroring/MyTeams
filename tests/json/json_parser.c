@@ -9,6 +9,7 @@
 #include "json/json.h"
 #include <stdio.h>
 #include <criterion/criterion.h>
+#include <stdlib.h>
 
 static bool is_equal(double a, double b) {
     if (a > b && a - b <= 0.0001)
@@ -35,6 +36,7 @@ Test(json_parser, empty_file)
     cr_assert(((json_object_t *) json)->values[0] == NULL);
 
     json_destroy(json);
+    free(json);
     // Delete the file
     remove("../../tests/json/empty.json");
 }
@@ -62,6 +64,7 @@ Test(json_parser, simple_file)
     cr_assert_str_eq(((json_string_t *) obj)->value, "value");
 
     json_destroy(json);
+    free(json);
     // Delete the file
     remove("../../tests/json/simple.json");
 }
@@ -113,6 +116,7 @@ Test(json_parser, simple_obj_all_types)
     cr_assert(is_equal(objF->value, 42.42f));
 
     json_destroy(json);
+    free(json);
     // Delete the file
     remove("../../tests/json/simple_obj_all_types.json");
 }
@@ -142,6 +146,7 @@ Test(json_parser, object_in_object)
     cr_assert_str_eq(obj2->value, "value");
 
     json_destroy(json);
+    free(json);
     // Delete the file
     remove("../../tests/json/object_in_object.json");
 }
@@ -188,6 +193,7 @@ Test(json_parser, array_in_object) {
     cr_assert(n->base.type == JSON_OBJECT_TYPE_NULL);
 
     json_destroy(json);
+    free(json);
     // Delete the file
     remove("../../tests/json/array_in_object.json");
 }
@@ -224,6 +230,7 @@ Test(json_parser, json_obj_in_array)
     cr_assert_str_eq(value->value, "value");
 
     json_destroy(json);
+    free(json);
     // Delete the file
     remove("../../tests/json/json_obj_in_array.json");
 }
@@ -266,6 +273,7 @@ Test(json_parser, json_root_array)
     cr_assert(jsonNull->base.type == JSON_OBJECT_TYPE_NULL);
 
     json_destroy((json_t *) json);
+    free(json);
     // Delete the file
     remove("../../tests/json/json_root_array.json");
 }
@@ -283,6 +291,7 @@ Test(json_parser, json_empty_array)
     cr_assert_eq(json->size, 0);
 
     json_destroy((json_t *) json);
+    free(json);
     // Delete the file
     remove("../../tests/json/json_empty_array.json");
 }
@@ -296,6 +305,8 @@ Test(json, safety_checks)
     cr_assert_null(json_object_get(obj, "key"));
     json_boolean_t *b = json_boolean_create(NULL, false);
     json_destroy((json_t *) b);
+    free(b);
     json_destroy((json_t *) obj);
+    free(obj);
     cr_assert(true);
 }

@@ -9,12 +9,14 @@
 #include "json/json.h"
 #include <stdio.h>
 #include <criterion/criterion.h>
+#include <stdlib.h>
 
 Test(json_save, empty_json)
 {
     json_object_t *json = json_object_create("root");
     json_save_to_file((json_t *) json, "../../tests/json/s_empty.json");
     json_destroy((json_t *) json);
+    free(json);
 
     // Check if the file is present
     FILE *f1 = fopen("../../tests/json/s_empty.json", "r");
@@ -45,6 +47,7 @@ Test(json_save, simple_json)
     json_object_add(json, (json_t *) floating);
     json_save_to_file((json_t *) json, "../../tests/json/s_simple.json");
     json_destroy((json_t *) json);
+    free(json);
 
     // Check if the file is present
     FILE *f1 = fopen("../../tests/json/s_simple.json", "r");
@@ -71,6 +74,7 @@ Test(json_save, array_of_int)
     json_array_add(array, (json_t *) int3);
     json_save_to_file((json_t *) array, "../../tests/json/s_array_of_int.json");
     json_destroy((json_t *) array);
+    free(array);
 
     // Check if the file is present
     FILE *f1 = fopen("../../tests/json/s_array_of_int.json", "r");
@@ -102,6 +106,7 @@ Test(json_save, obj_array)
     json_object_add(json, (json_t *) array);
     json_save_to_file((json_t *) json, "../../tests/json/s_obj_array.json");
     json_destroy((json_t *) json);
+    free(json);
 
     // Check if the file is present
     FILE *f1 = fopen("../../tests/json/s_obj_array.json", "r");

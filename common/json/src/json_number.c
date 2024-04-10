@@ -30,8 +30,8 @@ json_number_t *json_number_parse(const char *content)
 
 void json_number_destroy(json_number_t *json)
 {
-    free(json->base.key);
-    free(json);
+    if (json->base.key != NULL)
+        free(json->base.key);
 }
 
 char *json_number_serialize(json_number_t *json)
