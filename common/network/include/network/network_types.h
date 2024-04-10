@@ -42,6 +42,11 @@ typedef struct response_s {
     char *body;
 } response_t;
 
+typedef struct host_s {
+    char *ip;
+    int port;
+} host_t;
+
 typedef response_t (*route_handler_t)(request_t *request);
 typedef void (*network_promise_consumer_t)(response_t response);
 
