@@ -7,6 +7,14 @@
 */
 
 #pragma once
+#include <stddef.h>
+#include <sys/select.h>
+// Route
+#define ROUTE_SIZE 256
+// Parameters
+#define PARAMS_MAX 8
+#define KEY_SIZE 64
+#define VALUE_SIZE 128
 
 typedef enum request_method_e {
     GET = 0b0001,
@@ -17,12 +25,12 @@ typedef enum request_method_e {
 
 typedef struct route_s {
     request_method_t method;
-    char path[256];
+    char path[ROUTE_SIZE];
 } route_t;
 
 typedef struct param_s {
-    char key[64];
-    char value[128];
+    char key[KEY_SIZE];
+    char value[VALUE_SIZE];
 } param_t;
 
 typedef struct request_s {
@@ -30,7 +38,7 @@ typedef struct request_s {
         route_t route;
         size_t content_length;
     } header;
-    param_t params[8];
+    param_t params[PARAMS_MAX];
     char *body;
 } request_t;
 
@@ -57,3 +65,25 @@ typedef struct network_router_s {
     } *routes;
     size_t routes_count;
 } network_router_t;
+
+typedef enum waiting_socket_mode_e {
+    WRITE,
+    READ
+} waiting_socket_mode_t;
+
+typedef void (*waiting_socket_consumer_t)(int socket, void *data);
+
+typedef struct waiting_socket_s {
+    int socket;
+    waiting_socket_mode_t mode;
+    waiting_socket_consumer_t consumer;
+    void *data;
+} waiting_socket_t;
+
+typedef struct network_manager_s {
+    waiting_socket_t **waiting_sockets;
+    size_t waiting_sockets_count;
+    fd_set read_fds;
+    fd_set write_fds;
+    int max_fd;
+} network_manager_t;
