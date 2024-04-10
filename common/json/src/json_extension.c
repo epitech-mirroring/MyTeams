@@ -6,9 +6,9 @@
 ** You can even have multiple lines if you want !
 */
 
+#include "json/json.h"
 #include <stdlib.h>
 #include <string.h>
-#include "json/json.h"
 
 json_destructor_t json_get_destructor(json_object_type_t type)
 {

@@ -9,6 +9,10 @@
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
+#ifndef __APPLE__
+    #define __USE_GNU
+    #define _GNU_SOURCE
+#endif
 
 /**
  * @brief Enum for the different types of JSON objects

@@ -9,7 +9,6 @@
 #include "json/json.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 static bool should_toggle_string(const char *content, size_t i)
 {
@@ -91,7 +90,7 @@ static void json_split_consumer(const char *content, size_t *count,
 }
 
 void json_split_array_consumer(const char *content, size_t *count,
-                         split_t ***split, size_t *i)
+    split_t ***split, size_t *i)
 {
     split_t *tmp = malloc(sizeof(split_t));
 
