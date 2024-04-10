@@ -7,14 +7,27 @@
 ##
 
 # All the source files
-SOURCES			= 	src/main.c
+SOURCES			= 	src/json.c				\
+					src/json_extension.c	\
+					src/json_object.c		\
+					src/json_array.c		\
+					src/json_string.c		\
+					src/json_boolean.c		\
+					src/json_null.c			\
+					src/json_float.c		\
+					src/json_number.c		\
+					src/json_serialize.c	\
+					src/json_file.c
 
-TESTS			=
+TESTS			=	../../tests/json/json_parser.c		\
+					../../tests/json/json_save.c
 
 # Compiler and linker settings
-NAME 			=   myteams_server
+NAME 			=   libjson.a
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../libs
+FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
+					-lmy -I../../include $(shell [ uname != "Darwin" ] \
+					&& echo "--std=gnu99 -D__GNU_SOURCE")
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
@@ -40,7 +53,7 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 # Link the object files
 		@printf "$(RUNNING) $(BLUE) 🔗  Linking$(RESET)"
-		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) \
+		@ar rc $(NAME) $(OBJS) >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 # Check if the binary was created
 		@if [ -f $(NAME) ]; then \
@@ -56,7 +69,7 @@ $(OBJS):	%.o: %.c
 		@printf "$(RUNNING) $(BLUE) 🔨  $$(basename $<)$(RESET)"
 		@$(CC) -o $@ -c $< $(FLAGS) >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n" && cat $(LOG) \
-		&& exit 1)
+	  	&& exit 1)
 
 clean:
 # Delete all the object files

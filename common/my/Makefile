@@ -7,14 +7,15 @@
 ##
 
 # All the source files
-SOURCES			= 	src/main.c
+SOURCES			= 	src/my_readfile.c					\
 
-TESTS			=
+TESTS			=   ../../tests/my/test_my_readfile.c	\
 
 # Compiler and linker settings
-NAME 			=   myteams_server
+NAME 			=   libmy.a
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../libs
+FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
+ 					-I../../include
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
@@ -40,7 +41,7 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 # Link the object files
 		@printf "$(RUNNING) $(BLUE) 🔗  Linking$(RESET)"
-		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) \
+		@ar rc $(NAME) $(OBJS) >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 # Check if the binary was created
 		@if [ -f $(NAME) ]; then \
