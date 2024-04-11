@@ -123,7 +123,7 @@ void network_manager_destroy(network_manager_t *manager)
     free(manager);
 }
 
-int socket_create(host_t *host)
+int socket_create_client(host_t *host)
 {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in addr;
@@ -142,3 +142,30 @@ int socket_create(host_t *host)
     return sock;
 }
 
+int socket_create_server(host_t *host)
+{
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in addr;
+    int opt = 1;
+
+    if (sock == -1) {
+        fprintf(stderr, "Failed to create socket\n");
+        return 0;
+    }
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(host->port);
+    addr.sin_addr.s_addr = inet_addr(host->ip);
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
+        fprintf(stderr, "Failed to set socket options\n");
+        return 0;
+    }
+    if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+        fprintf(stderr, "Failed to bind to %s:%d\n", host->ip, host->port);
+        return 0;
+    }
+    if (listen(sock, 10) == -1) {
+        fprintf(stderr, "Failed to listen on %s:%d\n", host->ip, host->port);
+        return 0;
+    }
+    return sock;
+}
