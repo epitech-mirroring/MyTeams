@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
-#include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include "network/network_manager.h"
 
