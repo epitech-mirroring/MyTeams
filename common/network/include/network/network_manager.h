@@ -30,3 +30,5 @@ request_header_t deserialize_request_header(char *header_str);
 request_t *deserialize_request(char *header_str, char *content);
 response_header_t deserialize_response_header(char *header_str);
 response_t *deserialize_response(char *header_str, char *content);
+void destroy_request(request_t *request);
+void destroy_response(response_t *response);
