@@ -33,20 +33,26 @@ typedef struct param_s {
     char value[VALUE_SIZE];
 } param_t;
 
+typedef struct request_header_s {
+    route_t route;
+    size_t content_length;
+} request_header_t;
+
 typedef struct request_s {
-    struct {
-        route_t route;
-        size_t content_length;
-    } header;
+    request_header_t header;
     param_t params[PARAMS_MAX];
     char *body;
 } request_t;
 
+typedef unsigned int status_code_t;
+
+typedef struct response_header_s {
+    status_code_t status_code;
+    size_t content_length;
+} response_header_t;
+
 typedef struct response_s {
-    struct {
-        unsigned int status_code;
-        size_t content_length;
-    } header;
+    response_header_t header;
     char *body;
 } response_t;
 
@@ -57,6 +63,11 @@ typedef struct host_s {
 
 typedef response_t (*route_handler_t)(request_t *request);
 typedef void (*network_promise_consumer_t)(response_t response);
+
+typedef struct request_promises_s {
+    request_t *request;
+    network_promise_consumer_t consumer;
+} request_promises_t;
 
 typedef struct network_router_s {
     struct {
