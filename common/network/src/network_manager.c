@@ -170,94 +170,70 @@ int socket_create_server(host_t *host)
     return sock;
 }
 
-
-
-char *serialize_route(route_t route)
-{
-    char *str = malloc(sizeof(route_t) + 1);
-    char path[ROUTE_SIZE];
-
-    if (str == NULL)
-        return NULL;
-    for (size_t i = 0; i < ROUTE_SIZE; i++) {
-        path[i] = route.path[i];
-    }
-    strcpy(str, serialize_request_method(route.method));
-    for (size_t i = 0; i < ROUTE_SIZE; i++) {
-        str[i + 4] = route.path[i];
-    }
-    return str;
-}
-
-char *serialize_param(param_t param)
-{
-    char *key = calloc(sizeof(char), sizeof(param.key) * KEY_SIZE + 1);
-    char *value = calloc(sizeof(char), sizeof(param.value) * VALUE_SIZE + 1);
-    char *param_str = calloc(sizeof(char), sizeof(param_t) + 1);
-
-    if (key == NULL || value == NULL || param_str == NULL)
-        return NULL;
-    for (size_t i = 0; i < KEY_SIZE; i++) {
-        key[i] = param.key[i];
-    }
-    for (size_t i = 0; i < VALUE_SIZE; i++) {
-        value[i] = param.value[i];
-    }
-    sprintf(param_str, "%s%s", key, value);
-    free(key);
-    free(value);
-    return param_str;
-}
-
-char *serialize_params(param_t params[PARAMS_MAX])
-{
-    char *buff = calloc(sizeof(char), (sizeof(param_t) * PARAMS_MAX) + 1);
-    if (buff == NULL)
-        return NULL;
-
-    for (size_t i = 0; i < PARAMS_MAX; i++) {
-        if (params[i].key[0] == '\0')
-            break;
-        sprintf(buff, "%s%s", buff, serialize_param(params[i]));
-    }
-    return buff;
-}
-
-char *serialize_request_method(request_method_t method)
-{
-    char *str = malloc(4);
-
-    sprintf(str, "%c%c%c%c", method & 0xFF, (method >> 8) & 0xFF, (method >> 16) & 0xFF, (method >> 24) & 0xFF);
-    return str;
-}
-
-char *serialize_size_t(size_t size)
-{
-    char *str = malloc(sizeof(size_t) + 1);
-
-    if (str == NULL)
-        return NULL;
-    sprintf(str, "%c%c%c%c%c%c%c%c", (char)(size & 0xFF), (char)(size >> 8) & 0xFF, (char)(size >> 16) & 0xFF, (char)(size >> 24) & 0xFF,
-            (char)(size >> 32) & 0xFF, (char)(size >> 40) & 0xFF, (char)(size >> 48) & 0xFF, (char)(size >> 56) & 0xFF);
-    return str;
-}
-
-char *serialize_request_header(request_header_t header)
-{
-    char *str = malloc(sizeof(request_header_t) + 1);
-
-    if (str == NULL)
-        return NULL;
-    sprintf(str, "%s%s", serialize_route(header.route), serialize_size_t(header.content_length));
-    return str;
-}
-
 char *serialize_request(request_t *request)
 {
-    char *str = malloc(sizeof(request_t) + 1);
+    char *str = calloc(sizeof(request_header_t) + sizeof(param_t) * PARAMS_MAX + request->header.content_length, sizeof(char));
 
     if (str == NULL)
         return NULL;
-    sprintf(str, "%s%s%s", serialize_request_header(request->header), serialize_params(request->params), request->body);
+    memcpy(str, &request->header, sizeof(request_header_t));
+    memcpy(str + sizeof(request_header_t), request->params, sizeof(param_t) * PARAMS_MAX);
+    memcpy(str + sizeof(request_header_t) + sizeof(param_t) * PARAMS_MAX, request->body, request->header.content_length);
     return str;
+}
+
+request_header_t *deserialize_request_header(char *str)
+{
+    request_header_t *header = calloc(1, sizeof(request_header_t));
+
+    if (header == NULL)
+        return NULL;
+    memcpy(header, str, sizeof(request_header_t));
+    return header;
+}
+
+request_t *deserialize_request(request_header_t *header, char *body_with_params)
+{
+    request_t *request = calloc(1, sizeof(request_t));
+
+    if (request == NULL)
+        return NULL;
+    request->header = *header;
+    memcpy(request->params, body_with_params, sizeof(param_t) * PARAMS_MAX);
+    request->body = body_with_params + sizeof(param_t) * PARAMS_MAX;
+    free(header);
+    return request;
+}
+
+char *serialize_response(response_t *response)
+{
+    char *str = calloc(sizeof(response_header_t) + response->header.content_length, sizeof(char));
+
+    if (str == NULL)
+        return NULL;
+    memcpy(str, &response->header, sizeof(response_header_t));
+    memcpy(str + sizeof(response_header_t), response->body, response->header.content_length);
+    return str;
+}
+
+response_header_t *deserialize_response_header(char *str)
+{
+    response_header_t *header = calloc(1, sizeof(response_header_t));
+
+    if (header == NULL)
+        return NULL;
+    memcpy(header, str, sizeof(response_header_t));
+    return header;
+}
+
+response_t *deserialize_response(response_header_t *header, char *response_str)
+{
+    response_t *response = calloc(1, sizeof(response_t));
+
+    if (response == NULL)
+        return NULL;
+    response->header = *header;
+    response->body = response_str;
+    free(header);
+    return response;
 }

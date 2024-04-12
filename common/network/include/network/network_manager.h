@@ -49,97 +49,6 @@ void network_manager_remove_waiting_socket(network_manager_t *manager, int socke
  * @param manager The manager to handle the sockets with
  */
 void network_manager_handle_waiting_sockets(network_manager_t *manager);
-
-/**
- * @brief Serialize parameters
- * @param params The parameters to serialize
- * @return The serialized parameters
- */
-char *serialize_params(param_t params[PARAMS_MAX]);
-/**
- * @brief Serialize a parameter
- * @param param The parameter to serialize
- * @return The serialized parameter
- */
-char *serialize_param(param_t param);
-/**
- * @brief Serialize a route
- * @param route The route to serialize
- * @return The serialized route
- */
-char *serialize_route(route_t route);
-/**
- * @brief Serialize a request method
- * @param method The method to serialize
- * @return The serialized method
- */
-char *serialize_request_method(request_method_t method);
-/**
- * @brief Serialize a request header
- * @param header The header to serialize
- * @return The serialized header
- */
-char *serialize_request_header(request_header_t header);
-/**
- * @brief Serialize a request
- * @param request The request to serialize
- * @return The serialized request
- */
-char *serialize_request(request_t *request);
-
-
-/**
- * @brief Serialize a response header
- * @param header The header to serialize
- * @return The serialized header
- */
-char *serialize_response_header(response_header_t header);
-/**
- * @brief Serialize a status code
- * @param code The code to serialize
- * @return The serialized code
- */
-char *serialize_status_code(status_code_t code);
-/**
- * @brief Serialize a size_t
- * @param size The size to serialize
- * @return The serialized size
- */
-char *serialize_size_t(size_t size);
-/**
- * @brief Serialize a response
- * @param response The response to serialize
- * @return The serialized response
- */
-char *serialize_response(response_t *response);
-
-/**
- * @brief Deserialize a request header
- * @param header_str The header string to deserialize
- * @return The deserialized header
- */
-request_header_t deserialize_request_header(char *header_str);
-
-/**
- * @brief Deserialize a request
- * @param header_str The header string to deserialize
- * @param content The content string to deserialize
- * @return The deserialized request
- */
-request_t *deserialize_request(char *header_str, char *content);
-/**
- * @brief Deserialize a response header
- * @param header_str The header string to deserialize
- * @return The deserialized header
- */
-response_header_t deserialize_response_header(char *header_str);
-/**
- * @brief Deserialize a response
- * @param header_str The header string to deserialize
- * @param content The content string to deserialize
- * @return The deserialized response
- */
-response_t *deserialize_response(char *header_str, char *content);
 /**
  * @brief Destroy a request
  * @param request The request to destroy
@@ -150,3 +59,41 @@ void destroy_request(request_t *request);
  * @param response The response to destroy
  */
 void destroy_response(response_t *response);
+/**
+ * @brief Transform a response into bytes
+ * @param response The response to transform
+ * @return The byte array of the response
+ */
+char *serialize_response(response_t *response);
+/**
+ * @brief Transform a request into bytes
+ * @param request The request to transform
+ * @return The byte array of the request
+ */
+char *serialize_request(request_t *request);
+/**
+ * @brief Transform bytes into a request
+ * @param header The header of the request
+ * @param request_str The byte array to transform
+ * @return The request
+ */
+request_t *deserialize_request(request_header_t *header, char *body_with_params);
+/**
+ * @brief Transform bytes into a response
+ * @param header The header of the response
+ * @param response_str The byte array to transform
+ * @return The response
+ */
+response_t *deserialize_response(response_header_t *header, char *response_str);
+/**
+ * @brief Transform a request header into bytes
+ * @param header The header to transform
+ * @return The byte array of the header
+ */
+request_header_t *deserialize_request_header(char *header_str);
+/**
+ * @brief Transform a response header into bytes
+ * @param header The header to transform
+ * @return The byte array of the header
+ */
+response_header_t *deserialize_response_header(char *header_str);
