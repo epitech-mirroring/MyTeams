@@ -9,6 +9,7 @@
 #pragma once
 #include <stddef.h>
 #include <sys/select.h>
+#include <stdbool.h>
 // Route
 #define ROUTE_SIZE 256
 // Parameters
@@ -17,7 +18,7 @@
 #define VALUE_SIZE 128
 
 typedef enum request_method_e {
-    GET = 0b0001,
+    GET = 0x1001,
     POST = 0b0010,
     DELETE = 0b0011,
     PUT = 0b0100,
@@ -69,14 +70,6 @@ typedef struct request_promises_s {
     network_promise_consumer_t consumer;
 } request_promises_t;
 
-typedef struct network_router_s {
-    struct {
-        route_t route;
-        route_handler_t handler;
-    } *routes;
-    size_t routes_count;
-} network_router_t;
-
 typedef enum waiting_socket_mode_e {
     WRITE,
     READ
@@ -98,3 +91,27 @@ typedef struct network_manager_s {
     fd_set write_fds;
     int max_fd;
 } network_manager_t;
+
+typedef struct routes_binding_s {
+        route_t *route;
+        route_handler_t handler;
+} routes_binding_t;
+
+typedef request_t *(*network_middleware_handler)(request_t *request, void *data);
+
+typedef struct middlewares_s {
+    route_t *route;
+    network_middleware_handler handler;
+    void *data;
+} middlewares_t;
+
+typedef struct network_router_s {
+    routes_binding_t *routes;
+    int server_socket;
+    bool is_listening;
+    size_t routes_count;
+    host_t host;
+    network_manager_t *manager;
+    middlewares_t *middlewares;
+    size_t middlewares_count;
+} network_router_t;
