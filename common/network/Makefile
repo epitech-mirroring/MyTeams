@@ -7,8 +7,12 @@
 ##
 
 # All the source files
-SOURCES			=	src/router.c			\
-					src/network_manager.c	\
+SOURCES			=	src/router.c				\
+					src/router_middlewares.c 	\
+					src/router_requests.c		\
+					src/router_responses.c		\
+					src/router_socket.c			\
+					src/network_manager.c		\
 
 TESTS			=
 

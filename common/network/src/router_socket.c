@@ -21,7 +21,6 @@ static int socket_accept(int server_socket)
     return client_socket;
 }
 
-//accept socket
 void router_socket_accept(int server_socket, void *data)
 {
     network_router_t *router = (network_router_t *)data;
