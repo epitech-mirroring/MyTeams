@@ -13,6 +13,7 @@ SOURCES			=	src/router.c				\
 					src/router_responses.c		\
 					src/router_socket.c			\
 					src/network_manager.c		\
+					src/networking.c			\
 
 TESTS			=
 

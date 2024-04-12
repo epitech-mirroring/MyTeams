@@ -38,11 +38,25 @@ void router_handle_request(int client_socket, void *data)
     response_sock->consumer = &router_send_response;
     response_sock->data = &response;
     network_manager_add_waiting_socket(router->manager, response_sock);
-    request_destroy(request);
+    destroy_request(request);
 }
 
-void request_destroy(request_t *request)
+request_t *router_read_request(int client_socket)
 {
-    free(request->body);
-    free(request);
+    request_t *request = NULL;
+    request_header_t *header = NULL;
+    char *header_buffer = calloc(1, sizeof(request_header_t));
+    char *content_buffer = NULL;
+
+    if (!header_buffer)
+        return NULL;
+    read(client_socket, header_buffer, sizeof(request_header_t));
+    header = deserialize_request_header(header_buffer);
+    content_buffer = calloc(header->content_length + sizeof(param_t) * PARAMS_MAX, sizeof(char));
+    if (!content_buffer)
+        return NULL;
+    read(client_socket, content_buffer, header->content_length + sizeof(param_t) * PARAMS_MAX);
+    request = deserialize_request(header, content_buffer);
+    free(header_buffer);
+    return request;
 }

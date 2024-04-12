@@ -237,3 +237,8 @@ response_t *deserialize_response(response_header_t *header, char *response_str)
     free(header);
     return response;
 }
+
+void destroy_request(request_t *request)
+{
+    free(request);
+}

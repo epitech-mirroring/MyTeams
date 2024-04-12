@@ -63,12 +63,7 @@ typedef struct host_s {
 } host_t;
 
 typedef response_t (*route_handler_t)(request_t *request);
-typedef void (*network_promise_consumer_t)(response_t response);
-
-typedef struct request_promises_s {
-    request_t *request;
-    network_promise_consumer_t consumer;
-} request_promises_t;
+typedef void (*network_promise_consumer_t)(response_t *response);
 
 typedef enum waiting_socket_mode_e {
     WRITE,
@@ -91,6 +86,12 @@ typedef struct network_manager_s {
     fd_set write_fds;
     int max_fd;
 } network_manager_t;
+
+typedef struct api_handler_s {
+    host_t *host;
+    network_manager_t *manager;
+    bool running;
+} api_handler_t;
 
 typedef struct routes_binding_s {
         route_t *route;
@@ -115,3 +116,9 @@ typedef struct network_router_s {
     middlewares_t *middlewares;
     size_t middlewares_count;
 } network_router_t;
+
+typedef struct request_promises_s {
+    request_t *request;
+    network_promise_consumer_t consumer;
+    api_handler_t *handler;
+} request_promises_t;

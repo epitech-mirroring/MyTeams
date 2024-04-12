@@ -38,8 +38,7 @@ void network_router_destroy(network_router_t *router)
     free(router);
 }
 
-//add route to router
-void network_router_add_route(network_router_t *router, route_t *route, route_handler_t handler)
+void network_router_add_route(network_router_t *router, route_t route, route_handler_t handler)
 {
     routes_binding_t *routes_tmp = NULL;
 
@@ -48,17 +47,18 @@ void network_router_add_route(network_router_t *router, route_t *route, route_ha
         return;
     router->routes_count++;
     router->routes = routes_tmp;
-    router->routes[router->routes_count - 1].route = route;
+    router->routes[router->routes_count - 1].route = calloc(1, sizeof(route_t));
+    router->routes[router->routes_count - 1].route->method = route.method;
+    strcpy(router->routes[router->routes_count - 1].route->path, route.path);
     router->routes[router->routes_count - 1].handler = handler;
-
 }
 
-void network_router_remove_route(network_router_t *router, route_t *route)
+void network_router_remove_route(network_router_t *router, route_t route)
 {
     routes_binding_t *routes_tmp = NULL;
 
     for (size_t i = 0; i < router->routes_count; i++) {
-        if (strcmp(router->routes[i].route->path, route->path) == 0 && router->routes[i].route->method == route->method) {
+        if (strcmp(router->routes[i].route->path, route.path) == 0 && router->routes[i].route->method == route.method) {
             free(router->routes[i].route);
             for (size_t j = i; j < router->routes_count - 1; j++) {
                 router->routes[j] = router->routes[j + 1];
