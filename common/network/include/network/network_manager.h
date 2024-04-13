@@ -42,8 +42,9 @@ void network_manager_add_waiting_socket(network_manager_t *manager, waiting_sock
  * @brief Remove a waiting socket from a network manager
  * @param manager The manager to remove the socket from
  * @param socket The socket to remove
+ * @param mode The mode of the socket
  */
-void network_manager_remove_waiting_socket(network_manager_t *manager, int socket);
+void network_manager_remove_waiting_socket(network_manager_t *manager, int socket, waiting_socket_mode_t mode);
 /**
  * @brief Handle all waiting sockets in a network manager
  * @param manager The manager to handle the sockets with

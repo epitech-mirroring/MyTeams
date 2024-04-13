@@ -84,11 +84,5 @@ request_t *router_read_request(int client_socket);
  * @param data The data to send
  */
 void router_send_response(int client_socket, void *data);
-/**
- * @brief Convert a response to a string
- * @param response The response to convert
- * @return The response as a string
- */
-char *response_to_string(response_t *response);
 
 

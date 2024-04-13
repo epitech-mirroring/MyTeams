@@ -62,7 +62,7 @@ typedef struct host_s {
     int port;
 } host_t;
 
-typedef response_t (*route_handler_t)(request_t *request);
+typedef response_t *(*route_handler_t)(request_t *request);
 typedef void (*network_promise_consumer_t)(response_t *response);
 
 typedef enum waiting_socket_mode_e {

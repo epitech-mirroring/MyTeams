@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include "network/networking.h"
 #include "network/network_manager.h"
 
@@ -16,8 +17,10 @@ api_handler_t *handler_global = NULL;
 
 static void handle_response(response_t *response)
 {
-    printf("Response received: %s\n", response->body);
-    if (handler_global)
+    printf("Response received: %d %s\n", response->header.status_code, response->body);
+    if (strstr(response->body, "Hello, World!") != NULL)
+        network_send_request(handler_global, network_create_request_no_params_no_body((route_t) {POST, "/api/v1/stop"}), handle_response);
+    else
         handler_global->running = false;
 }
 

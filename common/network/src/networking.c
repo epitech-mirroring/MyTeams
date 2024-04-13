@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdio.h>
+#include <sys/socket.h>
 
 api_handler_t *network_create_api_handler(host_t *host)
 {
@@ -28,7 +28,7 @@ api_handler_t *network_create_api_handler(host_t *host)
 
 request_t *network_create_request(route_t route, param_t params[PARAMS_MAX], json_t *body)
 {
-    request_t *request = malloc(sizeof(request_t));
+    request_t *request = calloc(1, sizeof(request_t));
     char *body_str = json_serialize(body);
 
     if (!request)
@@ -39,7 +39,6 @@ request_t *network_create_request(route_t route, param_t params[PARAMS_MAX], jso
         request->params[i] = params[i];
     }
     request->body = body_str;
-    fprintf(stderr, "Request created !\n");
     return request;
 }
 
@@ -73,7 +72,7 @@ static void network_receive_response_consumer(int socket, void *data) {
         close(socket);
         return;
     }
-    read(socket, response_header_str, sizeof(response_header_t));
+    recv(socket, response_header_str, sizeof(response_header_t), 0);
     response_header = deserialize_response_header(response_header_str);
     response_content_str = calloc(sizeof(param_t) * PARAMS_MAX + response_header->content_length, sizeof(char));
     if (response_content_str == NULL) {
@@ -81,9 +80,8 @@ static void network_receive_response_consumer(int socket, void *data) {
         free(response_header_str);
         return;
     }
-    read(socket, response_content_str, sizeof(param_t) * PARAMS_MAX + response_header->content_length);
+    recv(socket, response_content_str, sizeof(param_t) * PARAMS_MAX + response_header->content_length, 0);
     response = deserialize_response(response_header, response_content_str);
-    fprintf(stderr, "Response received !\n");
     consumer(response);
     free(response_header_str);
 }
@@ -99,15 +97,13 @@ static void network_send_request_consumer(int socket, void *data) {
         free(waiting_socket);
         return;
     }
-    write(socket, request_str, strlen(request_str));
-    fprintf(stderr, "Request sent !\n");
+    send(socket, request_str, promise->request->header.content_length + sizeof(request_header_t) + sizeof(param_t) * PARAMS_MAX, 0);
     free(request_str);
     waiting_socket->socket = socket;
     waiting_socket->mode = READ;
     waiting_socket->data = promise->consumer;
     waiting_socket->consumer = network_receive_response_consumer;
     network_manager_add_waiting_socket(promise->handler->manager, waiting_socket);
-    fprintf(stderr, "Response added to queue !\n");
     destroy_request(promise->request);
     free(promise);
 }
@@ -120,7 +116,6 @@ void network_send_request(api_handler_t *handler, request_t *request, network_pr
 
     if (socket == -1)
         return;
-    fprintf(stderr, "Socket created !\n");
     waiting_socket = malloc(sizeof(waiting_socket_t));
     promise = malloc(sizeof(request_promises_t));
     if (waiting_socket == NULL || promise == NULL) {
@@ -137,7 +132,6 @@ void network_send_request(api_handler_t *handler, request_t *request, network_pr
     waiting_socket->data = promise;
     waiting_socket->consumer = network_send_request_consumer;
     network_manager_add_waiting_socket(handler->manager, waiting_socket);
-    fprintf(stderr, "Request added to queue !\n");
 }
 
 void destroy_api_handler(api_handler_t *handler)

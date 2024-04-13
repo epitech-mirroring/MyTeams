@@ -7,40 +7,18 @@
 */
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
+#include <sys/socket.h>
 #include "network/router.h"
-
-
-char *response_to_string(response_t *response)
-{
-    char *response_str = malloc(sizeof(char) * (response->header.content_length + sizeof(response->header) + 1));
-
-    sprintf(response_str, "%c%c%c%c%c%c%c%c%c%c%c%c%s", response->header.status_code & 0xFF,
-            response->header.status_code >> 8 & 0xFF,
-            response->header.status_code >> 16 & 0xFF,
-            response->header.status_code >> 24 & 0xFF,
-            (char)(response->header.content_length & 0xFF),
-            (char)(response->header.content_length >> 8 & 0xFF),
-            (char)(response->header.content_length >> 16 & 0xFF),
-            (char)(response->header.content_length >> 24 & 0xFF),
-            (char)(response->header.content_length >> 32 & 0xFF),
-            (char)(response->header.content_length >> 40 & 0xFF),
-            (char)(response->header.content_length >> 48 & 0xFF),
-            (char)(response->header.content_length >> 56 & 0xFF),
-            response->body);
-    return response_str;
-}
-
+#include "network/network_manager.h"
 
 void router_send_response(int client_socket, void *data)
 {
     response_t *response = (response_t *)data;
-    char *response_str = response_to_string(response);
+    char *response_str = serialize_response(response);
 
-    write(client_socket, response_str, response->header.content_length);
+    send(client_socket, response_str, response->header.content_length + sizeof(response->header), 0);
     close(client_socket);
     free(response_str);
-    free(response->body);
     free(response);
 }

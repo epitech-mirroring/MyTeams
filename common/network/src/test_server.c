@@ -12,25 +12,25 @@
 
 network_router_t *router_global = NULL;
 
-response_t router_handle_test(request_t *request)
+response_t *router_handle_test(request_t *request)
 {
-    response_t response;
+    response_t *response = calloc(1, sizeof(response_t));
     char *body = "{\"message\": \"Hello, World!\"}";
 
-    response.header.status_code = 200;
-    response.header.content_length = strlen(body);
-    response.body = body;
+    response->header.status_code = 200;
+    response->header.content_length = strlen(body);
+    response->body = body;
     return response;
 }
 
-response_t router_handle_stop(request_t *request)
+response_t *router_handle_stop(request_t *request)
 {
-    response_t response;
+    response_t *response = calloc(1, sizeof(response_t));
     char *body = "{\"message\": \"Goodbye, World!\"}";
 
-    response.header.status_code = 200;
-    response.header.content_length = strlen(body);
-    response.body = body;
+    response->header.status_code = 200;
+    response->header.content_length = strlen(body);
+    response->body = body;
     return response;
 }
 
