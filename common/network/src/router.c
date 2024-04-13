@@ -42,7 +42,7 @@ void network_router_add_route(network_router_t *router, route_t route, route_han
 {
     routes_binding_t *routes_tmp = NULL;
 
-    routes_tmp = realloc(router->routes, sizeof(route_handler_t) * (router->routes_count + 1));
+    routes_tmp = realloc(router->routes, sizeof(routes_binding_t) * (router->routes_count + 1));
     if (!routes_tmp)
         return;
     router->routes_count++;
