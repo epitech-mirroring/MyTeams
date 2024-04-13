@@ -50,7 +50,7 @@ int main(void)
     }
     router_global = router;
     network_router_add_route(router, (route_t) {GET, "/api/v1/test"}, &router_handle_test);
-    network_router_add_route(router, (route_t) {POST, "/api/v1/stop"}, &router_handle_test);
+    network_router_add_route(router, (route_t) {POST, "/api/v1/stop"}, &router_handle_stop);
     network_router_listen(router);
     network_router_destroy(router);
     free(host);
