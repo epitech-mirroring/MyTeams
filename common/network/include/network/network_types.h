@@ -18,10 +18,10 @@
 #define VALUE_SIZE 128
 
 typedef enum request_method_e {
-    GET = 0x1001,
-    POST = 0b0010,
-    DELETE = 0b0011,
-    PUT = 0b0100,
+    GET = 0x0001,
+    POST = 0x0002,
+    DELETE = 0x0003,
+    PUT = 0x0004,
 } request_method_t;
 
 typedef struct route_s {
