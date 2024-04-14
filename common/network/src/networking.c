@@ -9,9 +9,9 @@
 #include "network/network_manager.h"
 #include "network/networking.h"
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <string.h>
 
 api_handler_t *network_create_api_handler(host_t *host)
 {
@@ -41,8 +41,7 @@ static response_header_t *receive_response_header(int socket)
 static response_t *receive_response(response_header_t *header, int socket)
 {
     response_t *response = calloc(1, sizeof(response_t));
-    char *content_str = calloc(header->content_length + sizeof(param_t) *
-        PARAMS_MAX, sizeof(char));
+    char *content_str = calloc(header->content_length, sizeof(char));
 
     if (response == NULL || content_str == NULL)
         return NULL;
@@ -52,8 +51,7 @@ static response_t *receive_response(response_header_t *header, int socket)
     response->body = calloc(header->content_length, sizeof(char));
     if (response->body == NULL)
         return NULL;
-    strncpy(response->body, content_str + sizeof(param_t) * PARAMS_MAX,
-        header->content_length);
+    memcpy(response->body, content_str, header->content_length);
     return response;
 }
 
@@ -98,11 +96,9 @@ static void network_send_request_consumer(int socket, void *data)
     free(request_str);
     w->socket = socket;
     w->mode = READ;
-    w->data = promise->consumer;
+    w->data = promise;
     w->consumer = network_receive_response_consumer;
     network_manager_add_waiting_socket(promise->handler->manager, w);
-    destroy_request(promise->request);
-    free(promise);
 }
 
 void network_send_request(api_handler_t *handler, request_t *request,

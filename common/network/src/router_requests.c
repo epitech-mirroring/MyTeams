@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <netinet/in.h>
+#include <stdio.h>
 #include "network/router.h"
 #include "network/network_manager.h"
 
@@ -69,14 +70,18 @@ void router_handle_request(int client_socket, void *data)
 
 static request_header_t *receive_request_header(int client_socket)
 {
-    request_header_t *header = calloc(1, sizeof(request_header_t));
+    request_header_t *header = NULL;
     char *header_buffer = calloc(1, sizeof(request_header_t));
 
-    if (!header || !header_buffer)
+    if (!header_buffer) {
+        free(header_buffer);
         return NULL;
+    }
     if (recv(client_socket, header_buffer, sizeof(request_header_t), 0)
-        != sizeof(request_header_t))
+        != sizeof(request_header_t)) {
+        free(header_buffer);
         return NULL;
+    }
     header = deserialize_request_header(header_buffer);
     free(header_buffer);
     return header;
@@ -109,7 +114,6 @@ request_t *router_read_request(int client_socket)
     if (!content)
         return NULL;
     request = deserialize_request(header, content);
-    free(header);
     free(content);
     return request;
 }

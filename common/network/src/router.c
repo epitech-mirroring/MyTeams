@@ -9,7 +9,6 @@
 #include "network/router.h"
 #include "network/network_manager.h"
 #include <stdlib.h>
-#include <string.h>
 
 network_router_t *network_router_create(host_t host)
 {

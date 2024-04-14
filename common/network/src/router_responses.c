@@ -18,7 +18,7 @@ void router_send_response(int client_socket, void *data)
     char *response_str = serialize_response(response);
 
     send(client_socket, response_str, response->header.content_length
-        + sizeof(response->header), 0);
+        + sizeof(response_header_t), 0);
     close(client_socket);
     free(response_str);
     free(response);

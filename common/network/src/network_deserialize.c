@@ -27,7 +27,11 @@ response_t *deserialize_response(response_header_t *header, char *response_str)
     if (response == NULL)
         return NULL;
     response->header = *header;
-    response->body = response_str;
+    response->body = calloc(header->content_length, sizeof(char));
+    if (response->body == NULL)
+        return NULL;
+    memcpy(response->body, response_str + sizeof(response_header_t),
+            header->content_length);
     free(header);
     return response;
 }
@@ -54,7 +58,7 @@ request_t *deserialize_request(request_header_t *header,
     request->body = calloc(header->content_length, sizeof(char));
     if (request->body == NULL)
         return NULL;
-    strncpy(request->body, body_with_params + sizeof(param_t) * PARAMS_MAX,
+    memcpy(request->body, body_with_params + sizeof(param_t) * PARAMS_MAX,
             header->content_length);
     free(header);
     return request;
