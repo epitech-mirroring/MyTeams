@@ -7,6 +7,8 @@
 */
 
 #pragma once
+
+#include <string.h>
 #include "network_types.h"
 
 
@@ -37,6 +39,22 @@ void network_router_add_route(network_router_t *router,
  */
 void network_router_remove_route(network_router_t *router, route_t route);
 /**
+ * @brief Find a route in a network router
+ * @param router The router to find the route in
+ * @param route The route to find
+ * @return The index of the route or -1 if not found
+ */
+ssize_t router_find_route(network_router_t *router, route_t route);
+/**
+ * @brief Run a route with a request and a response
+ * @param router The router to run the route with
+ * @param request The request that called the route
+ * @param response The response to be filled by the route
+ * @return True if a route handled the request, false otherwise
+ */
+bool run_route(const network_router_t *router, request_t **request,
+    response_t **response);
+/**
  * @brief Listen for incoming connections
  * @param router The router to listen with
  */
@@ -56,6 +74,19 @@ void network_router_add_middleware(network_router_t *router,
  * @param route The route to remove the middleware from
  */
 void network_router_remove_middleware(network_router_t *router, route_t route);
+/**
+ * @brief Find a middleware in a network router
+ * @param router The router to find the middleware in
+ * @param route The route to find the middleware for
+ * @return The index of the middleware or -1 if not found
+ */
+ssize_t router_find_middleware(network_router_t *router, route_t route);
+/**
+ * @brief Apply middlewares to a request
+ * @param router The router to apply the middlewares with
+ * @param request The request to apply the middlewares to
+ */
+void apply_middlewares(const network_router_t *router, request_t **request);
 
 // ----------------------------- Socket ---------------------------------
 /**
@@ -86,3 +117,13 @@ request_t *router_read_request(int client_socket);
  * @param data The data to send
  */
 void router_send_response(int client_socket, void *data);
+/**
+ * @brief Create a server error response (500)
+ * @return The server error response
+ */
+response_t *create_server_error_response(void);
+/**
+ * @brief Create a not found response (404)
+ * @return The not found response
+ */
+response_t *create_not_found_response(void);
