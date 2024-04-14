@@ -94,15 +94,16 @@ typedef struct api_handler_s {
 } api_handler_t;
 
 typedef struct routes_binding_s {
-        route_t *route;
-        route_handler_t handler;
+    route_t *route;
+    route_handler_t handler;
 } routes_binding_t;
 
-typedef request_t *(*network_middleware_handler)(request_t *request, void *data);
+typedef request_t *(*network_middleware_handler_t)(request_t *request,
+    void *data);
 
 typedef struct middlewares_s {
     route_t *route;
-    network_middleware_handler handler;
+    network_middleware_handler_t handler;
     void *data;
 } middlewares_t;
 

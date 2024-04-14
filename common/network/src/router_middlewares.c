@@ -11,37 +11,52 @@
 #include <string.h>
 #include "network/router.h"
 
-void network_router_add_middleware(network_router_t *router, middlewares_t middleware)
+void network_router_add_middleware(network_router_t *router,
+    middlewares_t middleware)
 {
     middlewares_t *middlewares_tmp = NULL;
 
-    middlewares_tmp = realloc(router->middlewares, sizeof(middlewares_t) * (router->middlewares_count + 1));
+    middlewares_tmp = realloc(router->middlewares, sizeof(middlewares_t) *
+        (router->middlewares_count + 1));
     if (!middlewares_tmp)
         return;
     router->middlewares_count++;
     router->middlewares = middlewares_tmp;
-    router->middlewares[router->middlewares_count - 1].route = middleware.route;
-    router->middlewares[router->middlewares_count - 1].handler = middleware.handler;
+    router->middlewares[router->middlewares_count - 1].route =
+        middleware.route;
+    router->middlewares[router->middlewares_count - 1].handler =
+        middleware.handler;
     router->middlewares[router->middlewares_count - 1].data = middleware.data;
+}
+
+ssize_t router_find_middleware(network_router_t *router, route_t route)
+{
+    middlewares_t *middlewares_tmp = NULL;
+
+    for (ssize_t i = 0; i < (ssize_t) router->middlewares_count; i++) {
+        middlewares_tmp = &router->middlewares[i];
+        if (strcmp(middlewares_tmp->route->path, route.path) == 0 &&
+            middlewares_tmp->route->method == route.method) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 void network_router_remove_middleware(network_router_t *router, route_t route)
 {
     middlewares_t *middlewares_tmp = NULL;
+    ssize_t index = router_find_middleware(router, route);
 
-    for (size_t i = 0; i < router->middlewares_count; i++) {
-        if (strcmp(router->middlewares[i].route->path,
-                   route.path) == 0 && router->middlewares[i].route->method == route.method) {
-            for (size_t j = i; j < router->middlewares_count - 1; j++) {
-                router->middlewares[j] = router->middlewares[j + 1];
-            }
-            middlewares_tmp = realloc(router->middlewares,
-                                      sizeof(middlewares_t) * (router->middlewares_count - 1));
-            if (!middlewares_tmp)
-                return;
-            router->middlewares_count--;
-            router->middlewares = middlewares_tmp;
-            break;
-        }
+    if (index == -1)
+        return;
+    middlewares_tmp = realloc(router->middlewares, sizeof(middlewares_t) *
+        (router->middlewares_count - 1));
+    if (!middlewares_tmp)
+        return;
+    router->middlewares_count--;
+    router->middlewares = middlewares_tmp;
+    for (size_t i = index; i < router->middlewares_count; i++) {
+        router->middlewares[i] = router->middlewares[i + 1];
     }
 }

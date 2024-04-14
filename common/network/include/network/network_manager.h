@@ -37,14 +37,16 @@ int socket_create_server(host_t *host);
  * @param manager The manager to add the socket to
  * @param socket The socket to add
  */
-void network_manager_add_waiting_socket(network_manager_t *manager, waiting_socket_t *socket);
+void network_manager_add_waiting_socket(network_manager_t *manager,
+    waiting_socket_t *socket);
 /**
  * @brief Remove a waiting socket from a network manager
  * @param manager The manager to remove the socket from
  * @param socket The socket to remove
  * @param mode The mode of the socket
  */
-void network_manager_remove_waiting_socket(network_manager_t *manager, int socket, waiting_socket_mode_t mode);
+void network_manager_remove_waiting_socket(network_manager_t *manager,
+    int socket, waiting_socket_mode_t mode);
 /**
  * @brief Handle all waiting sockets in a network manager
  * @param manager The manager to handle the sockets with
@@ -78,14 +80,16 @@ char *serialize_request(request_t *request);
  * @param request_str The byte array to transform
  * @return The request
  */
-request_t *deserialize_request(request_header_t *header, char *body_with_params);
+request_t *deserialize_request(request_header_t *header,
+    char *body_with_params);
 /**
  * @brief Transform bytes into a response
  * @param header The header of the response
  * @param response_str The byte array to transform
  * @return The response
  */
-response_t *deserialize_response(response_header_t *header, char *response_str);
+response_t *deserialize_response(response_header_t *header,
+    char *response_str);
 /**
  * @brief Transform a request header into bytes
  * @param header The header to transform

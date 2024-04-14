@@ -28,7 +28,8 @@ void network_router_destroy(network_router_t *router);
  * @param route The route to add
  * @param handler The handler for the route
  */
-void network_router_add_route(network_router_t *router, route_t route, route_handler_t handler);
+void network_router_add_route(network_router_t *router,
+    route_t route, route_handler_t handler);
 /**
  * @brief Remove a route from a network router
  * @param router The router to remove the route from
@@ -47,7 +48,8 @@ void network_router_listen(network_router_t *router);
  * @param router The router to add the middleware to
  * @param middleware The middleware to add
  */
-void network_router_add_middleware(network_router_t *router, middlewares_t middleware);
+void network_router_add_middleware(network_router_t *router,
+    middlewares_t middleware);
 /**
  * @brief Remove a middleware from a network router
  * @param router The router to remove the middleware from
@@ -84,5 +86,3 @@ request_t *router_read_request(int client_socket);
  * @param data The data to send
  */
 void router_send_response(int client_socket, void *data);
-
-
