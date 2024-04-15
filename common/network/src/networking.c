@@ -73,7 +73,7 @@ static void network_receive_response_consumer(int socket, void *data)
         free(promise);
         return;
     }
-    promise->consumer(response);
+    promise->consumer(response, promise->data);
     free(header);
     free(promise);
     close(socket);
@@ -102,7 +102,7 @@ static void network_send_request_consumer(int socket, void *data)
 }
 
 void network_send_request(api_handler_t *handler, request_t *request,
-    network_promise_consumer_t consumer)
+    network_promise_consumer_t consumer, void *data)
 {
     int socket = socket_create_client(handler->host);
     waiting_socket_t *waiting_socket;
@@ -119,7 +119,7 @@ void network_send_request(api_handler_t *handler, request_t *request,
         return;
     }
     *(promise) = (request_promises_t){.handler = handler, .request = request,
-        .consumer = consumer};
+        .consumer = consumer, .data = data};
     *(waiting_socket) = (waiting_socket_t){.socket = socket, .mode = WRITE,
         .data = promise};
     waiting_socket->consumer = network_send_request_consumer;

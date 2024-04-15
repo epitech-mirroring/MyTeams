@@ -46,6 +46,7 @@ typedef struct request_s {
     request_header_t header;
     param_t params[PARAMS_MAX];
     char *body;
+    void *data;
 } request_t;
 
 typedef unsigned int status_code_t;
@@ -66,7 +67,7 @@ typedef struct host_s {
 } host_t;
 
 typedef response_t *(*route_handler_t)(request_t *request);
-typedef void (*network_promise_consumer_t)(response_t *response);
+typedef void (*network_promise_consumer_t)(response_t *response, void *data);
 
 typedef enum waiting_socket_mode_e {
     WRITE,
@@ -125,4 +126,5 @@ typedef struct request_promises_s {
     request_t *request;
     network_promise_consumer_t consumer;
     api_handler_t *handler;
+    void *data;
 } request_promises_t;

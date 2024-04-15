@@ -19,5 +19,5 @@ request_t *network_create_request_no_body(route_t route,
     param_t params[PARAMS_MAX]);
 request_t *network_create_request_no_params_no_body(route_t route);
 void network_send_request(api_handler_t *handler, request_t *request,
-    network_promise_consumer_t consumer);
+    network_promise_consumer_t consumer, void *data);
 void destroy_api_handler(api_handler_t *handler);

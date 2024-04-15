@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <netinet/in.h>
-#include <stdio.h>
 #include "network/router.h"
 #include "network/network_manager.h"
 
