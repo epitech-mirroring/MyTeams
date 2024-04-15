@@ -8,7 +8,8 @@
 
 # All the source files
 LIBRARIES		=	common/my		\
-					common/json
+					common/json		\
+					common/network	\
 
 TESTS			=
 
