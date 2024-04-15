@@ -16,6 +16,9 @@
 #define PARAMS_MAX 8
 #define KEY_SIZE 64
 #define VALUE_SIZE 128
+#ifndef _SSIZE_T
+typedef long ssize_t;
+#endif
 
 typedef enum request_method_e {
     GET = 0x0001,
