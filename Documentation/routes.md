@@ -357,6 +357,7 @@
     - <p class="error">403 - Forbidden (Not in team)</p>
     - <p class="error">404 - Team not found / Channel not found / Thread not found</p>
   
+## Threads
 - ### Create Thread
   - Method: `POST`
   - Route: `/teams/channels/threads/create`
