@@ -10,6 +10,7 @@
 LIBRARIES		=	common/my		\
 					common/json		\
 					common/network	\
+					common/uuid		\
 
 TESTS			=
 
