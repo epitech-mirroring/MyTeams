@@ -21,6 +21,12 @@ SOURCES			= 	src/main.c					\
 					src/data/load_team.c		\
 					src/data/load_messages.c	\
 					src/data/load_arrays.c		\
+					src/data/save.c				\
+					src/data/save_clients.c		\
+					src/data/save_teams.c		\
+					src/data/save_channels.c	\
+					src/data/save_threads.c		\
+					src/data/save_messages.c	\
 
 TESTS			=
 

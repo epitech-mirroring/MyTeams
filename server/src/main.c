@@ -21,6 +21,7 @@ int main(int ac, char **av)
         return 84;
     if (access("./data.json", F_OK) != -1)
         load_data(server, "./data.json");
+    save_data(server, "./data.json");
     destroy_server(server);
     return 0;
 }

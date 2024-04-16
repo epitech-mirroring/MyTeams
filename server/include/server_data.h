@@ -13,8 +13,9 @@
 /**
  * @brief Save the server data to a file
  * @param server The server to save
+ * @param path The path to save the data to
  */
-void save_data(roundtable_server_t *server);
+void save_data(roundtable_server_t *server, const char *path);
 /**
  * @brief Serialize the server data to a json object
  * @param server The server to serialize
@@ -40,11 +41,11 @@ json_array_t *serialize_teams(roundtable_server_t *server);
  */
 json_object_t *serialize_team(roundtable_team_t *team);
 /**
- * @brief Serialize the channels of a server to a json array
- * @param server The server to serialize
+ * @brief Serialize the channels of a team to a json array
+ * @param team The team to serialize its channels
  * @return The serialized channels
  */
-json_array_t *serialize_channels(roundtable_server_t *server);
+json_array_t *serialize_channels(roundtable_team_t *team);
 /**
  * @brief Serialize a channel to a json object
  * @param channel The channel to serialize
@@ -52,11 +53,11 @@ json_array_t *serialize_channels(roundtable_server_t *server);
  */
 json_object_t *serialize_channel(roundtable_channel_t *channel);
 /**
- * @brief Serialize the threads of a server to a json array
- * @param server The server to serialize
+ * @brief Serialize the threads of a channel to a json array
+ * @param channel The channel to serialize its threads
  * @return The serialized threads
  */
-json_array_t *serialize_threads(roundtable_server_t *server);
+json_array_t *serialize_threads(roundtable_channel_t *channel);
 /**
  * @brief Serialize a thread to a json object
  * @param thread The thread to serialize
@@ -64,11 +65,13 @@ json_array_t *serialize_threads(roundtable_server_t *server);
  */
 json_object_t *serialize_thread(roundtable_thread_t *thread);
 /**
- * @brief Serialize the messages of a server to a json array
- * @param server The server to serialize
+ * @brief Serialize a list of messages to a json array
+ * @param messages The messages to serialize
+ * @param message_count The number of messages
  * @return The serialized messages
  */
-json_array_t *serialize_messages(roundtable_server_t *server);
+json_array_t *serialize_messages(roundtable_message_t *messages,
+    size_t message_count);
 /**
  * @brief Serialize a message to a json object
  * @param message The message to serialize
@@ -76,17 +79,24 @@ json_array_t *serialize_messages(roundtable_server_t *server);
  */
 json_object_t *serialize_message(roundtable_message_t *message);
 /**
- * @brief Serialize the subscribers of a server to a json array
- * @param server The server to serialize
+ * @brief Serialize the subscribers of a team to a json array
+ * @param team The team to serialize its subscribers
  * @return The serialized subscribers
  */
-json_array_t *serialize_subscribers(roundtable_server_t *server);
+json_array_t *serialize_subscribers(roundtable_team_t *server);
 /**
  * @brief Serialize the direct messages of a server to a json array
  * @param server The server to serialize
  * @return The serialized direct messages
  */
 json_array_t *serialize_direct_messages(roundtable_server_t *server);
+/**
+ * @brief Serialize a direct message to a json object
+ * @param direct_message The direct message to serialize
+ * @return The serialized direct message data
+ */
+json_object_t *serialize_direct_message(
+    roundtable_direct_message_t *direct_message);
 // --------------------------- LOAD ------------------------------
 /**
  * @brief Serialize a direct message to a json object
