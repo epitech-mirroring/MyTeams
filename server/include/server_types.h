@@ -58,7 +58,7 @@ typedef struct roundtable_team_s {
     char *description;
     roundtable_channel_t *channels;
     size_t channel_count;
-    roundtable_client_t *subscribers;
+    uuid_t *subscribers;
     size_t subscriber_count;
 } roundtable_team_t;
 

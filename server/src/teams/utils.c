@@ -40,13 +40,13 @@ void roundtable_team_add_channel(roundtable_team_t *team,
 void roundtable_team_add_subscriber(roundtable_team_t *team,
     roundtable_client_t *subscriber)
 {
-    roundtable_client_t *new_subscribers = NULL;
+    uuid_t *new_subscribers = NULL;
 
     new_subscribers = realloc(team->subscribers,
-        sizeof(roundtable_client_t) * (team->subscriber_count + 1));
+        sizeof(uuid_t) * (team->subscriber_count + 1));
     if (new_subscribers == NULL)
         return;
     team->subscribers = new_subscribers;
-    team->subscribers[team->subscriber_count] = *subscriber;
+    COPY_UUID(team->subscribers[team->subscriber_count], subscriber->uuid);
     team->subscriber_count++;
 }
