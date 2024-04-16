@@ -18,7 +18,6 @@
     }
     ```
   - Possible status codes:
-    - Possible status codes:
     - <p class="success">200 - Successful</p>
     - <p class="success">201 - Successful: new user</p>
     - <p class="error">400 - Request malformed</p>
