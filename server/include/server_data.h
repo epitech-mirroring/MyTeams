@@ -46,23 +46,3 @@ void deserialize_direct_message_messages(json_array_t *messages,
     roundtable_direct_message_t *direct_message);
 void deserialize_direct_message_message(json_object_t *message,
     roundtable_direct_message_t *direct_message);
-void roundtable_server_add_client(roundtable_server_t *server,
-    roundtable_client_t *client);
-void roundtable_server_add_team(roundtable_server_t *server,
-    roundtable_team_t *team);
-void roundtable_team_add_channel(roundtable_team_t *team,
-    roundtable_channel_t *channel);
-void roundtable_channel_add_thread(roundtable_channel_t *channel,
-    roundtable_thread_t *thread);
-void roundtable_thread_add_message(roundtable_thread_t *thread,
-    roundtable_message_t *message);
-void roundtable_server_add_direct_message(roundtable_server_t *server,
-    roundtable_direct_message_t *direct_message);
-void roundtable_team_add_subscriber(roundtable_team_t *team,
-    roundtable_client_t *subscriber);
-void roundtable_direct_message_add_message(
-    roundtable_direct_message_t *direct_message,
-    roundtable_message_t *message);
-
-roundtable_client_t *roundtable_server_get_client_by_uuid(
-    roundtable_server_t *server, uuid_t uuid);

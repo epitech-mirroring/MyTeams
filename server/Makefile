@@ -8,6 +8,9 @@
 
 # All the source files
 SOURCES			= 	src/main.c					\
+					src/constructors.c			\
+					src/destructors.c			\
+					src/destructors_suite.c		\
 					src/data/load.c				\
 					src/data/load_team.c		\
 					src/data/load_messages.c	\
@@ -19,7 +22,8 @@ TESTS			=
 NAME 			=   myteams_server
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../libs \
-					-L../libs/myteams -lmyteams -lnetwork -ljson -I../include
+					-L../libs/myteams -lnetwork -ljson -I../include \
+					$(shell [ `uname` != "Darwin" ] && echo "-lmyteams")
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
@@ -45,8 +49,9 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 # Link the object files
 		@printf "$(RUNNING) $(BLUE) 🔗  Linking$(RESET)"
-		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) \
-		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
+		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) >> $(LOG) 2>&1 \
+		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n" && cat $(LOG) \
+		&& exit 1)
 # Check if the binary was created
 		@if [ -f $(NAME) ]; then \
 			printf \
