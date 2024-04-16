@@ -64,6 +64,9 @@ pipeline {
             }
             steps {
                 ansiColor('xterm') {
+                    // Clean before building
+                    sh 'make fclean'
+
                     // Run the build
                     sh 'make'
 
