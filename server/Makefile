@@ -7,7 +7,11 @@
 ##
 
 # All the source files
-SOURCES			= 	src/main.c
+SOURCES			= 	src/main.c					\
+					src/data/load.c				\
+					src/data/load_team.c		\
+					src/data/load_messages.c	\
+					src/data/load_arrays.c		\
 
 TESTS			=
 
