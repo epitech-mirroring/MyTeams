@@ -1,7 +1,7 @@
 # ROUTES DOCUMENTATION
-## Users  
+## Users
 - ### Login
-  - Method: `POST`  
+  - Method: `POST`
   - Route: `/login`
   - Request:
     - Params: _No params_
@@ -18,14 +18,14 @@
     }
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="success">201 - Successful: new user</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">403 - Already connected</p>
-   
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>201</b> - Successful: new user</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>403</b> - Already connected</p>
+
+
 - ### Logout
-  - Method: `POST`  
+  - Method: `POST`
   - Route: `/logout`
   - Request:
     - Params: _No params_
@@ -37,11 +37,11 @@
       ```  
   - Response: _Nothing_
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-  
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+
+
 - ### List user
   - Method: `GET`
   - Route: `/users`
@@ -64,11 +64,11 @@
     ]
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-  
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+
+
 - ### Get info of an user
   - Method: `GET`
   - Route: `/user`
@@ -89,10 +89,10 @@
         }
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">404 - User not found</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>404</b> - User not found</p>
 ## Messages
 
 - ### Send Message
@@ -112,11 +112,11 @@
       ```
   - Response: _Nothing_
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">404 - Recipient not found</p>
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>404</b> - Recipient not found</p>
+
 - ### Direct Message
   - Method: `GET`
   - Route: `/messages`
@@ -140,11 +140,11 @@
     ]
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">404 - Target not found</p>
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>404</b> - Target not found</p>
+
 ## Teams
 - ### Join Team
   - Method: `POST`
@@ -160,11 +160,11 @@
       ```
   - Response: _Nothing_
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Already in team</p>
-    - <p class="error">404 - Team not found</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Already in team</p>
+    - <p class="error"><b>404</b>- Team not found</p>
 
 - ### Leave Team
   - Method: `POST`
@@ -180,17 +180,17 @@
       ```
   - Response: _Nothing_
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Not in team</p>
-    - <p class="error">404 - Team not found</p>
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Not in team</p>
+    - <p class="error"><b>404</b>- Team not found</p>
+
 - ### Get Teams
   - Method: `GET`
   - Route: `/teams`
   - Request:
-    - Params: 
+    - Params:
       - `team-uuid: String (Optional)`
       - `only-joined: Boolean (Optional, default: false, incompatible with team-uuid)`
     - Body:
@@ -210,10 +210,10 @@
     ]
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">404 - Team not found</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>404</b>- Team not found</p>
 
 - ### Create Team
   - Method: `POST`
@@ -235,10 +235,10 @@
         }
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed / Name or description too long</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden (Already exists)</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed / Name or description too long</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden (Already exists)</p>
 
 - ### Get Team Users
   - Method: `GET`
@@ -263,11 +263,11 @@
     ]
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden</p>
-    - <p class="error">404 - Team not found</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden</p>
+    - <p class="error"><b>404</b>- Team not found</p>
 
 ## Channels
 - ### Get Team Channels
@@ -293,11 +293,11 @@
     ]
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden (Not in team)</p>
-    - <p class="error">404 - Team not found / Channel not found</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
+    - <p class="error"><b>404</b> - Team not found / Channel not found</p>
 
 - ### Create Channel
   - Method: `POST`
@@ -320,12 +320,12 @@
         }
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden (Not in team) / Forbidden (Already exists)</p>
-    - <p class="error">404 - Team not found</p>
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden (Not in team) / Forbidden (Already exists)</p>
+    - <p class="error"><b>404</b>- Team not found</p>
+
 - ### Get Team Channels Threads
   - Method: `GET`
   - Route: `/teams/channels/threads`
@@ -350,12 +350,12 @@
     ]
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden (Not in team)</p>
-    - <p class="error">404 - Team not found / Channel not found / Thread not found</p>
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
+    - <p class="error"><b>404</b> - Team not found / Channel not found / Thread not found</p>
+
 ## Threads
 - ### Create Thread
   - Method: `POST`
@@ -379,11 +379,11 @@
         }
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden (Not in team) / Forbidden (Already exists)</p>
-    - <p class="error">404 - Team not found / Channel not found</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden (Not in team) / Forbidden (Already exists)</p>
+    - <p class="error"><b>404</b> - Team not found / Channel not found</p>
 
 - ### Get Thread Messages
   - Method: `GET`
@@ -411,11 +411,11 @@
     ]
     ```
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden (Not in team)</p>
-    - <p class="error">404 - Team not found / Channel not found / Thread not found</p>
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
+    - <p class="error"><b>404</b> - Team not found / Channel not found / Thread not found</p>
 
 - ### Reply to Thread
   - Method: `POST`
@@ -436,12 +436,12 @@
       ```
   - Response: _Nothing_
   - Possible status codes:
-    - <p class="success">200 - Successful</p>
-    - <p class="error">400 - Request malformed</p>
-    - <p class="error">401 - Not connected</p>
-    - <p class="error">403 - Forbidden (Not in team)</p>
-    - <p class="error">404 - Team not found / Channel not found / Thread not found</p>
-  
+    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
+    - <p class="error"><b>404</b> - Team not found / Channel not found / Thread not found</p>
+
 <style>
     .success {
         color: #a3e635;
