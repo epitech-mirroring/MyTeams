@@ -6,7 +6,7 @@
 ** You can even have multiple lines if you want !
 */
 
-#include "server.h"
+#include "server_data.h"
 
 void load_data(roundtable_server_t *server, const char *path)
 {

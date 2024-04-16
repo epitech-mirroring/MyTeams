@@ -8,7 +8,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "server.h"
+#include "server_data.h"
 
 void deserialize_message(json_object_t *message, roundtable_thread_t *thread)
 {

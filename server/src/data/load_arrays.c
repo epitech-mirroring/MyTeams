@@ -8,7 +8,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "server.h"
+#include "server_data.h"
 
 void deserialize_clients(roundtable_server_t *server, json_array_t *clients)
 {
