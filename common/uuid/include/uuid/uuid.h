@@ -18,3 +18,15 @@ typedef unsigned char uuid_t[16];
  * @return true if the uuids are the same, false otherwise
  */
 bool uuid_compare(const uuid_t uu1, const uuid_t uu2);
+/**
+ * @brief Transform a string to a uuid
+ * @param uu the uuid to transform
+ * @return the string representation of the uuid
+ */
+char *uuid_to_string(const uuid_t uu);
+/**
+ * @brief Parse a string to a uuid
+ * @param str the string to transform
+ * @return the uuid parsed from the string
+ */
+uuid_t *uuid_from_string(const char *str);
