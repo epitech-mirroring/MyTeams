@@ -115,5 +115,5 @@ void roundtable_server_add_direct_message(roundtable_server_t *server,
  * @param message The message to add
  */
 void roundtable_direct_message_add_message(
-        roundtable_direct_message_t *direct_message,
-        roundtable_message_t *message);
+    roundtable_direct_message_t *direct_message,
+    roundtable_message_t *message);

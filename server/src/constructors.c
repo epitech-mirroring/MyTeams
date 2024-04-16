@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "server.h"
 
-roundtable_server_t *create_server()
+roundtable_server_t *create_server(void)
 {
     roundtable_server_t *server = calloc(1, sizeof(roundtable_server_t));
 

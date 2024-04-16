@@ -21,7 +21,6 @@ void roundtable_server_add_direct_message(roundtable_server_t *server,
     server->direct_messages = new_direct_messages;
     server->direct_messages[server->message_count] = *direct_message;
     server->message_count++;
-
 }
 
 void roundtable_direct_message_add_message(
