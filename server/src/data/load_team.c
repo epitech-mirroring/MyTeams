@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "server_data.h"
+#include "server.h"
 
 void deserialize_team(roundtable_server_t *server, json_object_t *team)
 {
