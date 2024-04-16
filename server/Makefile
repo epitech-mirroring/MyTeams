@@ -11,6 +11,12 @@ SOURCES			= 	src/main.c					\
 					src/constructors.c			\
 					src/destructors.c			\
 					src/destructors_suite.c		\
+					src/clients/composables.c   \
+					src/clients/utils.c			\
+					src/teams/utils.c			\
+					src/channels/utils.c		\
+					src/threads/utils.c			\
+					src/direct-messages/utils.c	\
 					src/data/load.c				\
 					src/data/load_team.c		\
 					src/data/load_messages.c	\
