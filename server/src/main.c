@@ -6,6 +6,8 @@
 ** You can even have multiple lines if you want !
 */
 
+#include <unistd.h>
+#include <sys/unistd.h>
 #include "server.h"
 #include "server_data.h"
 
@@ -17,7 +19,8 @@ int main(int ac, char **av)
     (void) av;
     if (!server)
         return 84;
-    load_data(server, "./data.json");
+    if (access("./data.json", F_OK) != -1)
+        load_data(server, "./data.json");
     destroy_server(server);
     return 0;
 }
