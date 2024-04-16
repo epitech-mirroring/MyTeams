@@ -9,7 +9,7 @@
 # All the source files
 SOURCES			= 	src/uuid.c					\
 
-TESTS			=
+TESTS			=	../../tests/uuid/test_uuid.c
 
 # Compiler and linker settings
 NAME 			=   libuuid.a
