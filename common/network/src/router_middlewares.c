@@ -36,7 +36,8 @@ ssize_t router_find_middleware(network_router_t *router, route_t route)
     for (ssize_t i = 0; i < (ssize_t) router->middlewares_count; i++) {
         middlewares_tmp = &router->middlewares[i];
         if (strcmp(middlewares_tmp->route->path, route.path) == 0 &&
-            middlewares_tmp->route->method == route.method) {
+            (middlewares_tmp->route->method == ANY ||
+            middlewares_tmp->route->method == route.method)) {
             return i;
         }
     }

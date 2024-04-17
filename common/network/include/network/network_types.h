@@ -25,6 +25,7 @@ typedef enum request_method_e {
     POST = 0x0002,
     DELETE = 0x0003,
     PUT = 0x0004,
+    ANY = 0x1000
 } request_method_t;
 
 typedef struct route_s {
