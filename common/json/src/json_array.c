@@ -9,7 +9,6 @@
 #include "json/json_array.h"
 #include "json/json.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 json_array_t *json_array_create(const char *key)
@@ -30,7 +29,6 @@ void json_array_add(json_array_t *json, json_t *obj)
 
     values = realloc(json->values, sizeof(json_t) * (json->size + 2));
     if (values == NULL) {
-        fprintf(stderr, "Failed to reallocate json array\n");
         return;
     }
     json->values = values;
@@ -42,7 +40,6 @@ void json_array_add(json_array_t *json, json_t *obj)
 json_t *json_array_get(json_array_t *json, size_t index)
 {
     if (index >= json->size) {
-        fprintf(stderr, "Index out of bounds\n");
         return NULL;
     }
     return json->values[index];

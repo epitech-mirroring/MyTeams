@@ -9,7 +9,6 @@
 #include "json/json_object.h"
 #include "json/json.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 json_object_t *json_object_create(const char *key)
@@ -32,7 +31,6 @@ void json_object_add(json_object_t *json, json_t *obj)
         i++;
     values = realloc(json->values, sizeof(json_t) * (i + 2));
     if (values == NULL) {
-        fprintf(stderr, "Failed to reallocate json object\n");
         return;
     }
     json->values = values;
@@ -49,7 +47,6 @@ json_t *json_object_get(json_object_t *json, char *key)
             return json->values[i];
         i++;
     }
-    fprintf(stderr, "Failed to find key %s in json object\n", key);
     return NULL;
 }
 
