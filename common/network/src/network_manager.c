@@ -20,12 +20,12 @@ void network_manager_handle_waiting_sockets(network_manager_t *manager)
         return;
     network_manager_reset_fds(manager);
     select(manager->max_fd + 1, &manager->read_fds, &manager->write_fds,
-           NULL, &timeout);
+    NULL, &timeout);
     call_set_sockets(manager, &called, &to_remove_count);
     for (size_t i = 0; i < to_remove_count; i++) {
         called[i]->consumer(called[i]->socket, called[i]->data);
         network_manager_remove_waiting_socket(manager, called[i]->socket,
-                                              called[i]->mode);
+            called[i]->mode);
     }
     free(called);
 }
