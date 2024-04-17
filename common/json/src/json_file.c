@@ -19,7 +19,6 @@ json_t *json_load_from_file(const char *path)
     char *content = my_readfile(path, &size);
 
     if (content == NULL) {
-        fprintf(stderr, "Failed to read file %s\n", path);
         return NULL;
     }
     json = json_parse(content);
@@ -33,12 +32,10 @@ void json_save_to_file(json_t *json, const char *path)
     FILE *file = NULL;
 
     if (content == NULL) {
-        fprintf(stderr, "Failed to convert json to string\n");
         return;
     }
     file = fopen(path, "w");
     if (file == NULL) {
-        fprintf(stderr, "Failed to open file %s\n", path);
         free(content);
         return;
     }

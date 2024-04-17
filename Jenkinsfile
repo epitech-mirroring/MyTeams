@@ -22,7 +22,7 @@ pipeline {
                 script {
                     def report = readFile 'coding-style-reports.log'
                     def errors = report.readLines()
-                    def ignoredFiles = ['./include/myteams/logging_client.h', './include/myteams/logging_server.h', './libs/myteams/libmyteams.so']
+                    def ignoredFiles = ['./libs/myteams/logging_client.h', './libs/myteams/logging_server.h', './libs/myteams/libmyteams.so']
                     def errorCountToIgnore = 0
 
                     for (error in errors) {
