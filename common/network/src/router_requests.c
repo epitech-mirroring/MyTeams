@@ -21,7 +21,8 @@ void apply_middlewares(const network_router_t *router, request_t **request)
         tmp = &router->middlewares[j];
         if (strncmp(tmp->route->path, req_route.path,
             strlen(tmp->route->path)) == 0
-            && tmp->route->method == req_route.method)
+            && (tmp->route->method == req_route.method || tmp->route->method
+            == ANY))
             (*request) = tmp->handler((*request), tmp->data);
     }
 }

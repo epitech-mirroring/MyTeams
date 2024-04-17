@@ -10,23 +10,23 @@
 #include <sys/unistd.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <stdio.h>
 #include "server.h"
 #include "server_data.h"
 #include "routes.h"
 
 void bind_middlewares(roundtable_server_t *server)
 {
-    route_t global_route = (route_t) {
-        .method = ANY,
-        .path = "/"
-    };
+    route_t *global_route = calloc(1, sizeof(route_t));
     middlewares_t global_middleware_ = (middlewares_t) {
-        .route = &global_route,
+        .route = global_route,
         .handler = global_middleware,
         .data = server
     };
 
+    *global_route = (route_t) {
+        .method = ANY,
+        .path = "/*"
+    };
     network_router_add_middleware(server->router, global_middleware_);
 }
 
