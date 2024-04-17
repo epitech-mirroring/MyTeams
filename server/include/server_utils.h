@@ -8,8 +8,10 @@
 
 #pragma once
 #include "network/router.h"
+#include "json/json.h"
 
 // -------------------------- NETWORK --------------------------------
 response_t *create_error(int status_code,
     const char *name, const char *message);
 response_t *create_success(int status_code);
+void destroy(char *str, json_t *req_body, json_t *res_body);
