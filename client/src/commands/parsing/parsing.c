@@ -16,7 +16,7 @@ static void skip_spaces(char *cmd, int *index)
 static char *argument_part(char *cmd, int *index)
 {
     char *argument = NULL;
-    int i = 0;
+    size_t i = 0;
 
     if (cmd[*index] != '"') {
         printf("Error: argument must be between double quotes\n");
@@ -30,7 +30,6 @@ static char *argument_part(char *cmd, int *index)
     }
     argument = strndup(&cmd[*index], i - *index);
     if (argument == NULL) {
-        perror("strndup");
         return NULL;
     }
     *index = i + 1;
@@ -40,12 +39,11 @@ static char *argument_part(char *cmd, int *index)
 static char *command_part(char *cmd, int *index)
 {
     char *command = NULL;
-    int i = 0;
+    size_t i = 0;
 
     for (i = *index; cmd[i] != '\0' && cmd[i] != '\n' && cmd[i] != ' '; i++);
     command = strndup(&cmd[*index], i - *index);
     if (command == NULL) {
-        perror("strndup");
         return NULL;
     }
     *index = i;
@@ -72,7 +70,7 @@ static bool parse_loop(char *cmd, int *index, char **parsed_cmd, int i)
 
 char **parse_command_2(char *cmd, int *index, char **parsed_cmd)
 {
-    for (int i = 1; i < MAX_NUM_ARGS; i++) {
+    for (size_t i = 1; i < MAX_NUM_ARGS; i++) {
         if (!parse_loop(cmd, index, parsed_cmd, i))
             return NULL;
     }
@@ -88,7 +86,7 @@ char **parse_command_2(char *cmd, int *index, char **parsed_cmd)
 char **parse_command(char *cmd)
 {
     char **parsed_cmd = calloc(MAX_NUM_ARGS + 1, sizeof(char *));
-    int index = 0;
+    size_t index = 0;
 
     if (parsed_cmd == NULL || cmd == NULL) {
         return NULL;

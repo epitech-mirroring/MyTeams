@@ -18,7 +18,6 @@ static client_t *init_struct(api_handler_t *api_handler)
     client_t *client = malloc(sizeof(client_t));
 
     if (client == NULL) {
-        perror("malloc");
         exit(84);
     }
     client->is_logged = false;
@@ -26,7 +25,6 @@ static client_t *init_struct(api_handler_t *api_handler)
     client->user_uuid = NULL;
     client->context = malloc(sizeof(context_t));
     if (client->context == NULL) {
-        perror("malloc");
         exit(84);
     }
     client->context->team_uuid = NULL;
@@ -81,13 +79,11 @@ void shell(client_t *client, fd_set readfds, char *buffer, bool *running)
     reset_fd_set(&readfds, 0);
     select_ret = select(1, &readfds, NULL, NULL, NULL);
     if (select_ret == -1) {
-        perror("select");
         exit(84);
     }
     if (select_ret > 0 && FD_ISSET(0, &readfds)) {
         read_bytes(0, buffer, running, client);
     } else if (select_ret == -1) {
-        perror("select");
         exit(84);
     }
 }
