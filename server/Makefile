@@ -31,6 +31,7 @@ SOURCES			= 	src/main.c					\
 					src/middlewares/global.c	\
 					src/routes/login.c			\
 					src/routes/logout.c			\
+					src/routes/user.c			\
 
 TESTS			=
 

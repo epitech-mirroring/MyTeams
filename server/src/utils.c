@@ -40,3 +40,10 @@ response_t *create_success(int status_code)
     response->header.content_length = 0;
     return response;
 }
+
+void destroy(char *str, json_t *req_body, json_t *res_body)
+{
+    free(str);
+    json_destroy(req_body);
+    json_destroy(res_body);
+}

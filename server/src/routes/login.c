@@ -30,13 +30,6 @@ static roundtable_client_t *get_or_create_client(
     return client;
 }
 
-static void destroy(char *str, json_t *req_body, json_t *res_body)
-{
-    free(str);
-    json_destroy(req_body);
-    json_destroy(res_body);
-}
-
 response_t *login_route(request_t *request)
 {
     response_t *response = calloc(1, sizeof(response_t));
