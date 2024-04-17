@@ -29,3 +29,12 @@ response_t *create_error(int status_code,
     json_destroy((json_t *) body);
     return response;
 }
+
+response_t *create_success(int status_code)
+{
+    response_t *response = calloc(1, sizeof(response_t));
+
+    response->header.status_code = status_code;
+    response->header.content_length = 0;
+    return response;
+}
