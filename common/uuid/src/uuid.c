@@ -50,3 +50,15 @@ uuid_t *uuid_from_string(const char *str)
     }
     return uu;
 }
+
+uuid_t *uuid_generate(void)
+{
+    uuid_t *uu = malloc(16);
+
+    srand(time(NULL));
+    if (!uu)
+        return NULL;
+    for (int i = 0; i < 16; i++)
+        (*uu)[i] = rand() % 256;
+    return uu;
+}

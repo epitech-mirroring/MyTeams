@@ -30,3 +30,8 @@ char *uuid_to_string(const uuid_t uu);
  * @return the uuid parsed from the string
  */
 uuid_t *uuid_from_string(const char *str);
+/**
+ * @brief Generate a new uuid
+ * @return the generated uuid
+ */
+uuid_t *uuid_generate(void);

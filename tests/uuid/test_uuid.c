@@ -88,3 +88,12 @@ Test(uuid, save_and_load)
     loaded = uuid_from_string(str);
     cr_assert_eq(uuid_compare(uu, loaded), true);
 }
+
+Test(uuid, generate)
+{
+    uuid_t *uu = uuid_generate();
+
+    cr_assert_not_null(uu);
+    cr_assert_not_null(uuid_to_string(*uu));
+    free(uu);
+}
