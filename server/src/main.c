@@ -43,7 +43,7 @@ void bind_routes(roundtable_server_t *server)
 static roundtable_server_t *get_server(bool write, void *data)
 {
     static roundtable_server_t *server = NULL;
-    
+
     if (write)
         server = (roundtable_server_t *) data;
     return server;

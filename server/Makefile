@@ -37,8 +37,9 @@ TESTS			=
 NAME 			=   myteams_server
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../libs \
-					-L../libs/myteams -lnetwork -ljson -I../include -lmy \
-					-luuid $(shell [ `uname` != "Darwin" ] && echo "-lmyteams")
+					-I../libs/myteams -L../libs/myteams -lnetwork \
+					-ljson -I../include -lmy -luuid \
+					$(shell [ `uname` == "Linux" ] && echo "-lmyteams")
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
