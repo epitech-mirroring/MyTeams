@@ -7,23 +7,25 @@
 */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "network/network_manager.h"
 
 void network_manager_handle_waiting_sockets(network_manager_t *manager)
 {
     waiting_socket_t **called = calloc(1, sizeof(waiting_socket_t *));
     size_t to_remove_count = 0;
+    struct timeval timeout = {0, 25000};
 
     if (called == NULL)
         return;
     network_manager_reset_fds(manager);
     select(manager->max_fd + 1, &manager->read_fds, &manager->write_fds,
-        NULL, NULL);
+           NULL, &timeout);
     call_set_sockets(manager, &called, &to_remove_count);
     for (size_t i = 0; i < to_remove_count; i++) {
         called[i]->consumer(called[i]->socket, called[i]->data);
         network_manager_remove_waiting_socket(manager, called[i]->socket,
-            called[i]->mode);
+                                              called[i]->mode);
     }
     free(called);
 }
