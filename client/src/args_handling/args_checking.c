@@ -12,7 +12,7 @@ static bool is_valid_ip(char *ip)
     int dots = 0;
     int digits = 0;
 
-    for (int i = 0; ip[i]; i++) {
+    for (size_t i = 0; ip[i]; i++) {
         if (ip[i] == '.' && digits > 0) {
             dots++;
             digits = 0;

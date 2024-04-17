@@ -9,8 +9,9 @@
 
 int tab_len(char **tab)
 {
-    int i = 0;
+    size_t i = 0;
 
-    for (; tab[i] != NULL; i++);
+    while (tab[i] != NULL)
+        i++;
     return i;
 }

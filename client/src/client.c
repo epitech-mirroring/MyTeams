@@ -116,7 +116,6 @@ int client(int ac, char **av)
     api_handler_t *api_handler = NULL;
 
     if (host == NULL) {
-        perror("malloc");
         return 84;
     }
     if (is_valid_args(ac, av) == 84) {

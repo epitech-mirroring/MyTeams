@@ -9,7 +9,8 @@
 
 static void skip_spaces(char *cmd, int *index)
 {
-    for (; cmd[*index] != '\0' && cmd[*index] == ' '; (*index)++);
+    while (cmd[*index] != '\0' && cmd[*index] == ' ')
+        (*index)++;
 }
 
 static char *argument_part(char *cmd, int *index)
