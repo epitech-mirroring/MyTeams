@@ -24,7 +24,9 @@ void login_resp(response_t *response, void *client)
         if (str == NULL)
             return;
         cli->user_uuid = strdup(str->value);
+#ifndef __APPLE__
         client_event_logged_in(cli->user_uuid, cli->user_name);
+#endif
     }
     // else {
     //     str = (json_string_t *)json_object_get(jobj, "error");
