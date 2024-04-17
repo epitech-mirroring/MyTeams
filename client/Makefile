@@ -12,6 +12,7 @@ SOURCES			= 	src/main.c											\
 					src/args_handling/args_checking.c					\
 					src/commands/on_command.c 							\
 					src/commands/help.c 								\
+					src/commands/login.c 								\
 					src/commands/parsing/parsing.c 						\
 					src/utils/utils.c 									\
 
