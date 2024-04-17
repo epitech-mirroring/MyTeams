@@ -78,14 +78,13 @@ static void help_no_args(void)
 static void compare_help(char **parsed_cmd)
 {
     if (strcmp(parsed_cmd[1], "create") == 0)
-        help_create();
+        return help_create();
     if (strcmp(parsed_cmd[1], "list") == 0)
-        help_list();
+        return help_list();
     if (strcmp(parsed_cmd[1], "info") == 0)
-        help_info();
-    else
-        printf("The command %s either does not exist "
-            "or does not have a help page\n", parsed_cmd[1]);
+        return help_info();
+    printf("The command %s either does not exist "
+        "or does not have a help page\n", parsed_cmd[1]);
 }
 
 void help(char **parsed_cmd)

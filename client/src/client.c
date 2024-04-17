@@ -21,6 +21,7 @@ static client_t *init_struct(api_handler_t *api_handler)
         exit(84);
     }
     client->is_logged = false;
+    client->waiting_for_response = false;
     client->user_name = NULL;
     client->user_uuid = NULL;
     client->context = malloc(sizeof(context_t));
@@ -47,13 +48,11 @@ static bool read_loop(int fd, char *cmd, bool *running, client_t *client)
         *running = false;
         return false;
     }
-    if (status != -1 && status != 0) {
-        strncat(cmd, buf, 1);
-        if (buf[0] == '\n') {
-            on_command(cmd, client);
-            memset(cmd, 0, 1024);
-            return false;
-        }
+    strncat(cmd, buf, 1);
+    if (buf[0] == '\n') {
+        on_command(cmd, client);
+        memset(cmd, 0, 1024);
+        return false;
     }
     return true;
 }
@@ -63,7 +62,7 @@ static void read_bytes(int fd, char *buffer, bool *running, client_t *client)
     char cmd[1024] = {0};
 
     strcpy(cmd, buffer);
-    while (running) {
+    while (*running) {
         if (!read_loop(fd, cmd, running, client))
             break;
     }
