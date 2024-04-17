@@ -25,7 +25,7 @@ void bind_middlewares(roundtable_server_t *server)
 
     *global_route = (route_t) {
         .method = ANY,
-        .path = "/*"
+        .path = "/"
     };
     network_router_add_middleware(server->router, global_middleware_);
 }
