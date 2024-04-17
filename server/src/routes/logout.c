@@ -7,7 +7,6 @@
 */
 
 #include "server.h"
-#include "network/router.h"
 #include "json/json.h"
 #include "server_utils.h"
 
