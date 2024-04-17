@@ -23,8 +23,7 @@ NAME 			=   myteams_cli
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include \
 					-L../libs/myteams/ -L../libs/  -lnetwork -ljson \
-					-I../include -I../libs/myteams \
-					$(shell [ `uname` != "Darwin" ] && echo "-lmyteams")
+					-I../include -I../libs/myteams -lmyteams
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
