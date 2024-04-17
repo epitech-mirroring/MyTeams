@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 bool uuid_compare(const uuid_t uu1, const uuid_t uu2)
 {
