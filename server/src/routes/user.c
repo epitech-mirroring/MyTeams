@@ -43,7 +43,7 @@ static response_t *create_user_response(json_object_t *req_body,
     response->header.content_length = strlen(response_body_str);
     response->body = strdup(response_body_str);
     destroy(response_body_str, (json_t *) req_body, (json_t *) rep_body);
-    return response
+    return response;
 }
 
 static roundtable_client_t *get_client(roundtable_server_t *server,
