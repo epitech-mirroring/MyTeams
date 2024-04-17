@@ -34,13 +34,14 @@ static response_t *create_user_response(json_object_t *req_body,
     char *response_body_str = NULL;
 
     json_object_add(rep_body, (json_t *) json_string_create("uuid",
-        client->username));
+    uuid_to_string(client->uuid)));
     json_object_add(rep_body, (json_t *) json_string_create("name",
-        client->status == ONLINE ? "online" : "offline"));
+    client->username));
     json_object_add(rep_body, (json_t *) json_string_create("status",
-        client->status == ONLINE ? "online" : "offline"));
+    client->status == ONLINE ? "online" : "offline"));
     response_body_str = json_serialize((json_t *) rep_body);
     response->header.content_length = strlen(response_body_str);
+    response->header.status_code = 200;
     response->body = strdup(response_body_str);
     destroy(response_body_str, (json_t *) req_body, (json_t *) rep_body);
     return response;
