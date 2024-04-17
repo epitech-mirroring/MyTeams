@@ -6,9 +6,9 @@
 ** You can even have multiple lines if you want !
 */
 
+#include "myclient.h"
+
 int main(int ac, char **av)
 {
-    (void)ac;
-    (void)av;
-    return 0;
+    return client(ac, av);
 }
