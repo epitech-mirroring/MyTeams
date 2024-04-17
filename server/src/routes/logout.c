@@ -18,11 +18,15 @@ response_t *logout_route(request_t *request)
     roundtable_client_t *client = NULL;
 
     if (!json || !json_object_get(json, "user_uuid"))
-        return create_error(400, "Bad Request", "Invalid JSON body");
-    user_uuid = ((json_string_t *) json_object_get(json, "user_uuid"))->value;
-    client = roundtable_server_get_client_by_uuid(server, *uuid_from_string(user_uuid));
+        return create_error(400, "Bad Request",
+    "Invalid JSON body");
+    user_uuid = ((json_string_t *) json_object_get(json,
+    "user_uuid"))->value;
+    client = roundtable_server_get_client_by_uuid(server,
+    *uuid_from_string(user_uuid));
     if (!client)
-        return create_error(404, "Not Found", "User not found");
+        return create_error(404, "Not Found",
+    "User not found");
     client->status = OFFLINE;
     return create_success(200);
 }

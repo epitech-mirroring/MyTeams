@@ -15,8 +15,10 @@ response_t *create_error(int status_code,
 {
     response_t *response = calloc(1, sizeof(response_t));
     json_object_t *body = json_object_create(NULL);
-    json_string_t *name_json = json_string_create("error_name", name);
-    json_string_t *message_json = json_string_create("error_message", message);
+    json_string_t *name_json = json_string_create("error_name",
+    name);
+    json_string_t *message_json = json_string_create("error_message",
+    message);
     char *body_str = NULL;
 
     json_object_add(body, (json_t *) name_json);
