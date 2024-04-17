@@ -29,7 +29,7 @@ void deserialize_client(roundtable_server_t *server, json_object_t *client)
         return;
     uuid = (json_string_t *) json_object_get(client, "uuid");
     username = (json_string_t *) json_object_get(client, "username");
-    COPY_UUID(new_client->uuid, uuid->value);
+    COPY_UUID(new_client->uuid, uuid_from_string(uuid->value));
     new_client->username = strdup(username->value);
     new_client->status = OFFLINE;
     roundtable_server_add_client(server, new_client);
@@ -51,7 +51,7 @@ void deserialize_subscribers(roundtable_server_t *server,
 
     for (size_t i = 0; i < subscribers->size; i++) {
         uuid = (json_string_t *) json_array_get(subscribers, i);
-        COPY_UUID(uuid_struct, uuid->value);
+        COPY_UUID(uuid_struct, uuid_from_string(uuid->value));
         client = roundtable_server_get_client_by_uuid(server, uuid_struct);
         if (client != NULL)
             roundtable_team_add_subscriber(team, client);

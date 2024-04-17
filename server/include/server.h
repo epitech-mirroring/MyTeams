@@ -12,9 +12,10 @@
 // --------------------------- SERVER CONSTRUCTORS -------------------------
 /**
  * @brief Create an empty server
+ * @param port the port to listen on
  * @return the newly created server or NULL if an error occurred
  */
-roundtable_server_t *create_server(void);
+roundtable_server_t *create_server(int port);
 // --------------------------- SERVER DESTRUCTORS --------------------------
 /**
  * @brief Destroy a server (including all clients, teams, channels,
@@ -57,12 +58,22 @@ void destroy_thread(roundtable_thread_t thread);
 roundtable_client_t *roundtable_server_get_client_by_uuid(
     roundtable_server_t *server, uuid_t uuid);
 /**
+ * @brief Get a client by its username
+ * @param server The server to search in
+ * @param username The username of the client to find
+ * @return The client if found, NULL otherwise
+ */
+roundtable_client_t *roundtable_server_get_client_by_username(
+    roundtable_server_t *server, const char *username);
+/**
  * @brief Add a client to the server
  * @param server The server to add the client to
  * @param client The client to add
  */
 void roundtable_server_add_client(roundtable_server_t *server,
     roundtable_client_t *client);
+roundtable_client_t *roundtable_server_create_client(
+    roundtable_server_t *server, const char *username);
 // --------------------------- SERVER TEAMS --------------------------------
 /**
  * @brief Add a team to the server

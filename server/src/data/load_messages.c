@@ -22,7 +22,7 @@ void deserialize_message(json_object_t *message, roundtable_thread_t *thread)
         return;
     sender_uuid = (json_string_t *) json_object_get(message, "sender_uuid");
     content = (json_string_t *) json_object_get(message, "content");
-    COPY_UUID(new_message->sender_uuid, sender_uuid->value);
+    COPY_UUID(new_message->sender_uuid, uuid_from_string(sender_uuid->value));
     new_message->content = strdup(content->value);
     roundtable_thread_add_message(thread, new_message);
 }
@@ -50,8 +50,8 @@ void deserialize_direct_message(roundtable_server_t *server,
     sender_uuid = (json_string_t *) json_object_get(message, "sender_uuid");
     rec_uuid = (json_string_t *) json_object_get(message, "receiver_uuid");
     messages = (json_array_t *) json_object_get(message, "messages");
-    COPY_UUID(new_message->sender_uuid, sender_uuid->value);
-    COPY_UUID(new_message->receiver_uuid, rec_uuid->value);
+    COPY_UUID(new_message->sender_uuid, uuid_from_string(sender_uuid->value));
+    COPY_UUID(new_message->receiver_uuid, uuid_from_string(rec_uuid->value));
     deserialize_direct_message_messages(messages, new_message);
     roundtable_server_add_direct_message(server, new_message);
 }
@@ -77,7 +77,7 @@ void deserialize_direct_message_message(json_object_t *message,
         return;
     sender_uuid = (json_string_t *) json_object_get(message, "sender_uuid");
     content = (json_string_t *) json_object_get(message, "content");
-    COPY_UUID(new_message->sender_uuid, sender_uuid->value);
+    COPY_UUID(new_message->sender_uuid, uuid_from_string(sender_uuid->value));
     new_message->content = strdup(content->value);
     roundtable_direct_message_add_message(direct_message, new_message);
 }

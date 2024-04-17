@@ -27,6 +27,9 @@ SOURCES			= 	src/main.c					\
 					src/data/save_channels.c	\
 					src/data/save_threads.c		\
 					src/data/save_messages.c	\
+					src/utils.c					\
+					src/middlewares/global.c	\
+					src/routes/login.c			\
 
 TESTS			=
 

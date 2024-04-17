@@ -58,5 +58,6 @@ void destroy_server(roundtable_server_t *server)
     destroy_clients(server->clients, server->client_count);
     destroy_teams(server->teams, server->team_count);
     destroy_direct_messages(server->direct_messages, server->message_count);
+    network_router_destroy(server->router);
     free(server);
 }

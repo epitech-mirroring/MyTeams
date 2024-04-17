@@ -9,17 +9,21 @@
 #include <stdlib.h>
 #include "server.h"
 
-roundtable_server_t *create_server(void)
+roundtable_server_t *create_server(int port)
 {
     roundtable_server_t *server = calloc(1, sizeof(roundtable_server_t));
+    host_t *host = calloc(1, sizeof(host_t));
 
-    if (!server)
+    if (!server || !host)
         return server;
+    *host = (host_t){.ip = "127.0.0.1", .port = port};
     server->clients = NULL;
     server->teams = NULL;
     server->direct_messages = NULL;
     server->client_count = 0;
     server->message_count = 0;
     server->team_count = 0;
+    server->router = network_router_create(*host);
+    free(host);
     return server;
 }

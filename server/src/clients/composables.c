@@ -6,6 +6,8 @@
 ** You can even have multiple lines if you want !
 */
 
+#include <stdlib.h>
+#include <uuid/uuid.h>
 #include "server.h"
 
 roundtable_client_t *roundtable_server_get_client_by_uuid(
@@ -16,4 +18,28 @@ roundtable_client_t *roundtable_server_get_client_by_uuid(
             return &server->clients[i];
     }
     return NULL;
+}
+
+roundtable_client_t *roundtable_server_get_client_by_username(
+    roundtable_server_t *server, const char *username)
+{
+    for (size_t i = 0; i < server->client_count; i++) {
+        if (strcmp(server->clients[i].username, username) == 0)
+            return &server->clients[i];
+    }
+    return NULL;
+}
+
+roundtable_client_t *roundtable_server_create_client(
+    roundtable_server_t *server, const char *username)
+{
+    roundtable_client_t *new_client = calloc(1, sizeof(roundtable_client_t));
+
+    if (new_client == NULL)
+        return NULL;
+    COPY_UUID(new_client->uuid, uuid_generate());
+    new_client->username = strdup(username);
+    new_client->status = OFFLINE;
+    roundtable_server_add_client(server, new_client);
+    return new_client;
 }
