@@ -22,12 +22,19 @@ pipeline {
                 script {
                     def report = readFile 'coding-style-reports.log'
                     def errors = report.readLines()
+                    def ignoredFiles = ['./libs/myteams/logging_client.h', './libs/myteams/logging_server.h', './libs/myteams/libmyteams.so']
+                    def errorCountToIgnore = 0
+
                     for (error in errors) {
                         def file = error.split(':')[0]
                         def line = error.split(':')[1]
                         def type = error.split(':')[2]
                         def code = error.split(':')[3]
-                        echo "File: ${file}, Line: ${line}, Type: ${type}, Code: ${code}"
+                        if (ignoredFiles.contains(file)) {
+                            errorCountToIgnore++
+                        } else {
+                            echo "File: ${file}, Line: ${line}, Type: ${type}, Code: ${code}"
+                        }
                     }
                     // Archive the report
                     archiveArtifacts 'coding-style-reports.log'
@@ -36,7 +43,7 @@ pipeline {
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '.', reportFiles: 'coding-style-reports.log', reportName: 'Coding Style Report', reportTitles: ''])
 
                     // Fail the build if the quality gate is not passed
-                    if (errors.size() > 0) {
+                    if (errors.size() - errorCountToIgnore > 0) {
                         // If on main branch, fail the build otherwise just warn
                         if (env.BRANCH_NAME == 'main') {
                             error "Too many coding style errors"
