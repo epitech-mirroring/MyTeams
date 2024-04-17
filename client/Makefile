@@ -21,7 +21,9 @@ TESTS			=
 # Compiler and linker settings
 NAME 			=   myteams_cli
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../libs/myteams/ -lmyteams -L../libs/  -lnetwork -ljson -I../include -I ../libs/myteams
+FLAGS			= 	-W -Wall -Wextra --coverage -I./include \
+	-L../libs/myteams/ -lmyteams -L../libs/  -lnetwork -ljson \
+	-I../include -I ../libs/myteams
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
