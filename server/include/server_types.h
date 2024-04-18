@@ -102,5 +102,5 @@ typedef struct roundtable_server_s {
     size_t client_count;
     roundtable_direct_message_t *direct_messages;
     size_t message_count;
-    network_router_t *router;
+    router_t *router;
 } roundtable_server_t;

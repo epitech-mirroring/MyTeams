@@ -26,4 +26,4 @@ request_t *global_middleware(request_t *request, void *data);
  * @return The response
  * @note see documentation/routes.md
  */
-response_t *login_route(request_t *request);
+response_t login_route(request_t *request, void *data);

@@ -28,7 +28,6 @@ SOURCES			= 	src/main.c					\
 					src/data/save_threads.c		\
 					src/data/save_messages.c	\
 					src/utils.c					\
-					src/middlewares/global.c	\
 					src/routes/login.c			\
 					src/routes/logout.c			\
 					src/routes/user.c			\
@@ -38,9 +37,9 @@ TESTS			=
 # Compiler and linker settings
 NAME 			=   myteams_server
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../libs \
+FLAGS			= 	-W -Wall -Wextra --coverage -L../libs \
 					-I../libs/myteams -L../libs/myteams -lnetwork \
-					-ljson -I../include -lmy -luuid \
+					-ljson -I../include -lmy -luuid  -I./include \
 					$(shell [ `uname` == "Linux" ] && echo "-lmyteams")
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)

@@ -16,28 +16,11 @@
 
 void bind_middlewares(roundtable_server_t *server)
 {
-    route_t *global_route = calloc(1, sizeof(route_t));
-    middlewares_t global_middleware_ = (middlewares_t) {
-        .route = global_route,
-        .handler = global_middleware,
-        .data = server
-    };
-
-    *global_route = (route_t) {
-        .method = ANY,
-        .path = "/"
-    };
-    network_router_add_middleware(server->router, global_middleware_);
 }
 
 void bind_routes(roundtable_server_t *server)
 {
-    route_t login_route_ = (route_t) {
-        .method = POST,
-        .path = "/login"
-    };
-
-    network_router_add_route(server->router, login_route_, login_route);
+    router_add_route(server->router, "/login", login_route, server);
 }
 
 static roundtable_server_t *get_server(bool write, void *data)
@@ -53,7 +36,8 @@ static void stop(int sig)
 {
     roundtable_server_t *server = get_server(false, NULL);
 
-    server->router->is_listening = false;
+    if (server)
+        server->router->ws_manager->running = false;
 }
 
 int main(int ac, char **av)
@@ -71,7 +55,7 @@ int main(int ac, char **av)
     bind_routes(server);
     get_server(true, server);
     sigaction(SIGINT, &(struct sigaction){.sa_handler = &stop}, NULL);
-    network_router_listen(server->router);
+    router_start(server->router);
     save_data(server, "./data.json");
     destroy_server(server);
     return 0;
