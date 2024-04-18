@@ -134,7 +134,8 @@ char *serialize_request(request_t req)
 
     if (serialized == NULL)
         return NULL;
-    sprintf(serialized, "%s %s HTTP/1.1\r\n", req.route.method, req.route.path);
+    sprintf(serialized, "%s %s HTTP/1.1\r\n",
+            req.route.method, req.route.path);
     for (size_t i = 0; i < req.headers_count; i++) {
         sprintf(serialized + strlen(serialized), "%s: %s\r\n",
             req.headers[i].key, req.headers[i].value);

@@ -26,12 +26,12 @@ SOURCES			=	src/sockets/waiting_sockets.c	\
 					src/dto/request_getters.c		\
 					src/dto/response.c				\
 					src/dto/response_utils.c		\
-					src/test_main.c
+					src/client/client.c				\
 
 TESTS			=
 
 # Compiler and linker settings
-NAME 			=   server
+NAME 			=   libnetwork.so
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
 					-I../../include -ljson
@@ -60,8 +60,7 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 # Link the object files
 		@printf "$(RUNNING) $(BLUE) 🔗  Linking$(RESET)"
-#@ar rc $(NAME) $(OBJS) >> $(LOG) 2>&1
-		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) >> $(LOG) 2>&1 \
+		@ar rc $(NAME) $(OBJS) >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 # Check if the binary was created
 		@if [ -f $(NAME) ]; then \
