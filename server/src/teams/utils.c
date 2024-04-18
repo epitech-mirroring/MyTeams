@@ -50,3 +50,28 @@ void roundtable_team_add_subscriber(roundtable_team_t *team,
     COPY_UUID(team->subscribers[team->subscriber_count], subscriber->uuid);
     team->subscriber_count++;
 }
+
+void roundtable_team_remove_subscriber(roundtable_team_t *team,
+    roundtable_client_t *subscriber)
+{
+    size_t index = 0;
+    bool found = false;
+    uuid_t *subscribers_copy = NULL;
+
+    for (size_t i = 0; i < team->subscriber_count; i++)
+        if (uuid_compare(team->subscribers[i], subscriber->uuid) == 0) {
+            index = i;
+            found = true;
+            break;
+        }
+    if (!found)
+        return;
+    for (size_t i = index; i < team->subscriber_count - 1; i++)
+        COPY_UUID(team->subscribers[i], team->subscribers[i + 1]);
+    team->subscriber_count--;
+    subscribers_copy = realloc(team->subscribers,
+        sizeof(uuid_t) * team->subscriber_count);
+    if (subscribers_copy == NULL)
+        return;
+    team->subscribers = subscribers_copy;
+}

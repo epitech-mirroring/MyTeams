@@ -131,6 +131,13 @@ bool roundtable_team_has_subscriber(roundtable_team_t *team,
  */
 roundtable_team_t *get_team_from_json(roundtable_server_t *server,
     json_object_t *body, char *key);
+/**
+ * @brief Remove a subscriber from a team
+ * @param team The team to remove the subscriber from
+ * @param subscriber The subscriber to remove
+ */
+void roundtable_team_remove_subscriber(roundtable_team_t *team,
+    roundtable_client_t *subscriber);
 // --------------------------- SERVER CHANNELS -----------------------------
 /**
  * @brief Add a thread to a channel
