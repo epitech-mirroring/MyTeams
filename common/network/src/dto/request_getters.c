@@ -26,3 +26,12 @@ char *request_get_header(request_t *req, char *key)
     }
     return NULL;
 }
+
+char *request_get_param(request_t *req, char *key)
+{
+    for (size_t i = 0; i < req->params_count; i++) {
+        if (strcmp(req->params[i].key, key) == 0)
+            return req->params[i].value;
+    }
+    return NULL;
+}
