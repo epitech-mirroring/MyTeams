@@ -14,7 +14,7 @@
 
 bool uuid_compare(const uuid_t uu1, const uuid_t uu2)
 {
-    for (int i = 0; i < 16; i++)
+    for (size_t i = 0; i < 16; i++)
         if (uu1[i] != uu2[i])
             return false;
     return true;
@@ -26,7 +26,7 @@ char *uuid_to_string(const uuid_t uu)
 
     if (!str)
         return NULL;
-    for (int i = 0; i < 16; i++) {
+    for (size_t i = 0; i < 16; i++) {
         sprintf(&str[i * 2], "%02x", uu[i]);
     }
     str[36] = '\0';
@@ -42,7 +42,7 @@ uuid_t *uuid_from_string(const char *str)
         free(uu);
         return NULL;
     }
-    for (int i = 0; i < 16; i++) {
+    for (size_t i = 0; i < 16; i++) {
         if (sscanf(&str[i * 2], "%2hhx", &byte) != 1) {
             free(uu);
             return NULL;
@@ -59,7 +59,7 @@ uuid_t *uuid_generate(void)
     srand(time(NULL));
     if (!uu)
         return NULL;
-    for (int i = 0; i < 16; i++)
+    for (size_t i = 0; i < 16; i++)
         (*uu)[i] = rand() % 256;
     return uu;
 }

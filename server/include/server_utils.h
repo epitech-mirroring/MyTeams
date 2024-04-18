@@ -11,7 +11,14 @@
 #include "json/json.h"
 
 // -------------------------- NETWORK --------------------------------
-response_t create_error(int status_code, const char *status_message,
+typedef struct status_message_s {
+    int status_code;
+    const char *message;
+} status_message_t;
+
+extern const status_message_t status_messages[];
+response_t create_error(int status_code,
     const char *name, const char *message);
-response_t create_success(int status_code, const char *status_message);
+response_t create_success(int status_code, const char *body);
 void destroy(char *str, json_t *req_body, json_t *res_body);
+const char *get_status_message(int status_code);
