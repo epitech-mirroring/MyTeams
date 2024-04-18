@@ -6,6 +6,7 @@
 */
 
 #include "myclient.h"
+#include "network/manager.h"
 
 static void reset_fd_set(fd_set *readfds, int fd)
 {
@@ -13,7 +14,7 @@ static void reset_fd_set(fd_set *readfds, int fd)
     FD_SET(fd, readfds);
 }
 
-static client_t *init_struct(api_handler_t *api_handler)
+static client_t *init_struct(api_client_t *api_handler)
 {
     client_t *client = malloc(sizeof(client_t));
 
@@ -97,9 +98,7 @@ int main_loop(client_t *client)
         if (client->waiting_for_response == false) {
             shell(client, readfds, buffer, &running);
         }
-        if (client->api_handler->running)
-            network_manager_handle_waiting_sockets(
-                client->api_handler->manager);
+        ws_manager_run_once(client->api_handler->ws_manager);
     }
     return 0;
 }
@@ -107,19 +106,13 @@ int main_loop(client_t *client)
 int client(int ac, char **av)
 {
     client_t *client = NULL;
-    host_t *host = malloc(sizeof(host_t));
-    api_handler_t *api_handler = NULL;
+    api_client_t *api_handler = NULL;
 
-    if (host == NULL) {
-        return 84;
-    }
     if (is_valid_args(ac, av) == 84) {
         print_help();
         return 84;
     }
-    host->ip = strdup(av[1]);
-    host->port = atoi(av[2]);
-    api_handler = network_create_api_handler(host);
+    api_handler = api_client_init(av[1], atoi(av[2]));
     if (api_handler == NULL) {
         return 84;
     }
