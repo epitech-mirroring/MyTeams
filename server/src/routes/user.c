@@ -12,15 +12,17 @@
 #include "network/dto.h"
 
 
-static roundtable_client_t *get_client(request_t *request, json_object_t *body, roundtable_server_t *srv)
+static roundtable_client_t *get_client(request_t *request,
+    json_object_t *body, roundtable_server_t *srv)
 {
     roundtable_client_t *client = NULL;
 
-     if (request_has_param(request, "uuid")) {
-         client = roundtable_server_get_client_by_uuid(srv, *uuid_from_string(request_get_param(request, "uuid")));
-     } else {
-         client = get_client_from_json(srv, body, "user_uuid");
-     }
+    if (request_has_param(request, "uuid")) {
+        client = roundtable_server_get_client_by_uuid(srv,
+        *uuid_from_string(request_get_param(request, "uuid")));
+    } else {
+        client = get_client_from_json(srv, body, "user_uuid");
+    }
     return client;
 }
 
@@ -30,13 +32,16 @@ static response_t make_response(roundtable_client_t *client)
     char *response_body_str = NULL;
     response_t rep = {0};
 
-    json_object_add(response_body, (json_t *)json_string_create("user_uuid", uuid_to_string(client->uuid)));
-    json_object_add(response_body, (json_t *)json_string_create("username", client->username));
-    json_object_add(response_body, (json_t *)json_string_create("status", client->status == ONLINE ? "ONLINE" : "OFFLINE"));
-    response_body_str = json_serialize((json_t *)response_body);
+    json_object_add(response_body, (json_t *) json_string_create("user_uuid",
+        uuid_to_string(client->uuid)));
+    json_object_add(response_body, (json_t *) json_string_create("username",
+        client->username));
+    json_object_add(response_body, (json_t *) json_string_create("status",
+        client->status == ONLINE ? "ONLINE" : "OFFLINE"));
+    response_body_str = json_serialize((json_t *) response_body);
     rep = create_success(200, response_body_str);
     response_add_header(&rep, "Content-Type", "application/json");
-    destroy(response_body_str, (json_t *)response_body, NULL);
+    destroy(response_body_str, (json_t *) response_body, NULL);
     return rep;
 }
 
