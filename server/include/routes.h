@@ -97,6 +97,15 @@ response_t leave_team_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t team_users_route(request_t *request, void *data);
+/**
+ * @brief Route to create a channel
+ * POST /teams/channels/create
+ * @param request The request to process
+ * @param data The instance of roundtable_server_t
+ * @return The response
+ * @note see documentation/routes.md
+ */
+response_t create_channel_route(request_t *request, void *data);
 
 /**
  * @brief Route to get the list of all the user

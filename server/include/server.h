@@ -146,6 +146,16 @@ void roundtable_team_remove_subscriber(roundtable_team_t *team,
  */
 void roundtable_channel_add_thread(roundtable_channel_t *channel,
     roundtable_thread_t *thread);
+/**
+ * @brief Create a channel
+ * @param name The name of the channel
+ * @param description The description of the channel
+ * @param team The team the channel belongs to
+ * @return The newly created channel or NULL if an error occurred
+ * @note The channel is automatically added to the team
+ */
+roundtable_channel_t *roundtable_channel_create(const char *name,
+    const char *description, roundtable_team_t *team);
 // --------------------------- SERVER THREADS ------------------------------
 /**
  * @brief Add a message to a thread
