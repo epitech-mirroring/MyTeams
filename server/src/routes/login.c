@@ -6,6 +6,7 @@
 ** You can even have multiple lines if you want !
 */
 
+#include <stdio.h>
 #include "server.h"
 #include "json/json.h"
 #include "server_utils.h"
@@ -40,8 +41,9 @@ response_t login_route(request_t *request, void *data)
     json_string_t *uuid_json = NULL;
     char *response_body_str = NULL;
 
-    if (!body || !json_object_get(body, "username"))
-        return create_error(400, "", "Bad Request", "Invalid JSON body");
+    if (body == NULL || !json_object_has_key(body, "username"))
+        return create_error(400, "Bad Request", "Bad Request",
+            "Invalid JSON body");
     username = ((json_string_t *) json_object_get(body, "username"))->value;
     client = get_or_create_client(server, username, &response);
     uuid_json = json_string_create("uuid", uuid_to_string(client->uuid));

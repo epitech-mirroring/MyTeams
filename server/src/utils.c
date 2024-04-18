@@ -26,8 +26,11 @@ response_t create_error(int status_code, const char *status_message,
     json_destroy((json_t *) res_body);
     response.status = status_code;
     response.status_message = strdup(status_message);
+    response.headers_count = 0;
+    response.headers = NULL;
     response.body = body;
     response_add_header(&response, "Content-Type", "application/json");
+    return response;
 }
 
 response_t create_success(int status_code, const char *status_message)
@@ -37,6 +40,9 @@ response_t create_success(int status_code, const char *status_message)
     response.status = status_code;
     response.status_message = strdup(status_message);
     response.body = strdup("");
+    response.headers_count = 0;
+    response.headers = NULL;
+    return response;
 }
 
 void destroy(char *str, json_t *req_body, json_t *res_body)

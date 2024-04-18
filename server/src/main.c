@@ -14,13 +14,10 @@
 #include "server_data.h"
 #include "routes.h"
 
-void bind_middlewares(roundtable_server_t *server)
-{
-}
-
 void bind_routes(roundtable_server_t *server)
 {
     router_add_route(server->router, "/login", login_route, server);
+    router_add_route(server->router, "/logout", logout_route, server);
 }
 
 static roundtable_server_t *get_server(bool write, void *data)
@@ -51,7 +48,6 @@ int main(int ac, char **av)
         return 84;
     if (access("./data.json", F_OK) != -1)
         load_data(server, "./data.json");
-    bind_middlewares(server);
     bind_routes(server);
     get_server(true, server);
     sigaction(SIGINT, &(struct sigaction){.sa_handler = &stop}, NULL);

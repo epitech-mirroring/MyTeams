@@ -17,6 +17,9 @@ response_t logout_route(request_t *request, void *data)
     char *user_uuid = NULL;
     roundtable_client_t *client = NULL;
 
+    if (strcmp(request->route.method, "POST") != 0)
+        return create_error(405, "Method Not Allowed", "Method not allowed",
+        "Method not allowed");
     if (!json || !json_object_get(json, "user_uuid"))
         return create_error(400, "Bad Request", "Bad JSON", "Invalid JSON");
     user_uuid = ((json_string_t *) json_object_get(json,
