@@ -42,8 +42,7 @@ response_t login_route(request_t *request, void *data)
     char *response_body_str = NULL;
 
     if (body == NULL || !json_object_has_key(body, "username"))
-        return create_error(400, "Bad Request", "Bad Request",
-            "Invalid JSON body");
+        return create_error(400, "Bad Request", "JSON", "Missing ursername");
     username = ((json_string_t *) json_object_get(body, "username"))->value;
     client = get_or_create_client(server, username, &response);
     uuid_json = json_string_create("uuid", uuid_to_string(client->uuid));

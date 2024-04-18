@@ -58,8 +58,10 @@ response_t user_route(request_t *request, void *data)
 
     if (!req_body || !json_object_get(req_body, "user_uuid"))
         return create_error(400, "Bad Request", "Bad JSON", "Invalid JSON");
-    client = get_client(server, request_get_param(request, "user_uuid"), req_body);
+    client = get_client(server, request_get_param(request, "user_uuid"),
+        req_body);
     if (!client)
-        return create_error(404, "Not Found", "Client not found", "Client not found");
+        return create_error(404, "Not Found", "Client not found",
+            "Client not found");
     return create_user_response(req_body, rep_body, client);
 }

@@ -68,7 +68,7 @@ json_object_t *json_object_parse(const char *content)
 
 void json_object_destroy(json_object_t *json)
 {
-    for(size_t i = 0; i < json->size; i++) {
+    for (size_t i = 0; i < json->size; i++) {
         json_destroy(json->values[i]);
     }
     if (json->values != NULL)
