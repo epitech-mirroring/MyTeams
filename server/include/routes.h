@@ -45,3 +45,12 @@ response_t send_dm_route(request_t *request, void *data);
  * @return the response
  */
 response_t get_dms_route(request_t *request, void *data);
+/**
+ * @brief Route to create a team
+ * POST /teams/create
+ * @param request The request to process
+ * @param data The instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t create_team_route(request_t *request, void *data);

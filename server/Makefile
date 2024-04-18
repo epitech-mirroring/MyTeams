@@ -14,6 +14,7 @@ SOURCES			= 	src/main.c							\
 					src/clients/composables.c   		\
 					src/clients/utils.c					\
 					src/teams/utils.c					\
+					src/teams/composables.c				\
 					src/channels/utils.c				\
 					src/threads/utils.c					\
 					src/direct-messages/utils.c			\
@@ -34,6 +35,7 @@ SOURCES			= 	src/main.c							\
 					src/routes/user.c					\
 					src/routes/messages/send.c			\
 					src/routes/messages/index.c			\
+					src/routes/teams/create.c			\
 
 TESTS			=
 

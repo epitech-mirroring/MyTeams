@@ -20,6 +20,7 @@ void bind_routes(roundtable_server_t *s)
     router_add_route(s->router, "/logout", logout_route, s);
     router_add_route(s->router, "/messages/send", send_dm_route, s);
     router_add_route(s->router, "/messages", get_dms_route, s);
+    router_add_route(s->router, "/teams/create", create_team_route, s);
 }
 
 static roundtable_server_t *get_server(bool write, void *data)
