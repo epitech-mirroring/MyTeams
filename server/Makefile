@@ -7,14 +7,40 @@
 ##
 
 # All the source files
-SOURCES			= 	src/main.c
+SOURCES			= 	src/main.c					\
+					src/constructors.c			\
+					src/destructors.c			\
+					src/destructors_suite.c		\
+					src/clients/composables.c   \
+					src/clients/utils.c			\
+					src/teams/utils.c			\
+					src/channels/utils.c		\
+					src/threads/utils.c			\
+					src/direct-messages/utils.c	\
+					src/data/load.c				\
+					src/data/load_team.c		\
+					src/data/load_messages.c	\
+					src/data/load_arrays.c		\
+					src/data/save.c				\
+					src/data/save_clients.c		\
+					src/data/save_teams.c		\
+					src/data/save_channels.c	\
+					src/data/save_threads.c		\
+					src/data/save_messages.c	\
+					src/utils.c					\
+					src/routes/login.c			\
+					src/routes/logout.c			\
+					src/routes/user.c			\
 
 TESTS			=
 
 # Compiler and linker settings
 NAME 			=   myteams_server
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../libs
+FLAGS			= 	-W -Wall -Wextra --coverage -L../libs \
+					-I../libs/myteams -L../libs/myteams -lnetwork \
+					-ljson -I../include -lmy -luuid  -I./include \
+					$(shell [ `uname` == "Linux" ] && echo "-lmyteams")
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
 LOG				=	./build.log
@@ -40,8 +66,9 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 # Link the object files
 		@printf "$(RUNNING) $(BLUE) 🔗  Linking$(RESET)"
-		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) \
-		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
+		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) >> $(LOG) 2>&1 \
+		&& printf "\r$(SUCCESS)\n" || (printf "\r$(FAILURE)\n" && cat $(LOG) \
+		&& exit 1)
 # Check if the binary was created
 		@if [ -f $(NAME) ]; then \
 			printf \

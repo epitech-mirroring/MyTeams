@@ -42,6 +42,7 @@ typedef struct json_s {
 typedef struct json_object_s {
     json_t base;
     json_t **values;
+    size_t size;
 } json_object_t;
 
 /**

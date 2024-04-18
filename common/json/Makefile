@@ -17,6 +17,7 @@ SOURCES			= 	src/json.c				\
 					src/json_float.c		\
 					src/json_number.c		\
 					src/json_serialize.c	\
+					src/json_object_utils.c	\
 					src/json_file.c
 
 TESTS			=	../../tests/json/json_parser.c		\

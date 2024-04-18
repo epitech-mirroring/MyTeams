@@ -192,3 +192,4 @@ Temporary Items
 *.gcno
 *.gcda
 *.log
+!/libs/myteams/libmyteams.so
