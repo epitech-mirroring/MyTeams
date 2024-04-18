@@ -7,12 +7,12 @@
 */
 
 #include <stdlib.h>
-#include <stdio.h>
+#include <string.h>
 #include "network/router.h"
 
 static response_t test_handler(request_t *req, void *data)
 {
-    return (response_t) {200, "OK", NULL, 0, ""};
+    return (response_t) {200, strdup("OK"), NULL, 0, strdup("{\"message\": \"Hello, World!\"}")};
 }
 
 int main(int argc, char **argv)
