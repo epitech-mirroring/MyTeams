@@ -63,3 +63,9 @@ uuid_t *uuid_generate(void)
         (*uu)[i] = rand() % 256;
     return uu;
 }
+
+void uuid_copy(uuid_t dest, const uuid_t src)
+{
+    for (size_t i = 0; i < 16; i++)
+        dest[i] = src[i];
+}

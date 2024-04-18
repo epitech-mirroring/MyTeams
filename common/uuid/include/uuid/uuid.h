@@ -35,3 +35,9 @@ uuid_t *uuid_from_string(const char *str);
  * @return the generated uuid
  */
 uuid_t *uuid_generate(void);
+/**
+ * @brief Copy a uuid
+ * @param dest the destination uuid
+ * @param src the source uuid
+ */
+void uuid_copy(uuid_t dest, const uuid_t src);
