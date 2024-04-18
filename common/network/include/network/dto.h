@@ -94,3 +94,9 @@ response_t *deserialize_response(char *buffer);
  * @param value the value of the header
  */
 void response_add_header(response_t *res, char *key, char *value);
+/**
+ * @brief Serialize a request path (with params) to a buffer
+ * @param req the request to serialize the path from
+ * @return the serialized buffer
+ */
+char *serialize_request_path(request_t *req);

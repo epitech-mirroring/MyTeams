@@ -44,3 +44,22 @@ bool request_has_header(request_t *req, char *key)
     }
     return false;
 }
+
+char *serialize_request_path(request_t *req)
+{
+    char *new_path = NULL;
+    char *path = strdup(req->route.path);
+
+    for (size_t i = 0; i < req->params_count; i++) {
+        new_path = realloc(path, strlen(path) + strlen(req->params[i].key)
+            + strlen(req->params[i].value) + 2);
+        if (new_path == NULL)
+            return NULL;
+        path = new_path;
+        strcat(path, i == 0 ? "?" : "&");
+        strcat(path, req->params[i].key);
+        strcat(path, "=");
+        strcat(path, req->params[i].value);
+    }
+    return path;
+}
