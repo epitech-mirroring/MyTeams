@@ -25,8 +25,10 @@ response_t logout_route(request_t *request, void *data)
     "user_uuid"))->value;
     client = roundtable_server_get_client_by_uuid(server,
     *uuid_from_string(user_uuid));
-    if (!client)
+    if (client == NULL)
         return create_error(404, "Client not found", "Client not found");
+    if (client->status == OFFLINE)
+        return create_error(401, "Unauthorized", "Client already offline");
     client->status = OFFLINE;
-    return create_success(200, "");
+    return create_success(204, "");
 }
