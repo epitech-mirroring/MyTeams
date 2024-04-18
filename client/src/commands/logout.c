@@ -17,14 +17,10 @@ void logout_rep(response_t *response, request_data_t *request_data)
 
     cli->waiting_for_response = false;
     if (response->status == 204) {
-        client_event_logged_out(cli->user_uuid, cli->user_name);
         cli->is_logged = false;
         cli->user_uuid = NULL;
-    } else {
-        jobj = (json_object_t *)json_parse(response->body);
-        str = (json_string_t *)json_object_get(jobj, "error_message");
-        printf("Error: %s\n", str->value);
-        json_destroy((json_t *)jobj);
+        cli->user_name = NULL;
+        printf("CLI : Successfully logged out\n");
     }
 }
 
