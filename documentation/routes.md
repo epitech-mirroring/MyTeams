@@ -77,7 +77,9 @@
 
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>405</b> - Method not allowed</p> 
+    - <p class="error"><b>404</b> - No users found</p>
+  
 - ### Get info of an user
 
   - Method: `GET`
