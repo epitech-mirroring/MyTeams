@@ -88,3 +88,11 @@ response_t join_team_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t leave_team_route(request_t *request, void *data);
+
+/**
+ * @brief Route to get the list of all the user
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ *
+*/
+response_t users_route(request_t *request, void *data);

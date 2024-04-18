@@ -33,6 +33,7 @@ SOURCES			= 	src/main.c							\
 					src/routes/login.c					\
 					src/routes/logout.c					\
 					src/routes/user.c					\
+					src/routes/users.c					\
 					src/routes/messages/send.c			\
 					src/routes/messages/index.c			\
 					src/routes/teams/create.c			\
