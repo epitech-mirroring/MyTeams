@@ -15,6 +15,10 @@ SOURCES			= 	src/main.c											\
 					src/commands/login.c 								\
 					src/commands/parsing/parsing.c 						\
 					src/commands/logout.c				 				\
+					src/commands/user.c 								\
+					src/commands/users.c 								\
+					src/commands/send.c 								\
+					src/commands/messages.c 							\
 					src/utils/utils.c 									\
 
 
@@ -25,7 +29,7 @@ TESTS			=
 NAME 			=   myteams_cli
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include \
-					-L../libs/myteams/ -L../libs/  -lnetwork -ljson \
+					-L../libs/myteams/ -L../libs/  -lnetwork -ljson -luuid \
 					-I../include -I../libs/myteams \
 					$(shell [ `uname` == "Linux" ] && echo "-lmyteams")
 OBJS			= 	$(SOURCES:.c=.o)

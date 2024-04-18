@@ -16,12 +16,16 @@
 #include <stdlib.h>
 #include <sys/select.h>
 #include <signal.h>
+#include "uuid/uuid.h"
 #include "network/api_client.h"
+#include "network/dto.h"
 
 #define _GNU_SOURCE
 
 #define MAX_NUM_ARGS 4
 #define MAX_NAME_LENGTH 32
+#define MAX_DESCRIPTION_LENGTH 255
+#define MAX_BODY_LENGTH 512
 
 typedef struct context_s {
     char const *team_uuid;
@@ -52,3 +56,7 @@ size_t tab_len(char **tab);
 void help(char **parsed_cmd);
 void logout(char **parsed_cmd, client_t *client);
 void login(char **parsed_cmd, client_t *client);
+void user(char **parsed_cmd, client_t *client);
+void users(char **parsed_cmd, client_t *client);
+void cmd_send(char **parsed_cmd, client_t *client);
+void messages(char **parsed_cmd, client_t *client);
