@@ -25,6 +25,7 @@ SOURCES			=	src/sockets/waiting_sockets.c	\
 					src/dto/request_utils.c			\
 					src/dto/request_getters.c		\
 					src/dto/response.c				\
+					src/dto/response_utils.c		\
 					src/test_main.c
 
 TESTS			=

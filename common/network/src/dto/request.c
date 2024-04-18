@@ -8,6 +8,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "network/dto.h"
 #include "regex.h"
 
@@ -125,4 +126,21 @@ request_t *deserialize_request(char *buffer)
     request_parse_headers(buffer, req, &line_start);
     req->body = strdup(buffer + line_start + 2);
     return req;
+}
+
+char *serialize_request(request_t req)
+{
+    char *serialized = calloc(BUFFER_SIZE, sizeof(char));
+
+    if (serialized == NULL)
+        return NULL;
+    sprintf(serialized, "%s %s HTTP/1.1\r\n", req.route.method, req.route.path);
+    for (size_t i = 0; i < req.headers_count; i++) {
+        sprintf(serialized + strlen(serialized), "%s: %s\r\n",
+            req.headers[i].key, req.headers[i].value);
+    }
+    sprintf(serialized + strlen(serialized), "Content-Length: %ld\r\n",
+        strlen(req.body));
+    sprintf(serialized + strlen(serialized), "\r\n%s", req.body);
+    return serialized;
 }

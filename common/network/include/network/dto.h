@@ -63,6 +63,12 @@ char *request_get_param(request_t *req, char *key);
  * @param req the request to destroy
  */
 void destroy_request(request_t *req);
+/**
+ * @brief Serialize a request to a buffer
+ * @param request the request to serialize
+ * @return the serialized buffer
+ */
+char *serialize_request(request_t request);
 // ------------------ RESPONSE ------------------
 /**
  * @brief Serialize a response to a buffer
@@ -70,9 +76,21 @@ void destroy_request(request_t *req);
  * @return the serialized buffer
  */
 char *serialize_response(response_t response);
+/**
+ * @brief Destroy a response
+ * @param res the response to destroy
+ */
 void destroy_response(response_t *res);
-
-
-char *serialize_request(request_t request);
-response_t deserialize_response(char *buffer);
+/**
+ * @brief Deserialize a response from a buffer
+ * @param buffer the buffer to deserialize
+ * @return the deserialized response
+ */
+response_t *deserialize_response(char *buffer);
+/**
+ * @brief Add a header to a response
+ * @param res response to add the header to
+ * @param key the key of the header
+ * @param value the value of the header
+ */
 void response_add_header(response_t *res, char *key, char *value);
