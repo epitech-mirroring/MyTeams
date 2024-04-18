@@ -28,12 +28,12 @@ void destroy_server(roundtable_server_t *server);
  * @brief Destroy a client and free its memory
  * @param client the client to destroy
  */
-void destroy_client(roundtable_client_t client);
+void destroy_client(roundtable_client_t *client);
 /**
  * @brief Destroy a team (including all channels) and free its memory
  * @param team the team to destroy
  */
-void destroy_team(roundtable_team_t team);
+void destroy_team(roundtable_team_t *team);
 /**
  * @brief Destroy a message and free its memory
  * @param message
@@ -97,6 +97,23 @@ void roundtable_team_add_channel(roundtable_team_t *team,
  */
 void roundtable_team_add_subscriber(roundtable_team_t *team,
     roundtable_client_t *subscriber);
+/**
+ * @brief Create a team
+ * @param server The server to create the team in
+ * @param name the name of the team
+ * @param description the description of the team
+ * @return The newly created team or NULL if an error occurred
+ */
+roundtable_team_t *roundtable_server_create_team(
+    roundtable_server_t *server, const char *name, const char *description);
+/**
+ * @brief Get a team by its UUID
+ * @param server The server to search in
+ * @param uuid The UUID of the team to find
+ * @return The team if found, NULL otherwise
+ */
+roundtable_team_t *roundtable_server_get_team_by_uuid(
+        roundtable_server_t *server, uuid_t uuid);
 // --------------------------- SERVER CHANNELS -----------------------------
 /**
  * @brief Add a thread to a channel

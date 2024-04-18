@@ -6,10 +6,7 @@
 ** You can even have multiple lines if you want !
 */
 
-#include <stdlib.h>
 #include "server.h"
-#include "server.h"
-#include "network/router.h"
 #include "json/json.h"
 #include "server_utils.h"
 #include "network/dto.h"

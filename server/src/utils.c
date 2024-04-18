@@ -8,8 +8,6 @@
 
 #include "server_utils.h"
 #include "network/dto.h"
-#include "server_types.h"
-#include "server.h"
 #include <stdlib.h>
 #include <string.h>
 

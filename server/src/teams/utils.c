@@ -12,14 +12,14 @@
 void roundtable_server_add_team(roundtable_server_t *server,
     roundtable_team_t *team)
 {
-    roundtable_team_t *new_teams = NULL;
+    roundtable_team_t **new_teams = NULL;
 
     new_teams = realloc(server->teams,
-        sizeof(roundtable_team_t) * (server->team_count + 1));
+        sizeof(roundtable_team_t *) * (server->team_count + 1));
     if (new_teams == NULL)
         return;
     server->teams = new_teams;
-    server->teams[server->team_count] = *team;
+    server->teams[server->team_count] = team;
     server->team_count++;
 }
 

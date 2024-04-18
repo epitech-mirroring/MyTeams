@@ -99,9 +99,9 @@ typedef struct roundtable_team_s {
  * @brief The server containing all the data
  */
 typedef struct roundtable_server_s {
-    roundtable_team_t *teams;
+    roundtable_team_t **teams;
     size_t team_count;
-    roundtable_client_t *clients;
+    roundtable_client_t **clients;
     size_t client_count;
     roundtable_direct_message_t **direct_messages;
     size_t message_count;

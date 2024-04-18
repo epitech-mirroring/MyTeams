@@ -14,12 +14,12 @@
 #include "server_data.h"
 #include "routes.h"
 
-void bind_routes(roundtable_server_t *server)
+void bind_routes(roundtable_server_t *s)
 {
-    router_add_route(server->router, "/login", login_route, server);
-    router_add_route(server->router, "/logout", logout_route, server);
-    router_add_route(server->router, "/messages/send", send_dm_route, server);
-    router_add_route(server->router, "/messages", get_dms_route, server);
+    router_add_route(s->router, "/login", login_route, s);
+    router_add_route(s->router, "/logout", logout_route, s);
+    router_add_route(s->router, "/messages/send", send_dm_route, s);
+    router_add_route(s->router, "/messages", get_dms_route, s);
 }
 
 static roundtable_server_t *get_server(bool write, void *data)
@@ -35,6 +35,7 @@ static void stop(int sig)
 {
     roundtable_server_t *server = get_server(false, NULL);
 
+    (void)sig;
     if (server)
         server->router->ws_manager->running = false;
 }

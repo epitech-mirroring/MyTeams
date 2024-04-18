@@ -39,6 +39,7 @@ response_t logout_route(request_t *request, void *data);
 response_t send_dm_route(request_t *request, void *data);
 /**
  * @brief Route to get the direct messages between two clients
+ * GET /messages
  * @param request the request to process
  * @param data the instance of roundtable_server_t
  * @return the response
