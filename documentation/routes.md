@@ -115,6 +115,7 @@
   - Method: `POST`
   - Route: `/messages/send`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -129,6 +130,7 @@
     ```
   - Response: _Nothing_
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -138,6 +140,7 @@
   - Method: `GET`
   - Route: `/messages`
   - Request:
+
     - Params: `uuid: String (Mandatory)`
     - Body:
 
@@ -147,17 +150,18 @@
         }
     ```
   - Response:
+
     ```json
     [
         {
             "sender_uuid": "String",
-            "message": {
-                "content": "String"
-            }
+            "content": "String",
+            "timestamp": Number,
         }
     ]
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -170,6 +174,7 @@
   - Method: `POST`
   - Route: `/teams/join`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -181,6 +186,7 @@
     ```
   - Response: _Nothing_
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -191,6 +197,7 @@
   - Method: `POST`
   - Route: `/teams/leave`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -202,6 +209,7 @@
     ```
   - Response: _Nothing_
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -212,6 +220,7 @@
   - Method: `GET`
   - Route: `/teams`
   - Request:
+
     - Params:
       - `team-uuid: String (Optional)`
       - `only-joined: Boolean (Optional, default: false, incompatible with team-uuid)`
@@ -223,6 +232,7 @@
         }
     ```
   - Response:
+
     ```json
     [
         {
@@ -233,6 +243,7 @@
     ]
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -242,6 +253,7 @@
   - Method: `POST`
   - Route: `/teams/create`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -253,12 +265,14 @@
         }
     ```
   - Response:
+
     ```json
         {
             "team_uuid": "String"
         }
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed / Name or description too long</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -268,6 +282,7 @@
   - Method: `GET`
   - Route: `/teams/users`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -278,6 +293,7 @@
         }
     ```
   - Response:
+
     ```json
     [
         {
@@ -288,6 +304,7 @@
     ]
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -301,6 +318,7 @@
   - Method: `GET`
   - Route: `/teams/channels`
   - Request:
+
     - Params: `channel_uuid: String (Optional)`
     - Body:
 
@@ -311,6 +329,7 @@
         }
     ```
   - Response:
+
     ```json
     [
         {
@@ -321,6 +340,7 @@
     ]
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -331,6 +351,7 @@
   - Method: `POST`
   - Route: `/teams/channels/create`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -343,12 +364,14 @@
         }
     ```
   - Response:
+
     ```json
         {
             "channel_uuid": "String"
         }
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -359,6 +382,7 @@
   - Method: `GET`
   - Route: `/teams/channels/threads`
   - Request:
+
     - Params: `thread_uuid: String (Optional)`
     - Body:
 
@@ -370,16 +394,19 @@
         }
     ```
   - Response:
+
     ```json
     [
         {
             "thread_uuid": "String",
             "title": "String",
-            "message": "String"
+            "message": "String",
+            "timestamp": Number
         }
     ]
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -393,6 +420,7 @@
   - Method: `POST`
   - Route: `/teams/channels/threads/create`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -406,12 +434,14 @@
         }
     ```
   - Response:
+
     ```json
         {
             "thread_uuid": "String"
         }
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -422,6 +452,7 @@
   - Method: `GET`
   - Route: `/teams/channels/threads/messages`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -434,17 +465,18 @@
         }
     ```
   - Response:
+
     ```json
     [
         {
             "sender_uuid": "String",
-            "message": {
-                "content": "String"
-            }
+            "content": "String",
+            "timestamp": Number
         }
     ]
     ```
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
@@ -455,6 +487,7 @@
   - Method: `POST`
   - Route: `/teams/channels/threads/reply`
   - Request:
+
     - Params: _No params_
     - Body:
 
@@ -471,6 +504,7 @@
     ```
   - Response: _Nothing_
   - Possible status codes:
+
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>

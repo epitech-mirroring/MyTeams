@@ -25,7 +25,10 @@ json_object_t *serialize_message(roundtable_message_t *message)
     json_string_t *content = json_string_create("content", message->content);
     json_string_t *sender = json_string_create("sender_uuid",
         uuid_to_string(message->sender_uuid));
+    json_number_t *timestamp = json_number_create("timestamp",
+        message->created_at);
 
+    json_object_add(json, (json_t *) timestamp);
     json_object_add(json, (json_t *) content);
     json_object_add(json, (json_t *) sender);
     return json;

@@ -11,6 +11,7 @@
 #include <string.h>
 #include "uuid/uuid.h"
 #include "network/router.h"
+#include <time.h>
 
 /**
  * @brief Copy a UUID from src to dest
@@ -23,6 +24,7 @@
  */
 typedef struct roundtable_message_s {
     uuid_t sender_uuid;
+    time_t created_at;
     char *content;
 } roundtable_message_t;
 
@@ -35,6 +37,7 @@ typedef struct roundtable_thread_s {
     char *content;
     roundtable_message_t *messages;
     size_t message_count;
+    time_t created_at;
 } roundtable_thread_t;
 
 /**

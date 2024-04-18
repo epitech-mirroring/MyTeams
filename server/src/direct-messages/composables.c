@@ -80,5 +80,6 @@ roundtable_message_t *roundtable_message_create(roundtable_client_t *s,
     COPY_UUID(new_message->sender_uuid, s->uuid);
     new_message->content = strdup(((json_string_t *)
         json_object_get(message, "content"))->value);
+    new_message->created_at = time(NULL);
     return new_message;
 }
