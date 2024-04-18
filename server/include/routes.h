@@ -71,4 +71,20 @@ response_t user_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t get_teams_route(request_t *request, void *data);
+/**
+ * @brief Route to join a team
+ * POST /teams/join
+ * @param request The request to process
+ * @param data The instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
 response_t join_team_route(request_t *request, void *data);
+/**
+ * @brief Route to leave a team
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t leave_team_route(request_t *request, void *data);
