@@ -24,6 +24,7 @@ void bind_routes(roundtable_server_t *s)
     router_add_route(s->router, "/teams", get_teams_route, s);
     router_add_route(s->router, "/teams/join", join_team_route, s);
     router_add_route(s->router, "/teams/leave", leave_team_route, s);
+    router_add_route(s->router, "/teams/users", team_users_route, s);
     router_add_route(s->router, "/user", user_route, s);
 }
 
