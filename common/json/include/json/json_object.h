@@ -46,3 +46,10 @@ void json_object_destroy(json_object_t *json);
  * @return The serialized json object
  */
 char *json_object_serialize(json_object_t *json);
+/**
+ * @brief Check if a json object has a key
+ * @param json The json object to check
+ * @param key The key to check for
+ * @return true if the key is present, false otherwise
+ */
+bool json_object_has_key(json_object_t *object, const char *key);

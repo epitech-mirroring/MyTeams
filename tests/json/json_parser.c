@@ -296,6 +296,27 @@ Test(json_parser, json_empty_array)
     remove("../../tests/json/json_empty_array.json");
 }
 
+Test(json_parser, json_wrong_name)
+{
+    FILE *file = fopen("../../tests/json/json_wrong_name.json", "wr");
+    fwrite("{\"key\": \"value\"}", 1, 16, file);
+    fclose(file);
+
+    // Parse the file
+    json_object_t *json = (json_object_t *) json_load_from_file("../../tests/json/json_wrong_name.json");
+    // Check if the file is correct
+    cr_assert(json->base.type == JSON_OBJECT_TYPE_OBJECT);
+    cr_assert_str_eq(json->base.key, "root");
+
+    cr_assert(json_object_has_key(json, "kez") == false);
+    cr_assert(json_object_get(json, "kez") == NULL);
+
+    json_destroy((json_t *) json);
+    free(json);
+    // Delete the file
+    remove("../../tests/json/json_wrong_name.json");
+}
+
 Test(json, safety_checks)
 {
     json_destroy(NULL);

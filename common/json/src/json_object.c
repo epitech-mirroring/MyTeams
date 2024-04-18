@@ -19,33 +19,28 @@ json_object_t *json_object_create(const char *key)
     new->base.key = strdup(key == NULL ? "root" : key);
     new->values = malloc(sizeof(json_t) * 1);
     new->values[0] = NULL;
+    new->size = 0;
     return new;
 }
 
 void json_object_add(json_object_t *json, json_t *obj)
 {
-    int i = 0;
-    json_t **values = NULL;
+    json_t **new_values = NULL;
 
-    while (json->values[i] != NULL)
-        i++;
-    values = realloc(json->values, sizeof(json_t) * (i + 2));
-    if (values == NULL) {
+    new_values = realloc(json->values, sizeof(json_t) * (json->size + 2));
+    if (new_values == NULL)
         return;
-    }
-    json->values = values;
-    json->values[i] = obj;
-    json->values[i + 1] = NULL;
+    json->values = new_values;
+    json->values[json->size] = obj;
+    json->values[json->size + 1] = NULL;
+    json->size++;
 }
 
 json_t *json_object_get(json_object_t *json, char *key)
 {
-    int i = 0;
-
-    while (json->values[i] != NULL) {
+    for (size_t i = 0; i < json->size; i++) {
         if (strcmp(json->values[i]->key, key) == 0)
             return json->values[i];
-        i++;
     }
     return NULL;
 }
@@ -73,12 +68,8 @@ json_object_t *json_object_parse(const char *content)
 
 void json_object_destroy(json_object_t *json)
 {
-    int i = 0;
-
-    while (json->values[i] != NULL) {
+    for(size_t i = 0; i < json->size; i++) {
         json_destroy(json->values[i]);
-        free(json->values[i]);
-        i++;
     }
     if (json->values != NULL)
         free(json->values);
