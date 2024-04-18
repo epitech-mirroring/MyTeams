@@ -42,7 +42,7 @@ response_t login_route(request_t *request, void *data)
     if (strcmp(request->route.method, "POST") != 0)
         return create_error(405, "Method not allowed", "Only POST");
     if (body == NULL || !json_object_has_key(body, "username"))
-        return create_error(400, "Invalid body", "Missing 'ursername'");
+        return create_error(400, "Invalid body", "Missing 'username'");
     c = get_create_client(s,
         ((json_string_t *) json_object_get(body, "username"))->value, &r);
     json_object_add(response_body, (json_t *)
