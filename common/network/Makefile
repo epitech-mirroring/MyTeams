@@ -31,7 +31,7 @@ SOURCES			=	src/sockets/waiting_sockets.c	\
 TESTS			=
 
 # Compiler and linker settings
-NAME 			=   libnetwork.so
+NAME 			=   libnetwork.a
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
 					-I../../include -ljson
