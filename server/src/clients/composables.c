@@ -38,7 +38,7 @@ roundtable_client_t *roundtable_server_create_client(
 
     if (new_client == NULL)
         return NULL;
-    COPY_UUID(new_client->uuid, uuid_generate());
+    uuid_copy(new_client->uuid, *uuid_generate());
     new_client->username = strdup(username);
     new_client->status = OFFLINE;
     roundtable_server_add_client(server, new_client);

@@ -46,7 +46,7 @@ json_array_t *serialize_direct_messages(roundtable_server_t *server)
 
     for (size_t i = 0; i < server->message_count; i++) {
         json_array_add(direct_messages,
-            (json_t *) serialize_direct_message(&server->direct_messages[i]));
+            (json_t *) serialize_direct_message(server->direct_messages[i]));
     }
     return direct_messages;
 }

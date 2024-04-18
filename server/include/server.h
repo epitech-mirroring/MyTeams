@@ -8,6 +8,7 @@
 
 #pragma once
 #include "server_types.h"
+#include "json/json_object.h"
 
 // --------------------------- SERVER CONSTRUCTORS -------------------------
 /**
@@ -128,3 +129,41 @@ void roundtable_server_add_direct_message(roundtable_server_t *server,
 void roundtable_direct_message_add_message(
     roundtable_direct_message_t *direct_message,
     roundtable_message_t *message);
+/**
+ * @brief Find a direct message between two clients
+ * @param server The server to search in
+ * @param sender the sender of the message
+ * @param receiver the receiver of the message
+ * @return The direct message if found, NULL otherwise
+ * @note Sender is not necessarily the sender of the direct message since
+ * direct messages are bidirectional
+ */
+roundtable_direct_message_t *roundtable_server_find_direct_message(
+    roundtable_server_t *server, roundtable_client_t *sender,
+    roundtable_client_t *receiver);
+/**
+ * @brief Create a direct message between two clients
+ * @param sender The sender of the initial message
+ * @param receiver The receiver of the initial message
+ * @return The newly created direct message or NULL if an error occurred
+ */
+roundtable_direct_message_t *roundtable_direct_message_create(
+    roundtable_client_t *sender, roundtable_client_t *receiver);
+/**
+ * @brief Create a message
+ * @param sender The sender of the message
+ * @param message The message to send
+ * @return The newly created message or NULL if an error occurred
+ */
+roundtable_message_t *roundtable_message_create(roundtable_client_t *sender,
+    json_object_t *message);
+/**
+ * @brief Send a direct message between two clients
+ * @param server The server to send the message in
+ * @param sender The sender of the message
+ * @param receiver The receiver of the message
+ * @param message
+ */
+void roundtable_server_send_dm(roundtable_server_t *server,
+    roundtable_client_t *sender, roundtable_client_t *receiver,
+    json_object_t *message);
