@@ -13,25 +13,25 @@
 void login_resp(response_t *response, void *client)
 {
     client_t *cli = (client_t *)client;
-    json_object_t *jobj = (json_object_t *)json_parse(response->body);
+    json_object_t *jobj = NULL;
     json_string_t *str = NULL;
 
-    if (jobj == NULL)
-        return;
-    if (response->header.status_code == 200) {
-        cli->is_logged = true;
-        str = (json_string_t *)json_object_get(jobj, "user_uuid");
-        if (str == NULL)
-            return;
-        cli->user_uuid = strdup(str->value);
-#ifndef __APPLE__
-        client_event_logged_in(cli->user_uuid, cli->user_name);
-#endif
-    }
-    // else {
-    //     str = (json_string_t *)json_object_get(jobj, "error");
-    // }
     cli->waiting_for_response = false;
+    if (response->header.status_code == 200 ||
+        response->header.status_code == 201) {
+        jobj = (json_object_t *)json_parse(response->body);
+        if (jobj == NULL) {
+            return;
+        }
+        str = (json_string_t *)json_object_get(jobj, "user_uuid");
+        if (str == NULL) {
+            printf("Error: invalid response\n");
+            return;
+        }
+        cli->user_uuid = strdup(str->value);
+        cli->is_logged = true;
+        client_event_logged_in(cli->user_uuid, cli->user_name);
+    }
 }
 
 static void send_login(client_t *client, char *user_name)
@@ -51,7 +51,6 @@ static void send_login(client_t *client, char *user_name)
     network_send_request(client->api_handler, request, &login_resp, client);
     client->waiting_for_response = true;
     client->user_name = strdup(user_name);
-    printf("Logging in as %s\n", user_name);
 }
 
 void login(char **parsed_cmd, client_t *client)
