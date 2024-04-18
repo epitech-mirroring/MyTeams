@@ -11,14 +11,16 @@
 
 static bool body_is_valid(json_object_t *body)
 {
-    if (body == NULL)
-        return false;
-    return json_object_has_key(body, "user_uuid") &&
-        json_object_has_key(body, "team_uuid");
+    bool sender = json_object_has_key(body, "user_uuid");
+    bool team = json_object_has_key(body, "team_uuid");
+
+    return sender && team;
 }
 
 static const char *get_missing_key(json_object_t *body)
 {
+    if (body == NULL)
+        return "Missing 'user_uuid' and 'team_uuid'";
     if (!json_object_has_key(body, "user_uuid"))
         return "Missing 'user_uuid'";
     if (!json_object_has_key(body, "team_uuid"))

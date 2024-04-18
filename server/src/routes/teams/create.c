@@ -8,7 +8,6 @@
 
 #include <stdlib.h>
 #include "server.h"
-#include "json/json.h"
 #include "server_utils.h"
 
 static bool body_is_valid(json_object_t *body)
@@ -22,6 +21,8 @@ static bool body_is_valid(json_object_t *body)
 
 static const char *get_missing_key(json_object_t *body)
 {
+    if (body == NULL)
+        return "Missing 'user_uuid', 'name' and 'description'";
     if (!json_object_has_key(body, "user_uuid"))
         return "Missing 'user_uuid'";
     if (!json_object_has_key(body, "name"))
