@@ -17,5 +17,7 @@ void on_command(char *cmd, client_t *client)
         return help(parsed_cmd);
     if (strcmp(parsed_cmd[0], "/login") == 0)
         return login(parsed_cmd, client);
+    if (strcmp(parsed_cmd[0], "/logout") == 0)
+        return logout(parsed_cmd, client);
     printf("Unknown command\n");
 }

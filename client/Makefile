@@ -14,7 +14,9 @@ SOURCES			= 	src/main.c											\
 					src/commands/help.c 								\
 					src/commands/login.c 								\
 					src/commands/parsing/parsing.c 						\
+					src/commands/logout.c				 				\
 					src/utils/utils.c 									\
+
 
 
 TESTS			=
