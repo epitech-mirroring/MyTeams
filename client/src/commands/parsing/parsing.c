@@ -7,9 +7,9 @@
 
 #include "myclient.h"
 
-static void skip_spaces(char *cmd, size_t *index)
+static void skip_spaces(const char *cmd, size_t *index)
 {
-    while (cmd[*index] != '\0' && cmd[*index] == ' ')
+    while (cmd[*index] && cmd[*index] == ' ')
         (*index)++;
 }
 

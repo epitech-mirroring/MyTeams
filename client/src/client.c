@@ -39,7 +39,7 @@ static client_t *init_struct(api_client_t *api_handler)
 static bool read_loop(int fd, char *cmd, bool *running, client_t *client)
 {
     char buf[1];
-    int status;
+    long status;
 
     status = read(fd, buf, 1);
     if (status == -1)
@@ -83,14 +83,12 @@ void shell(client_t *client, fd_set readfds, char *buffer, bool *running)
     }
     if (select_ret > 0 && FD_ISSET(0, &readfds)) {
         read_bytes(0, buffer, running, client);
-    } else if (select_ret == -1) {
-        exit(84);
     }
 }
 
 int main_loop(client_t *client)
 {
-    fd_set readfds;
+    fd_set readfds = {0};
     char buffer[1024] = {0};
     bool running = true;
 

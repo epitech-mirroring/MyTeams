@@ -46,7 +46,7 @@ void print_help(void);
 void on_command(char *cmd, client_t *client);
 char **parse_command(char *cmd);
 
-int tab_len(char **tab);
+size_t tab_len(char **tab);
 
 
 void help(char **parsed_cmd);
