@@ -6,7 +6,6 @@
 ** You can even have multiple lines if you want !
 */
 
-#include <stdio.h>
 #include "server.h"
 #include "json/json.h"
 #include "server_utils.h"
