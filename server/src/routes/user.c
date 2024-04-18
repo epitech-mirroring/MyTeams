@@ -11,55 +11,47 @@
 #include "server_utils.h"
 #include "network/dto.h"
 
-static response_t create_user_response(json_object_t *req_body,
-    json_object_t *rep_body, roundtable_client_t *client)
-{
-    response_t response = {0};
-    char *response_body_str = NULL;
 
-    json_object_add(rep_body, (json_t *) json_string_create("uuid",
-    uuid_to_string(client->uuid)));
-    json_object_add(rep_body, (json_t *) json_string_create("name",
-    client->username));
-    json_object_add(rep_body, (json_t *) json_string_create("status",
-    client->status == ONLINE ? "online" : "offline"));
-    response_body_str = json_serialize((json_t *) rep_body);
-    response.status = 200;
-    response.status_message = strdup("OK");
-    response.body = strdup(response_body_str);
-    response_add_header(&response, "Content-Type", "application/json");
-    destroy(response_body_str, (json_t *) req_body, (json_t *) rep_body);
-    return response;
-}
-
-static roundtable_client_t *get_client(roundtable_server_t *server,
-    char *uuid_json_user_info, json_object_t *req_body)
+static roundtable_client_t *get_client(request_t *request, json_object_t *body, roundtable_server_t *srv)
 {
     roundtable_client_t *client = NULL;
 
-    if (!uuid_json_user_info)
-        uuid_json_user_info = ((json_string_t *) json_object_get(req_body,
-        "user_uuid"))->value;
-    client = roundtable_server_get_client_by_uuid(server,
-        *uuid_from_string(uuid_json_user_info));
+     if (request_has_param(request, "uuid")) {
+         client = roundtable_server_get_client_by_uuid(srv, *uuid_from_string(request_get_param(request, "uuid")));
+     } else {
+         client = get_client_from_json(srv, body, "user_uuid");
+     }
     return client;
+}
+
+static response_t make_response(roundtable_client_t *client)
+{
+    json_object_t *response_body = json_object_create(NULL);
+    char *response_body_str = NULL;
+    response_t rep = {0};
+
+    json_object_add(response_body, (json_t *)json_string_create("user_uuid", uuid_to_string(client->uuid)));
+    json_object_add(response_body, (json_t *)json_string_create("username", client->username));
+    json_object_add(response_body, (json_t *)json_string_create("status", client->status == ONLINE ? "ONLINE" : "OFFLINE"));
+    response_body_str = json_serialize((json_t *)response_body);
+    rep = create_success(200, response_body_str);
+    response_add_header(&rep, "Content-Type", "application/json");
+    destroy(response_body_str, (json_t *)response_body, NULL);
+    return rep;
 }
 
 response_t user_route(request_t *request, void *data)
 {
-    roundtable_server_t *server = (roundtable_server_t *) data;
-    json_object_t *req_body = (json_object_t *) json_parse(request->body);
+    roundtable_server_t *srv = (roundtable_server_t *)data;
+    json_object_t *body = (json_object_t *)json_parse(request->body);
     roundtable_client_t *client = NULL;
-    json_object_t *rep_body = json_object_create(NULL);
 
-    if (strcmp(request->route.method, "GET") != 0)
+    if (!IS_METHOD(request, "GET"))
         return create_error(405, "Method not allowed", "Only GET");
-    if (!req_body || !json_object_get(req_body, "user_uuid"))
-        return create_error(400, "Bad JSON", "Missing user_uuid");
-    client = get_client(server, request_get_param(request, "user_uuid"),
-        req_body);
+    if (!body || !json_object_has_key(body, "user_uuid"))
+        return create_error(400, "Invalid body", "Missing 'user_uuid'");
+    client = get_client(request, body, srv);
     if (!client)
-        return create_error(404, "Client not found", "No client for"
-            " this uuid");
-    return create_user_response(req_body, rep_body, client);
+        return create_error(404, "Client not found", "Sender not found");
+    return make_response(client);
 }
