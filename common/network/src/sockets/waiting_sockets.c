@@ -24,6 +24,8 @@ waiting_sockets_t *waiting_sockets_init(void)
 
 void waiting_sockets_destroy(waiting_sockets_t *waiting_sockets)
 {
+    if (waiting_sockets == NULL)
+        return;
     for (size_t i = 0; i < waiting_sockets->sockets_count; i++) {
         close(waiting_sockets->sockets[i].socket);
     }
