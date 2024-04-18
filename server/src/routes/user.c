@@ -32,9 +32,9 @@ static response_t make_response(roundtable_client_t *client)
     char *response_body_str = NULL;
     response_t rep = {0};
 
-    json_object_add(response_body, (json_t *) json_string_create("user_uuid",
+    json_object_add(response_body, (json_t *) json_string_create("uuid",
         uuid_to_string(client->uuid)));
-    json_object_add(response_body, (json_t *) json_string_create("username",
+    json_object_add(response_body, (json_t *) json_string_create("name",
         client->username));
     json_object_add(response_body, (json_t *) json_string_create("status",
         client->status == ONLINE ? "ONLINE" : "OFFLINE"));
