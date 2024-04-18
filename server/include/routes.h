@@ -71,3 +71,4 @@ response_t user_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t get_teams_route(request_t *request, void *data);
+response_t join_team_route(request_t *request, void *data);

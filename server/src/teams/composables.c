@@ -46,3 +46,11 @@ bool roundtable_team_has_subscriber(
     }
     return false;
 }
+
+roundtable_team_t *get_team_from_json(
+        roundtable_server_t *server, json_object_t *body, char *key)
+{
+    return roundtable_server_get_team_by_uuid(server,
+        *uuid_from_string(
+        ((json_string_t *) json_object_get(body,key))->value));
+}

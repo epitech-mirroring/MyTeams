@@ -8,7 +8,7 @@
 
 #pragma once
 #include "server_types.h"
-#include "json/json_object.h"
+#include "json/json.h"
 
 // --------------------------- SERVER CONSTRUCTORS -------------------------
 /**
@@ -122,6 +122,15 @@ roundtable_team_t *roundtable_server_get_team_by_uuid(
  */
 bool roundtable_team_has_subscriber(roundtable_team_t *team,
     roundtable_client_t *client);
+/**
+ * @brief Get a team from a json object
+ * @param server The server to search in
+ * @param body The json object to search in
+ * @param key The key of the team to find
+ * @return The team if found, NULL otherwise
+ */
+roundtable_team_t *get_team_from_json(roundtable_server_t *server,
+    json_object_t *body, char *key);
 // --------------------------- SERVER CHANNELS -----------------------------
 /**
  * @brief Add a thread to a channel

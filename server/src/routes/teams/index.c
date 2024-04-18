@@ -7,13 +7,9 @@
 */
 
 #include <stdbool.h>
-#include <jansson.h>
 #include "server.h"
-#include "json/json.h"
 #include "server_utils.h"
 #include "network/dto.h"
-#include "json/json_types.h"
-#include "json/json_array.h"
 
 static json_object_t *dto_team(roundtable_team_t *team)
 {

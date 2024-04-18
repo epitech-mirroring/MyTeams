@@ -33,7 +33,8 @@ json_array_t *serialize_subscribers(roundtable_team_t *team)
 
     for (size_t i = 0; i < team->subscriber_count; i++) {
         json_array_add(subscribers,
-            (json_t *) uuid_to_string(team->subscribers[i]));
+            (json_t *) json_string_create(NULL,
+                uuid_to_string(team->subscribers[i])));
     }
     return subscribers;
 }

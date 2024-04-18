@@ -37,6 +37,7 @@ SOURCES			= 	src/main.c							\
 					src/routes/messages/index.c			\
 					src/routes/teams/create.c			\
 					src/routes/teams/index.c			\
+					src/routes/teams/join.c				\
 
 TESTS			=
 
