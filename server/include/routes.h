@@ -62,3 +62,12 @@ response_t create_team_route(request_t *request, void *data);
  * @return the response
  */
 response_t user_route(request_t *request, void *data);
+/**
+ * @brief Route to get the teams
+ * GET /teams
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t get_teams_route(request_t *request, void *data);

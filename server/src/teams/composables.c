@@ -36,3 +36,13 @@ roundtable_team_t *roundtable_server_create_team(
     roundtable_server_add_team(server, new_team);
     return new_team;
 }
+
+bool roundtable_team_has_subscriber(
+    roundtable_team_t *team, roundtable_client_t *client)
+{
+    for (size_t i = 0; i < team->subscriber_count; i++) {
+        if (uuid_compare(team->subscribers[i], client->uuid))
+            return true;
+    }
+    return false;
+}

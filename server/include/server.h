@@ -113,7 +113,15 @@ roundtable_team_t *roundtable_server_create_team(
  * @return The team if found, NULL otherwise
  */
 roundtable_team_t *roundtable_server_get_team_by_uuid(
-        roundtable_server_t *server, uuid_t uuid);
+    roundtable_server_t *server, uuid_t uuid);
+/**
+ * @brief Check if a client is a subscriber of a team
+ * @param team the team to check in
+ * @param client the client to check for
+ * @return true if the client is a subscriber, false otherwise
+ */
+bool roundtable_team_has_subscriber(roundtable_team_t *team,
+    roundtable_client_t *client);
 // --------------------------- SERVER CHANNELS -----------------------------
 /**
  * @brief Add a thread to a channel

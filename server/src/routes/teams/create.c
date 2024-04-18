@@ -10,7 +10,6 @@
 #include "server.h"
 #include "json/json.h"
 #include "server_utils.h"
-#include "network/dto.h"
 
 static bool body_is_valid(json_object_t *body)
 {
