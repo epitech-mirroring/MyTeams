@@ -18,6 +18,7 @@ void bind_routes(roundtable_server_t *server)
 {
     router_add_route(server->router, "/login", login_route, server);
     router_add_route(server->router, "/logout", logout_route, server);
+    router_add_route(server->router, "/messages/send", send_dm_route, server);
 }
 
 static roundtable_server_t *get_server(bool write, void *data)

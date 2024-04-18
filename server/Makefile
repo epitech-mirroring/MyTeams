@@ -7,30 +7,32 @@
 ##
 
 # All the source files
-SOURCES			= 	src/main.c					\
-					src/constructors.c			\
-					src/destructors.c			\
-					src/destructors_suite.c		\
-					src/clients/composables.c   \
-					src/clients/utils.c			\
-					src/teams/utils.c			\
-					src/channels/utils.c		\
-					src/threads/utils.c			\
-					src/direct-messages/utils.c	\
-					src/data/load.c				\
-					src/data/load_team.c		\
-					src/data/load_messages.c	\
-					src/data/load_arrays.c		\
-					src/data/save.c				\
-					src/data/save_clients.c		\
-					src/data/save_teams.c		\
-					src/data/save_channels.c	\
-					src/data/save_threads.c		\
-					src/data/save_messages.c	\
-					src/utils.c					\
-					src/routes/login.c			\
-					src/routes/logout.c			\
-					src/routes/user.c			\
+SOURCES			= 	src/main.c							\
+					src/constructors.c					\
+					src/destructors.c					\
+					src/destructors_suite.c				\
+					src/clients/composables.c   		\
+					src/clients/utils.c					\
+					src/teams/utils.c					\
+					src/channels/utils.c				\
+					src/threads/utils.c					\
+					src/direct-messages/utils.c			\
+					src/direct-messages/composables.c	\
+					src/data/load.c						\
+					src/data/load_team.c				\
+					src/data/load_messages.c			\
+					src/data/load_arrays.c				\
+					src/data/save.c						\
+					src/data/save_clients.c				\
+					src/data/save_teams.c				\
+					src/data/save_channels.c			\
+					src/data/save_threads.c				\
+					src/data/save_messages.c			\
+					src/utils.c							\
+					src/routes/login.c					\
+					src/routes/logout.c					\
+					src/routes/user.c					\
+					src/routes/messages/send.c			\
 
 TESTS			=
 

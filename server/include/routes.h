@@ -28,3 +28,12 @@ response_t login_route(request_t *request, void *data);
  * @return The response
  */
 response_t logout_route(request_t *request, void *data);
+/**
+ * @brief Route to send a direct message between two clients
+ * POST /messages/send
+ * @param request The request to process
+ * @param data The instance of roundtable_server_t
+ * @return The response
+ * @note see documentation/routes.md
+ */
+response_t send_dm_route(request_t *request, void *data);
