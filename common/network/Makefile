@@ -7,26 +7,30 @@
 ##
 
 # All the source files
-SOURCES			=	src/router.c							\
-					src/router_routes.c						\
-					src/router_middlewares.c 				\
-					src/router_requests.c					\
-					src/router_responses.c					\
-					src/router_standard_responses.c			\
-					src/router_socket.c						\
-					src/network_manager.c					\
-					src/network_manager_fds.c				\
-					src/network_manager_waiting_sockets.c	\
-					src/network_manager_sockets.c			\
-					src/network_serialize.c					\
-					src/network_deserialize.c				\
-					src/networking.c						\
-					src/networking_requests.c				\
+SOURCES			=	src/sockets/waiting_sockets.c	\
+					src/sockets/fds.c				\
+					src/sockets/dump.c				\
+					src/sockets/operators.c			\
+					src/sockets/utils.c				\
+					src/sockets/network.c			\
+					src/manager/ws_manager.c		\
+					src/manager/control.c			\
+					src/manager/ws_handler.c		\
+					src/router/router.c				\
+					src/router/operators.c			\
+					src/router/control.c			\
+					src/router/handler.c			\
+					src/router/routing.c			\
+					src/dto/request.c				\
+					src/dto/request_utils.c			\
+					src/dto/request_getters.c		\
+					src/dto/response.c				\
+					src/test_main.c
 
 TESTS			=
 
 # Compiler and linker settings
-NAME 			=   libnetwork.a
+NAME 			=   server
 CC				= 	gcc
 FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
 					-I../../include -ljson
@@ -55,7 +59,8 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 # Link the object files
 		@printf "$(RUNNING) $(BLUE) 🔗  Linking$(RESET)"
-		@ar rc $(NAME) $(OBJS) >> $(LOG) 2>&1 \
+#@ar rc $(NAME) $(OBJS) >> $(LOG) 2>&1
+		@$(CC) -o $(NAME) $(OBJS) $(FLAGS) >> $(LOG) 2>&1 \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"
 # Check if the binary was created
 		@if [ -f $(NAME) ]; then \
