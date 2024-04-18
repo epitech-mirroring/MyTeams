@@ -7,21 +7,26 @@
 ##
 
 # All the source files
-SOURCES			=	src/router.c							\
-					src/router_routes.c						\
-					src/router_middlewares.c 				\
-					src/router_requests.c					\
-					src/router_responses.c					\
-					src/router_standard_responses.c			\
-					src/router_socket.c						\
-					src/network_manager.c					\
-					src/network_manager_fds.c				\
-					src/network_manager_waiting_sockets.c	\
-					src/network_manager_sockets.c			\
-					src/network_serialize.c					\
-					src/network_deserialize.c				\
-					src/networking.c						\
-					src/networking_requests.c				\
+SOURCES			=	src/sockets/waiting_sockets.c	\
+					src/sockets/fds.c				\
+					src/sockets/dump.c				\
+					src/sockets/operators.c			\
+					src/sockets/utils.c				\
+					src/sockets/network.c			\
+					src/manager/ws_manager.c		\
+					src/manager/control.c			\
+					src/manager/ws_handler.c		\
+					src/router/router.c				\
+					src/router/operators.c			\
+					src/router/control.c			\
+					src/router/handler.c			\
+					src/router/routing.c			\
+					src/dto/request.c				\
+					src/dto/request_utils.c			\
+					src/dto/request_getters.c		\
+					src/dto/response.c				\
+					src/dto/response_utils.c		\
+					src/client/client.c				\
 
 TESTS			=
 

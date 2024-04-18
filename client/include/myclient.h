@@ -16,8 +16,7 @@
 #include <stdlib.h>
 #include <sys/select.h>
 #include <signal.h>
-#include "network/networking.h"
-#include "network/network_manager.h"
+#include "network/api_client.h"
 
 #define _GNU_SOURCE
 
@@ -36,7 +35,7 @@ typedef struct client_s {
     char const *user_name;
     bool is_logged;
     bool waiting_for_response;
-    api_handler_t *api_handler;
+    api_client_t *api_handler;
 } client_t;
 
 int client(int ac, char **av);

@@ -10,13 +10,6 @@
 #include "network/router.h"
 
 // -------------------------- MIDDLEWARES --------------------------------
-/**
- * @brief Global middleware (run on every request)
- * @param request The request that will be processed
- * @param data The instance of roundtable_server_t
- * @return The request with the server attached
- */
-request_t *global_middleware(request_t *request, void *data);
 
 // -------------------------- ROUTES --------------------------------
 /**
@@ -26,4 +19,12 @@ request_t *global_middleware(request_t *request, void *data);
  * @return The response
  * @note see documentation/routes.md
  */
-response_t *login_route(request_t *request);
+response_t login_route(request_t *request, void *data);
+/**
+ * @brief Route for the logout
+ * POST /logout
+ * @param request The request to process
+ * @param data The instance of roundtable_server_t
+ * @return The response
+ */
+response_t logout_route(request_t *request, void *data);

@@ -6,13 +6,13 @@
 ** You can even have multiple lines if you want !
 */
 
-#include <stdlib.h>
+#include <stdio.h>
 #include "server.h"
-#include "network/router.h"
 #include "json/json.h"
 #include "server_utils.h"
+#include "network/dto.h"
 
-static roundtable_client_t *get_or_create_client(
+static roundtable_client_t *get_create_client(
     roundtable_server_t *server, const char *username, response_t *response)
 {
     roundtable_client_t *client = roundtable_server_get_client_by_username(
@@ -20,36 +20,36 @@ static roundtable_client_t *get_or_create_client(
 
     if (!client) {
         client = roundtable_server_create_client(server, username);
-        if (response)
-            response->header.status_code = 201;
+        response->status = 201;
+        response->status_message = strdup(get_status_message(201));
     } else {
-        if (response)
-            response->header.status_code = 200;
+        response->status = 200;
+        response->status_message = strdup(get_status_message(200));
     }
     client->status = ONLINE;
     return client;
 }
 
-response_t *login_route(request_t *request)
+response_t login_route(request_t *request, void *data)
 {
-    response_t *response = calloc(1, sizeof(response_t));
-    roundtable_server_t *server = (roundtable_server_t *)request->data;
+    response_t r = {0};
+    roundtable_server_t *s = (roundtable_server_t *) data;
     json_object_t *body = (json_object_t *) json_parse(request->body);
-    char *username = NULL;
-    roundtable_client_t *client = NULL;
+    roundtable_client_t *c = NULL;
     json_object_t *response_body = json_object_create(NULL);
-    json_string_t *uuid_json = NULL;
     char *response_body_str = NULL;
 
-    if (!body || !json_object_get(body, "username"))
-        return create_error(400, "Bad Request", "Invalid JSON body");
-    username = ((json_string_t *) json_object_get(body, "username"))->value;
-    client = get_or_create_client(server, username, response);
-    uuid_json = json_string_create("uuid", uuid_to_string(client->uuid));
-    json_object_add(response_body, (json_t *) uuid_json);
+    if (strcmp(request->route.method, "POST") != 0)
+        return create_error(405, "Method not allowed", "Only POST");
+    if (body == NULL || !json_object_has_key(body, "username"))
+        return create_error(400, "Invalid body", "Missing 'ursername'");
+    c = get_create_client(s,
+        ((json_string_t *) json_object_get(body, "username"))->value, &r);
+    json_object_add(response_body, (json_t *)
+        json_string_create("user_uuid", uuid_to_string(c->uuid)));
     response_body_str = json_serialize((json_t *) response_body);
-    response->header.content_length = strlen(response_body_str);
-    response->body = strdup(response_body_str);
+    r.body = strdup(response_body_str);
+    response_add_header(&r, "Content-Type", "application/json");
     destroy(response_body_str, (json_t *) body, (json_t *) response_body);
-    return response;
+    return r;
 }
