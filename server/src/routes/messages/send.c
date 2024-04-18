@@ -30,14 +30,6 @@ static const char *get_missing_key(json_object_t *body)
     return NULL;
 }
 
-static roundtable_client_t *get_client_from_json(
-    roundtable_server_t *server, json_object_t *body, char *key)
-{
-    return roundtable_server_get_client_by_uuid(server,
-        *uuid_from_string(((json_string_t *) json_object_get(body,
-        key))->value));
-}
-
 response_t send_dm_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;

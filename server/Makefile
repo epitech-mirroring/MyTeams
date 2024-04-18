@@ -33,6 +33,7 @@ SOURCES			= 	src/main.c							\
 					src/routes/logout.c					\
 					src/routes/user.c					\
 					src/routes/messages/send.c			\
+					src/routes/messages/index.c			\
 
 TESTS			=
 
