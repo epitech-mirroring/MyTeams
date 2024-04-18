@@ -28,6 +28,5 @@ ws_manager_t *ws_manager_init(void)
 void ws_manager_destroy(ws_manager_t *ws_manager)
 {
     waiting_sockets_destroy(ws_manager->ws);
-
     free(ws_manager);
 }
