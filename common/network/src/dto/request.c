@@ -119,7 +119,7 @@ static void request_parse_headers(char *buffer, request_t *req,
 request_t *deserialize_request(char *buffer)
 {
     request_t *req = calloc(1, sizeof(request_t));
-    size_t line_start;
+    size_t line_start = 0;
 
     parse_request_first_line(buffer, req);
     request_parse_headers(buffer, req, &line_start);

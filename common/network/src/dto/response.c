@@ -22,6 +22,8 @@ char *serialize_response(response_t res)
         sprintf(serialized + strlen(serialized), "%s: %s\r\n",
             res.headers[i].key, res.headers[i].value);
     }
+    sprintf(serialized + strlen(serialized), "Content-Length: %ld\r\n",
+        strlen(res.body));
     sprintf(serialized + strlen(serialized), "\r\n%s", res.body);
     return serialized;
 }

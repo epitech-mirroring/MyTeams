@@ -9,7 +9,6 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include "network/router.h"
 #include "network/dto.h"
 
@@ -22,7 +21,7 @@ static response_t get_route_not_found_response(void)
     res.body = strdup("Route not found");
     res.headers_count = 0;
     res.headers = NULL;
-    res.body = NULL;
+    res.body = strdup("");
     return res;
 }
 
@@ -45,16 +44,13 @@ bool router_handle_request(waiting_socket_t *socket)
 {
     router_t *router = socket->data;
     char *buffer = calloc(BUFFER_SIZE, sizeof(char));
-    request_t *req = NULL;
+    request_t *req = calloc(1, sizeof(request_t));
     response_t res = {0};
 
-    if (recv(socket->socket, buffer, BUFFER_SIZE, 0) <= 0) {
+    if (req == NULL || buffer == NULL ||
+        recv(socket->socket, buffer, BUFFER_SIZE, 0) <= 0) {
         free(buffer);
-        return false;
-    }
-    req = calloc(1, sizeof(request_t));
-    if (req == NULL) {
-        free(buffer);
+        free(req);
         return false;
     }
     res = get_response(router, buffer, req);
