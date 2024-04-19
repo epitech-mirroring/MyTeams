@@ -43,6 +43,10 @@ const char *get_status_message(int status_code)
 static void add_common_headers(response_t *response)
 {
     response_add_header(response, "Access-Control-Allow-Origin", "*");
+    response_add_header(response, "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS");
+    response_add_header(response, "Access-Control-Allow-Headers",
+        "Content-Type, Authorization");
 }
 
 response_t create_error(int status_code, const char *name, const char *message)
@@ -76,6 +80,8 @@ response_t create_success(int status_code, const char *body)
     response.body = strdup(body);
     response.headers_count = 0;
     response.headers = NULL;
+    if (body && strlen(body) > 0 && (body[0] == '{' || body[0] == '['))
+        response_add_header(&response, "Content-Type", "application/json");
     add_common_headers(&response);
     return response;
 }
