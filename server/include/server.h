@@ -17,6 +17,12 @@
  * @return the newly created server or NULL if an error occurred
  */
 roundtable_server_t *create_server(int port);
+// --------------------------- SERVER ROUTER -------------------------------
+typedef struct roundtable_route_s {
+    char *path;
+    response_t (*handler)(request_t *req, void *data);
+} roundtable_route_t;
+extern const roundtable_route_t ROUTES[];
 // --------------------------- SERVER DESTRUCTORS --------------------------
 /**
  * @brief Destroy a server (including all clients, teams, channels,
