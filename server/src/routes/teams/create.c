@@ -9,22 +9,20 @@
 #include <stdlib.h>
 #include "server.h"
 #include "server_utils.h"
+#include "network/dto.h"
 
 static bool body_is_valid(json_object_t *body)
 {
-    bool sender = json_object_has_key(body, "user_uuid");
     bool name = json_object_has_key(body, "name");
     bool description = json_object_has_key(body, "description");
 
-    return sender && name && description;
+    return name && description;
 }
 
 static const char *get_missing_key(json_object_t *body)
 {
     if (body == NULL)
-        return "Missing 'user_uuid', 'name' and 'description'";
-    if (!json_object_has_key(body, "user_uuid"))
-        return "Missing 'user_uuid'";
+        return "Missing 'name' and 'description'";
     if (!json_object_has_key(body, "name"))
         return "Missing 'name'";
     if (!json_object_has_key(body, "description"))
@@ -56,11 +54,13 @@ response_t create_team_route(request_t *request, void *data)
 
     if (strcmp(request->route.method, "POST") != 0)
         return create_error(405, "Method not allowed", "Only POST");
+    if (!request_has_header(request, "Authorization"))
+        return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (body == NULL || !body_is_valid(body))
         return create_error(400, "Invalid body", get_missing_key(body));
-    client = get_client_from_json(server, body, "user_uuid");
+    client = get_client_from_header(server, request);
     if (!client)
-        return create_error(404, "Client not found", "Client not found");
+        return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     team = roundtable_server_create_team(server,
         ((json_string_t *) json_object_get(body, "name"))->value,
         ((json_string_t *) json_object_get(body, "description"))->value);

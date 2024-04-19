@@ -8,22 +8,20 @@
 
 #include "server.h"
 #include "server_utils.h"
+#include "network/dto.h"
 
 static bool body_is_valid(json_object_t *body)
 {
-    bool sender = json_object_has_key(body, "user_uuid");
     bool receiver = json_object_has_key(body, "recipient_uuid");
     bool message = json_object_has_key(body, "message");
 
-    return sender && receiver && message;
+    return receiver && message;
 }
 
 static const char *get_missing_key(json_object_t *body)
 {
     if (body == NULL)
-        return "Missing 'user_uuid', 'recipient_uuid' and 'message'";
-    if (!json_object_has_key(body, "user_uuid"))
-        return "Missing 'user_uuid'";
+        return "Missing 'recipient_uuid' and 'message'";
     if (!json_object_has_key(body, "recipient_uuid"))
         return "Missing 'recipient_uuid'";
     if (!json_object_has_key(body, "message"))
@@ -40,11 +38,13 @@ response_t send_dm_route(request_t *request, void *data)
 
     if (!IS_METHOD(request, "POST"))
         return create_error(405, "Method not allowed", "Only POST");
+    if (!request_has_header(request, "Authorization"))
+        return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (!body || !body_is_valid(body))
         return create_error(400, "Invalid body", get_missing_key(body));
-    sender = get_client_from_json(server, body, "user_uuid");
+    sender = get_client_from_header(server, request);
     if (!sender)
-        return create_error(404, "Client not found", "Sender not found");
+        return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     receiver = get_client_from_json(server, body, "recipient_uuid");
     if (!receiver)
         return create_error(404, "Client not found", "Receiver not found");

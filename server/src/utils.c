@@ -40,6 +40,11 @@ const char *get_status_message(int status_code)
     return "Unknown";
 }
 
+static void add_common_headers(response_t *response)
+{
+    response_add_header(response, "Access-Control-Allow-Origin", "*");
+}
+
 response_t create_error(int status_code, const char *name, const char *message)
 {
     response_t response = {0};
@@ -58,6 +63,7 @@ response_t create_error(int status_code, const char *name, const char *message)
     response.headers = NULL;
     response.body = body;
     response_add_header(&response, "Content-Type", "application/json");
+    add_common_headers(&response);
     return response;
 }
 
@@ -70,6 +76,7 @@ response_t create_success(int status_code, const char *body)
     response.body = strdup(body);
     response.headers_count = 0;
     response.headers = NULL;
+    add_common_headers(&response);
     return response;
 }
 
@@ -80,10 +87,9 @@ void destroy(char *str, json_t *req_body, json_t *res_body)
     json_destroy(res_body);
 }
 
-roundtable_client_t *get_client_from_json(
-    roundtable_server_t *server, json_object_t *body, char *key)
+response_t create_options_response(void)
 {
-    return roundtable_server_get_client_by_uuid(server,
-        *uuid_from_string(((json_string_t *) json_object_get(body,
-        key))->value));
+    response_t response = create_success(204, "");
+
+    return response;
 }
