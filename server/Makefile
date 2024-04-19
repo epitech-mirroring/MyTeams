@@ -42,6 +42,7 @@ SOURCES			= 	src/main.c							\
 					src/routes/teams/join.c				\
 					src/routes/teams/leave.c			\
 					src/routes/teams/users.c			\
+					src/routes/teams/is-subscribed.c	\
 					src/routes/teams/channels/create.c	\
 
 TESTS			=

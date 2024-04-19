@@ -25,6 +25,7 @@ const roundtable_route_t ROUTES[] = {
     {"/teams/join", join_team_route},
     {"/teams/leave", leave_team_route},
     {"/teams/users", team_users_route},
+    {"/teams/is-subscribed", is_subscribed_route},
     {"/teams/channels/create", create_channel_route},
     {"/user", user_route},
     {"/users", users_route},

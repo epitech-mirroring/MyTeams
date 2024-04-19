@@ -106,7 +106,6 @@ response_t team_users_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t create_channel_route(request_t *request, void *data);
-
 /**
  * @brief Route to get the list of all the user
  * @param request the request to process
@@ -114,3 +113,12 @@ response_t create_channel_route(request_t *request, void *data);
  *
 */
 response_t users_route(request_t *request, void *data);
+/**
+ * @brief Route to check if a user is subscribed to a team
+ * GET /teams/is-subscribed?team-uuid=...
+ * @param request The request to process
+ * @param data The instance of roundtable_server_t
+ * @return The response ({subscribed: true/false})
+ * @note see documentation/routes.md
+ */
+response_t is_subscribed_route(request_t *request, void *data);
