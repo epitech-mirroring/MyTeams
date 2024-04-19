@@ -491,7 +491,6 @@
     ```
   - Response: _Nothing_
   - Possible status codes:
-
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>

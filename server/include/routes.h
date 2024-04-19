@@ -123,3 +123,12 @@ response_t users_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t get_channels_routes(request_t *request, void *data);
+
+/**
+ * @brief Route to create a thread
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t create_thread_route(request_t *request, void *data);

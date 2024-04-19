@@ -18,6 +18,7 @@ SOURCES			= 	src/main.c							\
 					src/channels/utils.c				\
 					src/channels/composables.c			\
 					src/threads/utils.c					\
+					src/threads/composables.c			\
 					src/direct-messages/utils.c			\
 					src/direct-messages/composables.c	\
 					src/data/load.c						\
@@ -44,6 +45,9 @@ SOURCES			= 	src/main.c							\
 					src/routes/teams/users.c			\
 					src/routes/teams/channels/create.c	\
 					src/routes/teams/channels/index.c	\
+					src/routes/teams/channels/threads/create.c	\
+					src/routes/teams/channels/threads/index.c	\
+
 
 TESTS			=
 

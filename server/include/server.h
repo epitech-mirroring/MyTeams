@@ -217,6 +217,16 @@ roundtable_channel_t *get_channel_from_json(roundtable_team_t *team,
  */
 void roundtable_thread_add_message(roundtable_thread_t *thread,
     roundtable_message_t *message);
+/**
+ * @brief Create a thread
+ * @param name The name of the thread
+ * @param channel The channel the thread belongs to
+ * @return The newly created thread or NULL if an error occurred
+ * @note The thread is automatically added to the channel
+ */
+roundtable_thread_t *roundtable_thread_create(const char *title,
+    const char *message, roundtable_channel_t *channel);
+
 // ---------------------- SERVER DIRECT MESSAGES ---------------------------
 /**
  * @brief Add a direct message to the server
