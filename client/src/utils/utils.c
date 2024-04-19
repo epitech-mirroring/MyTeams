@@ -16,7 +16,7 @@ size_t tab_len(char **tab)
     return i;
 }
 
-char *add_bearer(char *uuid)
+char *add_bearer(const char *uuid)
 {
     char *bearer = malloc(sizeof(char) * (strlen(uuid) + 8));
 

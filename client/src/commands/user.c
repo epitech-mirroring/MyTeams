@@ -32,9 +32,6 @@ void user_response(response_t *response, request_data_t *request_data)
 {
     client_t *cli = (client_t *)request_data->data;
     json_object_t *jobj = NULL;
-    json_string_t *uuid = NULL;
-    json_string_t *username = NULL;
-    json_string_t *status = NULL;
 
     cli->waiting_for_response = false;
     if (response->status == 200) {
