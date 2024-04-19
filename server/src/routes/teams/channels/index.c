@@ -57,7 +57,7 @@ static response_t get_channels_list(roundtable_team_t *team,
     return rep;
 }
 
-response_t get_channels_routes(request_t *request, void *data)
+response_t get_channels_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *)data;
     roundtable_client_t *client = NULL;
