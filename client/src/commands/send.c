@@ -35,21 +35,21 @@ void send_response(response_t *response, request_data_t *request_data)
 static void send_send(client_t *client, char *user_uuid, char *message_body)
 {
     json_object_t *jobj = json_object_create("root");
-    json_string_t *user = json_string_create("user_uuid", client->user_uuid);
     json_string_t *recipient = json_string_create("recipient_uuid", user_uuid);
     json_string_t *body = json_string_create("content", message_body);
     json_object_t *message = json_object_create("message");
     request_t *request = calloc(1, sizeof(request_t));
+    char *bearer = add_bearer(client->user_uuid);
 
-    if (jobj == NULL || user == NULL || request == NULL || recipient == NULL ||
-        body == NULL || message == NULL)
+    if (jobj == NULL || request == NULL || recipient == NULL ||
+        body == NULL || message == NULL || bearer == NULL)
         return;
     json_object_add(message, (json_t *)body);
-    json_object_add(jobj, (json_t *)user);
     json_object_add(jobj, (json_t *)recipient);
     json_object_add(jobj, (json_t *)message);
     request->route = (route_t){"POST", "/messages/send"};
     request->body = json_serialize((json_t *)jobj);
+    request_add_header(request, "Authorization", bearer);
     api_client_send_request(client->api_handler, request, &send_response,
         client);
     client->waiting_for_response = true;

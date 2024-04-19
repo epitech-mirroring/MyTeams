@@ -49,16 +49,15 @@ void user_response(response_t *response, request_data_t *request_data)
 
 static void send_user(client_t *client, char *uuid)
 {
-    json_object_t *jobj = json_object_create("root");
-    json_string_t *user = json_string_create("user_uuid", client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid);
     request_t *request = calloc(1, sizeof(request_t));
 
-    if (jobj == NULL || user == NULL || request == NULL)
+    if (bearer == NULL || request == NULL)
         return;
-    json_object_add(jobj, (json_t *)user);
     request->route = (route_t){"GET", "/user"};
-    request->body = json_serialize((json_t *)jobj);
+    request_add_header(request, "Authorization", bearer);
     request_add_param(request, "uuid", uuid);
+    request->body = strdup("");
     api_client_send_request(client->api_handler, request, &user_response,
         client);
     client->waiting_for_response = true;
