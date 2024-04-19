@@ -23,7 +23,7 @@ response_t logout_route(request_t *request, void *data)
     if (client == NULL)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (client->status == OFFLINE)
-        return create_error(401, "Unauthorized", "Client already offline");
+        return create_error(409, "Conflict", "Client already offline");
     client->status = OFFLINE;
     return create_success(204, "");
 }
