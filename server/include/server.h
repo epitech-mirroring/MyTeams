@@ -287,3 +287,21 @@ roundtable_message_t *roundtable_message_create(roundtable_client_t *sender,
 void roundtable_server_send_dm(roundtable_server_t *server,
     roundtable_client_t *sender, roundtable_client_t *receiver,
     json_object_t *message);
+
+/**
+ * @brief Get a direct message from a json object
+ * @param server The server to search in
+ * @param body The json object to search in
+ * @param key The key of the direct message to find
+ * @return The direct message if found, NULL otherwise
+ */
+roundtable_thread_t *roundtable_thread_find_by_uuid(
+    roundtable_channel_t *channel, uuid_t uuid);
+/**
+ *  @brief Get a thread from a string
+ *  @param channel The channel to search in
+ *  @param uuid The string representation of the thread's UUID
+ *  @return The thread if found, NULL otherwise
+ */
+roundtable_thread_t *get_thread_from_string(roundtable_channel_t *channel,
+    char *uuid);
