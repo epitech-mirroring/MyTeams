@@ -7,7 +7,7 @@
 
 #include "myclient.h"
 
-static bool is_valid_ip(char *ip)
+static bool is_valid_ip(const char *ip)
 {
     int dots = 0;
     int digits = 0;
@@ -27,9 +27,9 @@ static bool is_valid_ip(char *ip)
     return dots == 3 && digits > 0;
 }
 
-static bool is_valid_port(char *port)
+static bool is_valid_port(const char *port)
 {
-    for (int i = 0; port[i]; i++) {
+    for (size_t i = 0; port[i]; i++) {
         if (port[i] < '0' || port[i] > '9')
             return false;
     }
