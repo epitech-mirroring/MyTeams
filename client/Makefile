@@ -24,6 +24,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/unsubscribe.c 							\
 					src/commands/use.c 									\
 					src/commands/create/create.c 						\
+					src/commands/create/create_team.c 					\
 					src/utils/utils.c 									\
 
 
