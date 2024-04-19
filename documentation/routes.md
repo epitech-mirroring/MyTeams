@@ -26,8 +26,10 @@
   - Possible status codes:
 
     - <p class="success"><b>200</b> - Successful</p>
-    - <p class="success"><b>201</b> - Successful: new user</p>
-    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="success"><b>201</b> - Successful: created user</p>
+    - <p class="error"><b>400</b> - Invalid body</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Logout
 
   - Method: `POST`
@@ -35,19 +37,18 @@
   - Request:
 
     - Params: _No params_
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String"
-        }
-    ```
+    - Headers:
+      - Authorization: `Bearer <token>`
+    - Body: _No Body_
   - Response: _Nothing_
   - Possible status codes:
 
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>204</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>409</b> - Already offline</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### List user
 
   - Method: `GET`
@@ -55,15 +56,10 @@
   - Request:
 
     - Params: `only-connected: Boolean (Optional, default false)`
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String"
-        }
-    ```
+    - Headers:
+      - Authorization: `Bearer <token>`
+    - Body: _No body_
   - Response:
-
     ```json
     [
         {
@@ -76,9 +72,8 @@
   - Possible status codes:
 
     - <p class="success"><b>200</b> - Successful</p>
-    - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>405</b> - Method not allowed</p> 
-    - <p class="error"><b>404</b> - No users found</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
   
 - ### Get info of an user
 
@@ -87,15 +82,10 @@
   - Request:
 
     - Params: `uuid: String (Optional, default current user)`
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String"
-        }
-    ```
+    - Headers:
+      - Authorization: `Bearer <token>`
+    - Body: _No body_
   - Response:
-
     ```json
         {
             "uuid": "String",
@@ -104,11 +94,10 @@
         }
     ```
   - Possible status codes:
-
     - <p class="success"><b>200</b> - Successful</p>
-    - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>404</b> - User not found</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>404</b> - Client not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
 
 ## Messages
 
@@ -119,11 +108,11 @@
   - Request:
 
     - Params: _No params_
+    - Headers:
+      - Authorization: `Bearer <token>`
     - Body:
-
     ```json
         {
-            "user_uuid": "String",
             "recipient_uuid": "String",
             "message": {
                 "content": "String"
@@ -132,11 +121,12 @@
     ```
   - Response: _Nothing_
   - Possible status codes:
-
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>204</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>404</b> - Recipient not found</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>404</b> - Receiver not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Direct Message
 
   - Method: `GET`
@@ -144,15 +134,10 @@
   - Request:
 
     - Params: `uuid: String (Mandatory)`
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String"
-        }
-    ```
+    - Headers:
+      - Authorization: `Bearer <token>`
+    - Body: _No body_
   - Response:
-
     ```json
     [
         {
@@ -163,11 +148,11 @@
     ]
     ```
   - Possible status codes:
-
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
     - <p class="error"><b>404</b> - Target not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
 
 ## Teams
 
@@ -178,22 +163,23 @@
   - Request:
 
     - Params: _No params_
+    - Headers:
+      - Authorization: `Bearer <token`
     - Body:
-
     ```json
         {
-            "user_uuid": "String",
             "team_uuid": "String"
         }
     ```
   - Response: _Nothing_
   - Possible status codes:
-
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>204</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>403</b> - Already in team</p>
-    - <p class="error"><b>404</b>- Team not found</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>409</b> - Already joined </p>
+    - <p class="error"><b>404</b> - Team not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Leave Team
 
   - Method: `POST`
@@ -201,22 +187,24 @@
   - Request:
 
     - Params: _No params_
+    - Headers:
+      - Authorization: `Bearer <token>`
     - Body:
 
     ```json
         {
-            "user_uuid": "String",
             "team_uuid": "String"
         }
     ```
   - Response: _Nothing_
   - Possible status codes:
-
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>204</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>403</b> - Not in team</p>
-    - <p class="error"><b>404</b>- Team not found</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>409</b> - Not in team</p>
+    - <p class="error"><b>404</b> - Team not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Get Teams
 
   - Method: `GET`
@@ -226,13 +214,9 @@
     - Params:
       - `team-uuid: String (Optional)`
       - `only-joined: Boolean (Optional, default: false, incompatible with team-uuid)`
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String"
-        }
-    ```
+    - Headers: 
+      - Authorization: `Bearer <token>`
+    - Body: _No body_
   - Response:
 
     ```json
@@ -245,11 +229,13 @@
     ]
     ```
   - Possible status codes:
-
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>404</b>- Team not found</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>404</b> - Team not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
+  
 - ### Create Team
 
   - Method: `POST`
@@ -257,11 +243,12 @@
   - Request:
 
     - Params: _No params_
+    - Headers:
+      - Authorization: `Bearer <token>`
     - Body:
 
     ```json
         {
-            "user_uuid": "String",
             "name": "String",
             "description": "String"
         }
@@ -274,26 +261,23 @@
         }
     ```
   - Possible status codes:
-
-    - <p class="success"><b>200</b> - Successful</p>
-    - <p class="error"><b>400</b> - Request malformed / Name or description too long</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>403</b> - Forbidden (Already exists)</p>
+    - <p class="success"><b>201</b> - Successful</p>
+    - <p class="error"><b>400</b> - Request malformed</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>500</b> - Internal server error</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Get Team Users
 
   - Method: `GET`
   - Route: `/teams/users`
   - Request:
 
-    - Params: _No params_
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String",
-            "team_uuid": "String"
-        }
-    ```
+    - Params:
+      - `team-uuid: String (mandatory)`
+    - Headers:
+      - Authorization: `Bearer <token>`
+    - Body: _No body_
   - Response:
 
     ```json
@@ -306,12 +290,12 @@
     ]
     ```
   - Possible status codes:
-
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
     - <p class="error"><b>403</b> - Forbidden</p>
-    - <p class="error"><b>404</b>- Team not found</p>
+    - <p class="error"><b>404</b> - Team not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
 
 ## Channels
 
@@ -321,15 +305,12 @@
   - Route: `/teams/channels`
   - Request:
 
-    - Params: `channel_uuid: String (Optional)`
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String",
-            "team_uuid": "String"
-        }
-    ```
+    - Params: 
+      - `channel-uuid: String (Optional)`
+      - `team-uuid: String (Mandatory)`
+    - Headers:
+      - Authorization: `Bearer <token>`
+    - Body: _No body_
   - Response:
 
     ```json
@@ -342,12 +323,13 @@
     ]
     ```
   - Possible status codes:
-
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
     - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
     - <p class="error"><b>404</b> - Team not found / Channel not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Create Channel
 
   - Method: `POST`
@@ -355,11 +337,12 @@
   - Request:
 
     - Params: _No params_
+    - Headers:
+      - Authorization: `Bearer <token>`
     - Body:
 
     ```json
         {
-            "user_uuid": "String",
             "team_uuid": "String",
             "name": "String",
             "description": "String"
@@ -373,28 +356,26 @@
         }
     ```
   - Possible status codes:
-
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>201</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>403</b> - Forbidden (Not in team) / Forbidden (Already exists)</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>403</b> - Forbidden client not subscribed</p>
     - <p class="error"><b>404</b>- Team not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Get Team Channels Threads
 
   - Method: `GET`
   - Route: `/teams/channels/threads`
   - Request:
 
-    - Params: `thread_uuid: String (Optional)`
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String",
-            "team_uuid": "String",
-            "channel_uuid": "String"
-        }
-    ```
+    - Params: 
+      - `thread-uuid: String (Optional)`
+      - `team-uuid: String (Mandatory)`
+      - `channel-uuid: String (Mandatory)`
+    - Headers:
+      - Authorization: `Bearer <token>`
+    - Body: _No body_
   - Response:
 
     ```json
@@ -409,11 +390,12 @@
     ```
   - Possible status codes:
 
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>204</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
     - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
     - <p class="error"><b>404</b> - Team not found / Channel not found / Thread not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
 
 ## Threads
 
@@ -424,11 +406,12 @@
   - Request:
 
     - Params: _No params_
+    - Headers:
+      - Authorization: `Bearer <token>`
     - Body:
 
     ```json
         {
-            "user_uuid": "String",
             "team_uuid": "String",
             "channel_uuid": "String",
             "title": "String",
@@ -444,28 +427,27 @@
     ```
   - Possible status codes:
 
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>201</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
-    - <p class="error"><b>403</b> - Forbidden (Not in team) / Forbidden (Already exists)</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
+    - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
     - <p class="error"><b>404</b> - Team not found / Channel not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Get Thread Messages
 
   - Method: `GET`
   - Route: `/teams/channels/threads/messages`
   - Request:
 
-    - Params: _No params_
-    - Body:
-
-    ```json
-        {
-            "user_uuid": "String",
-            "team_uuid": "String",
-            "channel_uuid": "String",
-            "thread_uuid": "String"
-        }
-    ```
+    - Params: 
+      - `team-uuid: String (Mandatory)`
+      - `channel-uuid: String (Mandatory)`
+      - `thread-uuid: String (Mandatory)`
+    - Headers:
+      - Authorization: `Bearer
+    - Body: _No body_
+    
   - Response:
 
     ```json
@@ -481,9 +463,11 @@
 
     - <p class="success"><b>200</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
-    - <p class="error"><b>401</b> - Not connected</p>
+    - <p class="error"><b>401</b> - Missing authorization / Invalid authorization</p>
     - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
     - <p class="error"><b>404</b> - Team not found / Channel not found / Thread not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
+  
 - ### Reply to Thread
 
   - Method: `POST`
@@ -491,11 +475,12 @@
   - Request:
 
     - Params: _No params_
+    - Headers:
+      - Authorization: `Bearer <token>`
     - Body:
 
     ```json
         {
-            "user_uuid": "String",
             "team_uuid": "String",
             "channel_uuid": "String",
             "thread_uuid": "String",
@@ -512,6 +497,7 @@
     - <p class="error"><b>401</b> - Not connected</p>
     - <p class="error"><b>403</b> - Forbidden (Not in team)</p>
     - <p class="error"><b>404</b> - Team not found / Channel not found / Thread not found</p>
+    - <p class="error"><b>405</b> - Method not allowed</p>
 
 <style>
     .success {
