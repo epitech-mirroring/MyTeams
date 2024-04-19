@@ -10,15 +10,6 @@
 #include "server_utils.h"
 #include "network/dto.h"
 
-static roundtable_client_t *get_client(
-    json_object_t *body, roundtable_server_t *srv)
-{
-    roundtable_client_t *client = NULL;
-
-    client = get_client_from_json(srv, body, "user_uuid");
-    return client;
-}
-
 static bool is_connected(request_t *request, roundtable_server_t *srv)
 {
     if (request_has_param(request, "only-connected")) {
@@ -56,18 +47,17 @@ static response_t make_response(roundtable_client_t *client,
 response_t users_route(request_t *request, void *data)
 {
     roundtable_server_t *srv = (roundtable_server_t *)data;
-    json_object_t *body = (json_object_t *)json_parse(request->body);
     roundtable_client_t *client = NULL;
     response_t rep = {0};
     bool only_connected = false;
 
     if (!IS_METHOD(request, "GET"))
         return create_error(405, "Method not allowed", "Only GET");
-    if (!body || !json_object_has_key(body, "user_uuid"))
-        return create_error(400, "Invalid body", "Missing 'user_uuid'");
-    client = get_client(body, srv);
+    if (!request_has_header(request, "Authorization"))
+        return create_error(401, "Unauthorized", "Missing 'Authorization'");
+    client = get_client_from_header(srv, request);
     if (!client)
-        return create_error(404, "User not found", "User not found");
+        return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     only_connected = is_connected(request, srv);
     return make_response(client, srv, only_connected, rep);
 }

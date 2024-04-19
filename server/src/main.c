@@ -13,6 +13,7 @@
 #include "server.h"
 #include "server_data.h"
 #include "routes.h"
+#include "server_utils.h"
 
 void bind_routes(roundtable_server_t *s)
 {
@@ -63,6 +64,7 @@ int main(int ac, char **av)
     bind_routes(server);
     get_server(true, server);
     sigaction(SIGINT, &(struct sigaction){.sa_handler = &stop}, NULL);
+    router_add_middleware(server->router, "/", &options_middleware, server);
     router_start(server->router);
     save_data(server, "./data.json");
     destroy_server(server);

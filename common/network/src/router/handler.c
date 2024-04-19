@@ -28,16 +28,25 @@ static response_t get_route_not_found_response(void)
 static response_t get_response(router_t *router, char *buffer, request_t *req)
 {
     route_handler_t *handler = NULL;
-    response_t res;
+    middleware_t **middlewares = NULL;
+    response_t *res = NULL;
 
     req = deserialize_request(buffer);
     handler = router_get_route(router, req->route.path);
+    middlewares = router_get_middlewares(router, req->route.path);
     if (handler == NULL) {
-        res = get_route_not_found_response();
+        return get_route_not_found_response();
     } else {
-        res = handler->handler(req, handler->data);
+        for (size_t i = 0; middlewares[i] != NULL; i++) {
+            res = middlewares[i]->handler(req, middlewares[i]->data);
+        }
+        if (res == NULL) {
+            res = calloc(1, sizeof(response_t));
+            *res = handler->handler(req, handler->data);
+        }
     }
-    return res;
+    free(middlewares);
+    return *res;
 }
 
 bool router_handle_request(waiting_socket_t *socket)

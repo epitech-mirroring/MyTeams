@@ -15,9 +15,17 @@ typedef struct route_handler_s {
     void *data;
 } route_handler_t;
 
+typedef struct middleware_s {
+    char *path;
+    response_t *(*handler)(request_t *req, void *data);
+    void *data;
+} middleware_t;
+
 typedef struct router_s {
     route_handler_t *routes;
     size_t routes_count;
+    middleware_t *middlewares;
+    size_t middlewares_count;
     ws_manager_t *ws_manager;
     host_t host;
 } router_t;
@@ -42,6 +50,16 @@ void router_destroy(router_t *router);
  */
 void router_add_route(router_t *router, const char *path,
     response_t (*handler)(request_t *req, void *data), void *data);
+/**
+ * @brief Add a middleware to the router
+ * @param router the router object to add the middleware to
+ * @param path the path of the middleware (will be copied)
+ * @param handler the handler of the middleware
+ * @param data custom data to pass to the handler (can be NULL)
+ * @note Middlewares are executed before routes
+ */
+void router_add_middleware(router_t *router, const char *path,
+    response_t *(*handler)(request_t *req, void *data), void *data);
 /**
  * @brief Start the router
  * @param router The router object to start
@@ -72,3 +90,11 @@ bool waiting_socket_send_response(waiting_socket_t *socket);
  * @return The route handler that matches the path, or NULL if no route matches
  */
 route_handler_t *router_get_route(router_t *router, const char *path);
+/**
+ * @brief Get all middlewares that match the given path
+ * @param router the router object to get the middlewares from
+ * @param path the path to match
+ * @return An array of middlewares that match the path
+ * @note The array is NULL-terminated
+ */
+middleware_t **router_get_middlewares(router_t *router, const char *path);
