@@ -446,7 +446,7 @@
       - `channel-uuid: String (Mandatory)`
       - `thread-uuid: String (Mandatory)`
     - Headers:
-      - Authorization: `Bearer
+      - Authorization: `Bearer <token>`
     - Body: _No body_
     
   - Response:
