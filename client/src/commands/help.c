@@ -89,7 +89,7 @@ static void compare_help(char **parsed_cmd)
 
 void help(char **parsed_cmd)
 {
-    int len = tab_len(parsed_cmd);
+    size_t len = tab_len(parsed_cmd);
 
     if (len == 1)
         help_no_args();

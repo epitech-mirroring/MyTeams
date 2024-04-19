@@ -7,7 +7,7 @@
 
 #include "myclient.h"
 
-int tab_len(char **tab)
+size_t tab_len(char **tab)
 {
     size_t i = 0;
 

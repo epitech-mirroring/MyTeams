@@ -7,13 +7,13 @@
 
 #include "myclient.h"
 
-static void skip_spaces(char *cmd, int *index)
+static void skip_spaces(const char *cmd, size_t *index)
 {
-    while (cmd[*index] != '\0' && cmd[*index] == ' ')
+    while (cmd[*index] && cmd[*index] == ' ')
         (*index)++;
 }
 
-static char *argument_part(char *cmd, int *index)
+static char *argument_part(char *cmd, size_t *index)
 {
     char *argument = NULL;
     size_t i = 0;
@@ -36,7 +36,7 @@ static char *argument_part(char *cmd, int *index)
     return argument;
 }
 
-static char *command_part(char *cmd, int *index)
+static char *command_part(char *cmd, size_t *index)
 {
     char *command = NULL;
     size_t i = 0;
@@ -57,7 +57,7 @@ void print_parsed_command(char **parsed_cmd)
     }
 }
 
-static bool parse_loop(char *cmd, int *index, char **parsed_cmd, int i)
+static bool parse_loop(char *cmd, size_t *index, char **parsed_cmd, int i)
 {
     skip_spaces(cmd, index);
     if (cmd[*index] != '\0' && cmd[*index] != '\n') {
@@ -68,7 +68,7 @@ static bool parse_loop(char *cmd, int *index, char **parsed_cmd, int i)
     return true;
 }
 
-char **parse_command_2(char *cmd, int *index, char **parsed_cmd)
+char **parse_command_2(char *cmd, size_t *index, char **parsed_cmd)
 {
     for (size_t i = 1; i < MAX_NUM_ARGS; i++) {
         if (!parse_loop(cmd, index, parsed_cmd, i))
