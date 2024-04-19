@@ -61,3 +61,4 @@ void user(char **parsed_cmd, client_t *client);
 void users(char **parsed_cmd, client_t *client);
 void cmd_send(char **parsed_cmd, client_t *client);
 void messages(char **parsed_cmd, client_t *client);
+void subscribe(char **parsed_cmd, client_t *client);

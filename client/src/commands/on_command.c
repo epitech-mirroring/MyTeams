@@ -9,6 +9,8 @@
 
 void on_command_2(char **parsed_cmd, client_t *client)
 {
+    if (strcmp(parsed_cmd[0], "/subscribe") == 0)
+        return subscribe(parsed_cmd, client);
     printf("Unknown command\n");
 }
 
