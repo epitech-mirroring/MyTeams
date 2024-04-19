@@ -65,7 +65,6 @@ response_t create_team_route(request_t *request, void *data)
         ((json_string_t *) json_object_get(body, "name"))->value,
         ((json_string_t *) json_object_get(body, "description"))->value);
     if (!team)
-        return create_error(500, "Internal server error",
-            "Team creation failed");
+        return create_error(500, "Internal error", "Team creation failed");
     return create_team_response(team);
 }

@@ -10,9 +10,8 @@
 #include "server_utils.h"
 #include "network/dto.h"
 
-
 static roundtable_client_t *get_client(request_t *request,
-        roundtable_server_t *srv)
+    roundtable_server_t *srv)
 {
     roundtable_client_t *client = NULL;
 

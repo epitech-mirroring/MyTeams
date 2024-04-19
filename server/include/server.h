@@ -97,7 +97,7 @@ roundtable_client_t *get_client_from_header(
  * @return The client if found, NULL otherwise
  */
 roundtable_client_t *get_client_from_json(
-        roundtable_server_t *server, json_object_t *body, char *key);
+    roundtable_server_t *server, json_object_t *body, char *key);
 // --------------------------- SERVER TEAMS --------------------------------
 /**
  * @brief Add a team to the server
