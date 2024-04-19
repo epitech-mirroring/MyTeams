@@ -23,5 +23,5 @@ response_t create_error(int status_code,
 response_t create_success(int status_code, const char *body);
 void destroy(char *str, json_t *req_body, json_t *res_body);
 const char *get_status_message(int status_code);
-response_t create_options_response(void);
+response_t *options_middleware(request_t *req, void *data);
 #define IS_METHOD(r, m) (strcmp(r->route.method, m) == 0)

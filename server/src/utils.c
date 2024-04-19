@@ -87,9 +87,13 @@ void destroy(char *str, json_t *req_body, json_t *res_body)
     json_destroy(res_body);
 }
 
-response_t create_options_response(void)
+response_t *options_middleware(request_t *req, void *data)
 {
-    response_t response = create_success(204, "");
+    response_t *response = NULL;
 
+    if (IS_METHOD(req, "OPTIONS")) {
+        response = calloc(1, sizeof(response_t));
+        *response = create_success(204, "");
+    }
     return response;
 }
