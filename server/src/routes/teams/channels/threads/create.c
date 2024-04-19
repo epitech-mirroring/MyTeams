@@ -44,6 +44,8 @@ static response_t create_thread_response_body(roundtable_thread_t *thread)
 
     json_object_add(body, (json_t *) json_string_create("thread_uuid",
     uuid_to_string(thread->uuid)));
+    json_object_add(body, (json_t *) json_number_create("timestamp",
+    thread->created_at));
     body_str = json_serialize((json_t *) body);
     json_object_destroy(body);
     response = create_success(201, body_str);
