@@ -43,6 +43,7 @@ SOURCES			= 	src/main.c							\
 					src/routes/teams/leave.c			\
 					src/routes/teams/users.c			\
 					src/routes/teams/channels/create.c	\
+					src/routes/teams/channels/index.c	\
 
 TESTS			=
 
