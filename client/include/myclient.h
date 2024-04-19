@@ -51,6 +51,7 @@ void on_command(char *cmd, client_t *client);
 char **parse_command(char *cmd);
 
 size_t tab_len(char **tab);
+char *add_bearer(char *uuid);
 
 
 void help(char **parsed_cmd);
