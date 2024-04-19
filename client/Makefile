@@ -23,6 +23,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/subscribed.c 							\
 					src/commands/unsubscribe.c 							\
 					src/commands/use.c 									\
+					src/commands/create/create.c 						\
 					src/utils/utils.c 									\
 
 
