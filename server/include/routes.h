@@ -122,3 +122,30 @@ response_t users_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t is_subscribed_route(request_t *request, void *data);
+
+/**
+ * @brief Route to get the list of all the channels
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t get_channels_route(request_t *request, void *data);
+
+/**
+ * @brief Route to create a thread
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t create_thread_route(request_t *request, void *data);
+
+/**
+ * @brief Route to get the list of all the threads
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t get_threads_route(request_t *request, void *data);

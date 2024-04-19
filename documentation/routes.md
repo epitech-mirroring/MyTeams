@@ -422,7 +422,8 @@
 
     ```json
         {
-            "thread_uuid": "String"
+            "thread_uuid": "String",
+            "timestamp": Number
         }
     ```
   - Possible status codes:
@@ -445,7 +446,7 @@
       - `channel-uuid: String (Mandatory)`
       - `thread-uuid: String (Mandatory)`
     - Headers:
-      - Authorization: `Bearer
+      - Authorization: `Bearer <token>`
     - Body: _No body_
     
   - Response:
@@ -489,10 +490,14 @@
             }
         }
     ```
-  - Response: _Nothing_
+  - Response: 
+  ```json
+    {
+        "timestamp": Number
+    }
+  ```
   - Possible status codes:
-
-    - <p class="success"><b>200</b> - Successful</p>
+    - <p class="success"><b>201</b> - Successful</p>
     - <p class="error"><b>400</b> - Request malformed</p>
     - <p class="error"><b>401</b> - Not connected</p>
     - <p class="error"><b>403</b> - Forbidden (Not in team)</p>

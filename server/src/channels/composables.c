@@ -24,3 +24,21 @@ roundtable_channel_t *roundtable_channel_create(const char *name,
     roundtable_team_add_channel(team, channel);
     return channel;
 }
+
+roundtable_channel_t *roundtable_channel_find_by_uuid(roundtable_team_t *team,
+    uuid_t uuid)
+{
+    for (size_t i = 0; i < team->channel_count; i++) {
+        if (uuid_compare(team->channels[i].uuid, uuid) == true)
+            return &team->channels[i];
+    }
+    return NULL;
+}
+
+roundtable_channel_t *get_channel_from_json(roundtable_team_t *team,
+    json_object_t *body, char *key)
+{
+    return roundtable_channel_find_by_uuid(team,
+        *uuid_from_string(((json_string_t *)
+        json_object_get(body, key))->value));
+}
