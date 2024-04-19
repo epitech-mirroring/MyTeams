@@ -12,7 +12,6 @@
 void unsubscribe_response_error(response_t *response,
     request_data_t *request_data)
 {
-    client_t *cli = (client_t *)request_data->data;
     json_object_t *jobj = NULL;
     json_string_t *team_uuid = NULL;
 
