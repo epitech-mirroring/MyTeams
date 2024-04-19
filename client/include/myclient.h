@@ -68,3 +68,4 @@ void use(char **parsed_cmd, client_t *client);
 
 void create(char **parsed_cmd, client_t *client);
 void create_team(char **parsed_cmd, client_t *client);
+void create_channel(char **parsed_cmd, client_t *client);

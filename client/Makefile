@@ -25,6 +25,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/use.c 									\
 					src/commands/create/create.c 						\
 					src/commands/create/create_team.c 					\
+					src/commands/create/create_channel.c 				\
 					src/utils/utils.c 									\
 
 
