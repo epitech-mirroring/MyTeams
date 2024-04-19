@@ -7,13 +7,11 @@
 */
 
 #include "server.h"
-#include "json/json.h"
 #include "server_utils.h"
 #include "network/dto.h"
 
-
 static roundtable_client_t *get_client(request_t *request,
-    json_object_t *body, roundtable_server_t *srv)
+    roundtable_server_t *srv)
 {
     roundtable_client_t *client = NULL;
 
@@ -21,7 +19,7 @@ static roundtable_client_t *get_client(request_t *request,
         client = roundtable_server_get_client_by_uuid(srv,
         *uuid_from_string(request_get_param(request, "uuid")));
     } else {
-        client = get_client_from_json(srv, body, "user_uuid");
+        client = get_client_from_header(srv, request);
     }
     return client;
 }
@@ -48,15 +46,18 @@ static response_t make_response(roundtable_client_t *client)
 response_t user_route(request_t *request, void *data)
 {
     roundtable_server_t *srv = (roundtable_server_t *)data;
-    json_object_t *body = (json_object_t *)json_parse(request->body);
     roundtable_client_t *client = NULL;
+    roundtable_client_t *target = NULL;
 
     if (!IS_METHOD(request, "GET"))
         return create_error(405, "Method not allowed", "Only GET");
-    if (!body || !json_object_has_key(body, "user_uuid"))
-        return create_error(400, "Invalid body", "Missing 'user_uuid'");
-    client = get_client(request, body, srv);
+    if (!request_has_header(request, "Authorization"))
+        return create_error(401, "Unauthorized", "Missing 'Authorization'");
+    client = get_client_from_header(srv, request);
     if (!client)
+        return create_error(401, "Unauthorized", "Invalid 'Authorization'");
+    target = get_client(request, srv);
+    if (!target)
         return create_error(404, "Client not found", "Sender not found");
-    return make_response(client);
+    return make_response(target);
 }

@@ -8,25 +8,7 @@
 
 #include "server.h"
 #include "server_utils.h"
-
-static bool body_is_valid(json_object_t *body)
-{
-    bool sender = json_object_has_key(body, "user_uuid");
-    bool team = json_object_has_key(body, "team_uuid");
-
-    return sender && team;
-}
-
-static const char *get_missing_key(json_object_t *body)
-{
-    if (body == NULL)
-        return "Missing 'user_uuid' and 'team_uuid'";
-    if (!json_object_has_key(body, "user_uuid"))
-        return "Missing 'user_uuid'";
-    if (!json_object_has_key(body, "team_uuid"))
-        return "Missing 'team_uuid'";
-    return NULL;
-}
+#include "network/dto.h"
 
 static char *serialize_users(roundtable_server_t *server,
     roundtable_team_t *team)
@@ -56,18 +38,20 @@ static char *serialize_users(roundtable_server_t *server,
 response_t team_users_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
-    json_object_t *body = (json_object_t *) json_parse(request->body);
     roundtable_client_t *client = NULL;
     roundtable_team_t *team = NULL;
 
     if (!IS_METHOD(request, "GET"))
         return create_error(405, "Method not allowed", "Only GET");
-    if (!body || !body_is_valid(body))
-        return create_error(400, "Invalid body", get_missing_key(body));
-    client = get_client_from_json(server, body, "user_uuid");
+    if (!request_has_header(request, "Authorization"))
+        return create_error(401, "Unauthorized", "Missing 'Authorization'");
+    if (!request_has_param(request, "team-uuid"))
+        return create_error(400, "Invalid params", "Missing 'team-uuid'");
+    client = get_client_from_header(server, request);
     if (!client)
-        return create_error(404, "Client not found", "Client not found");
-    team = get_team_from_json(server, body, "team_uuid");
+        return create_error(401, "Unauthorized", "Invalid 'Authorization'");
+    team = get_team_from_string(server,
+        request_get_param(request, "team-uuid"));
     if (!team)
         return create_error(404, "Team not found", "Team not found");
     if (!roundtable_team_has_subscriber(team, client))

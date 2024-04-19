@@ -50,7 +50,23 @@ bool roundtable_team_has_subscriber(
 roundtable_team_t *get_team_from_json(
     roundtable_server_t *server, json_object_t *body, char *key)
 {
+    char *uuid_str = NULL;
+    json_t *uuid_json = json_object_get(body, key);
+
+    if (uuid_json == NULL || uuid_json->type != JSON_OBJECT_TYPE_STRING)
+        return NULL;
+    uuid_str = ((json_string_t *) uuid_json)->value;
+    if (uuid_str == NULL || strlen(uuid_str) != 32)
+        return NULL;
     return roundtable_server_get_team_by_uuid(server,
-        *uuid_from_string(((json_string_t *)
-        json_object_get(body, key))->value));
+        *uuid_from_string(uuid_str));
+}
+
+roundtable_team_t *get_team_from_string(
+    roundtable_server_t *server, char *uuid_str)
+{
+    if (uuid_str == NULL || strlen(uuid_str) != 32)
+        return NULL;
+    return roundtable_server_get_team_by_uuid(server,
+        *uuid_from_string(uuid_str));
 }

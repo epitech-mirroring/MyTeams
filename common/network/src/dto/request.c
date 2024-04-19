@@ -68,7 +68,8 @@ static void parse_request_first_line(const char *buffer, request_t *req)
     regmatch_t matches[3];
     char *uri = NULL;
 
-    regcomp(&regex, "^(GET|POST|PUT|DELETE) ([^ ]+) HTTP/1.1", REG_EXTENDED);
+    regcomp(&regex, "^(GET|POST|PUT|DELETE|OPTIONS) ([^ ]+) HTTP/1.1",
+        REG_EXTENDED);
     if (regexec(&regex, buffer, 3, matches, 0) == 0) {
         strncpy((*req).route.method, buffer + matches[1].rm_so,
             matches[1].rm_eo - matches[1].rm_so);
