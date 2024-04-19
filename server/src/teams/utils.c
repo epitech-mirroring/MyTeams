@@ -12,14 +12,14 @@
 void roundtable_server_add_team(roundtable_server_t *server,
     roundtable_team_t *team)
 {
-    roundtable_team_t *new_teams = NULL;
+    roundtable_team_t **new_teams = NULL;
 
     new_teams = realloc(server->teams,
-        sizeof(roundtable_team_t) * (server->team_count + 1));
+        sizeof(roundtable_team_t *) * (server->team_count + 1));
     if (new_teams == NULL)
         return;
     server->teams = new_teams;
-    server->teams[server->team_count] = *team;
+    server->teams[server->team_count] = team;
     server->team_count++;
 }
 
@@ -49,4 +49,40 @@ void roundtable_team_add_subscriber(roundtable_team_t *team,
     team->subscribers = new_subscribers;
     COPY_UUID(team->subscribers[team->subscriber_count], subscriber->uuid);
     team->subscriber_count++;
+}
+
+static size_t get_subscriber_index(roundtable_team_t *team,
+    roundtable_client_t *subscriber, bool *found)
+{
+    for (size_t i = 0; i < team->subscriber_count; i++) {
+        if (uuid_compare(team->subscribers[i], subscriber->uuid)) {
+            *found = true;
+            return i;
+        }
+    }
+    *found = false;
+    return 0;
+}
+
+void roundtable_team_remove_subscriber(roundtable_team_t *team,
+    roundtable_client_t *subscriber)
+{
+    size_t index;
+    bool found = false;
+    uuid_t *subscribers = NULL;
+
+    index = get_subscriber_index(team, subscriber, &found);
+    if (!found)
+        return;
+    subscribers = calloc(team->subscriber_count - 1, sizeof(uuid_t));
+    if (subscribers == NULL)
+        return;
+    for (size_t i = 0; i < team->subscriber_count; i++) {
+        if (i == index)
+            continue;
+        COPY_UUID(subscribers[i], team->subscribers[i]);
+    }
+    free(team->subscribers);
+    team->subscribers = subscribers;
+    team->subscriber_count--;
 }

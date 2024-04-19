@@ -19,6 +19,9 @@ const status_message_t status_messages[] = {
     {401, "Unauthorized"},
     {403, "Forbidden"},
     {404, "Not Found"},
+    {405, "Method Not Allowed"},
+    {409, "Conflict"},
+    {422, "Unprocessable Entity"},
     {500, "Internal Server Error"},
     {501, "Not Implemented"},
     {502, "Bad Gateway"},
@@ -75,4 +78,12 @@ void destroy(char *str, json_t *req_body, json_t *res_body)
     free(str);
     json_destroy(req_body);
     json_destroy(res_body);
+}
+
+roundtable_client_t *get_client_from_json(
+    roundtable_server_t *server, json_object_t *body, char *key)
+{
+    return roundtable_server_get_client_by_uuid(server,
+        *uuid_from_string(((json_string_t *) json_object_get(body,
+        key))->value));
 }

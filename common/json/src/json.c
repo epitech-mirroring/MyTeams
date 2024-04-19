@@ -163,11 +163,17 @@ json_parser_t json_get_parser(json_object_type_t type)
 
 json_t *json_parse(const char *content)
 {
-    char *striped = json_strip(content);
-    json_object_type_t type = json_get_type(striped);
-    json_parser_t parser = json_get_parser(type);
-    json_t *new = parser(striped);
+    char *striped = NULL;
+    json_object_type_t type = JSON_OBJECT_TYPE_NULL;
+    json_parser_t parser = NULL;
+    json_t *new = NULL;
 
+    if (content == NULL || strlen(content) == 0)
+        return NULL;
+    striped = json_strip(content);
+    type = json_get_type(striped);
+    parser = json_get_parser(type);
+    new = parser(striped);
     free(striped);
     return new;
 }

@@ -8,6 +8,7 @@
 
 #pragma once
 #include "server_types.h"
+#include "json/json.h"
 
 // --------------------------- SERVER CONSTRUCTORS -------------------------
 /**
@@ -27,12 +28,12 @@ void destroy_server(roundtable_server_t *server);
  * @brief Destroy a client and free its memory
  * @param client the client to destroy
  */
-void destroy_client(roundtable_client_t client);
+void destroy_client(roundtable_client_t *client);
 /**
  * @brief Destroy a team (including all channels) and free its memory
  * @param team the team to destroy
  */
-void destroy_team(roundtable_team_t team);
+void destroy_team(roundtable_team_t *team);
 /**
  * @brief Destroy a message and free its memory
  * @param message
@@ -96,6 +97,47 @@ void roundtable_team_add_channel(roundtable_team_t *team,
  */
 void roundtable_team_add_subscriber(roundtable_team_t *team,
     roundtable_client_t *subscriber);
+/**
+ * @brief Create a team
+ * @param server The server to create the team in
+ * @param name the name of the team
+ * @param description the description of the team
+ * @return The newly created team or NULL if an error occurred
+ */
+roundtable_team_t *roundtable_server_create_team(
+    roundtable_server_t *server, const char *name, const char *description);
+/**
+ * @brief Get a team by its UUID
+ * @param server The server to search in
+ * @param uuid The UUID of the team to find
+ * @return The team if found, NULL otherwise
+ */
+roundtable_team_t *roundtable_server_get_team_by_uuid(
+    roundtable_server_t *server, uuid_t uuid);
+/**
+ * @brief Check if a client is a subscriber of a team
+ * @param team the team to check in
+ * @param client the client to check for
+ * @return true if the client is a subscriber, false otherwise
+ */
+bool roundtable_team_has_subscriber(roundtable_team_t *team,
+    roundtable_client_t *client);
+/**
+ * @brief Get a team from a json object
+ * @param server The server to search in
+ * @param body The json object to search in
+ * @param key The key of the team to find
+ * @return The team if found, NULL otherwise
+ */
+roundtable_team_t *get_team_from_json(roundtable_server_t *server,
+    json_object_t *body, char *key);
+/**
+ * @brief Remove a subscriber from a team
+ * @param team The team to remove the subscriber from
+ * @param subscriber The subscriber to remove
+ */
+void roundtable_team_remove_subscriber(roundtable_team_t *team,
+    roundtable_client_t *subscriber);
 // --------------------------- SERVER CHANNELS -----------------------------
 /**
  * @brief Add a thread to a channel
@@ -104,6 +146,16 @@ void roundtable_team_add_subscriber(roundtable_team_t *team,
  */
 void roundtable_channel_add_thread(roundtable_channel_t *channel,
     roundtable_thread_t *thread);
+/**
+ * @brief Create a channel
+ * @param name The name of the channel
+ * @param description The description of the channel
+ * @param team The team the channel belongs to
+ * @return The newly created channel or NULL if an error occurred
+ * @note The channel is automatically added to the team
+ */
+roundtable_channel_t *roundtable_channel_create(const char *name,
+    const char *description, roundtable_team_t *team);
 // --------------------------- SERVER THREADS ------------------------------
 /**
  * @brief Add a message to a thread
@@ -128,3 +180,41 @@ void roundtable_server_add_direct_message(roundtable_server_t *server,
 void roundtable_direct_message_add_message(
     roundtable_direct_message_t *direct_message,
     roundtable_message_t *message);
+/**
+ * @brief Find a direct message between two clients
+ * @param server The server to search in
+ * @param sender the sender of the message
+ * @param receiver the receiver of the message
+ * @return The direct message if found, NULL otherwise
+ * @note Sender is not necessarily the sender of the direct message since
+ * direct messages are bidirectional
+ */
+roundtable_direct_message_t *roundtable_server_find_direct_message(
+    roundtable_server_t *server, roundtable_client_t *sender,
+    roundtable_client_t *receiver);
+/**
+ * @brief Create a direct message between two clients
+ * @param sender The sender of the initial message
+ * @param receiver The receiver of the initial message
+ * @return The newly created direct message or NULL if an error occurred
+ */
+roundtable_direct_message_t *roundtable_direct_message_create(
+    roundtable_client_t *sender, roundtable_client_t *receiver);
+/**
+ * @brief Create a message
+ * @param sender The sender of the message
+ * @param message The message to send
+ * @return The newly created message or NULL if an error occurred
+ */
+roundtable_message_t *roundtable_message_create(roundtable_client_t *sender,
+    json_object_t *message);
+/**
+ * @brief Send a direct message between two clients
+ * @param server The server to send the message in
+ * @param sender The sender of the message
+ * @param receiver The receiver of the message
+ * @param message
+ */
+void roundtable_server_send_dm(roundtable_server_t *server,
+    roundtable_client_t *sender, roundtable_client_t *receiver,
+    json_object_t *message);

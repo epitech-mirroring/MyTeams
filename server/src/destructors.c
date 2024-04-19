@@ -25,16 +25,19 @@ static void destroy_threads(roundtable_thread_t *threads, size_t size)
     free(threads);
 }
 
-void destroy_client(roundtable_client_t client)
+void destroy_client(roundtable_client_t *client)
 {
-    free(client.username);
+    free(client->username);
+    free(client);
 }
 
-void destroy_team(roundtable_team_t team)
+void destroy_team(roundtable_team_t *team)
 {
-    free(team.name);
-    free(team.description);
-    destroy_channels(team.channels, team.channel_count);
+    free(team->name);
+    free(team->description);
+    destroy_channels(team->channels, team->channel_count);
+    free(team->subscribers);
+    free(team);
 }
 
 void destroy_message(roundtable_message_t message)

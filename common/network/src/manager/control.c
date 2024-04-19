@@ -28,6 +28,8 @@ void ws_manager_run_once(ws_manager_t *ws_manager)
 
     if (waiting_sockets_select(ws) == -1) {
         waiting_sockets_destroy(ws);
+        ws_manager->running = false;
+        ws_manager->ws = NULL;
         return;
     }
     ws_manager_handle_sockets(ws);

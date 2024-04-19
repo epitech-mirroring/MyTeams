@@ -11,18 +11,20 @@
 #include <string.h>
 #include "uuid/uuid.h"
 #include "network/router.h"
+#include <time.h>
 
 /**
  * @brief Copy a UUID from src to dest
- * @note This is a macro because the uuid_t type is an array of 16 bytes
+ * @note This is a macro because the uuid_t type is an array of 16unsigned char
  */
-#define COPY_UUID(dest, src) memcpy(dest, src, 16)
+#define COPY_UUID(dest, src) uuid_copy(dest, src)
 
 /**
  * @brief A message sent by a client in a thread or a direct message
  */
 typedef struct roundtable_message_s {
     uuid_t sender_uuid;
+    time_t created_at;
     char *content;
 } roundtable_message_t;
 
@@ -35,6 +37,7 @@ typedef struct roundtable_thread_s {
     char *content;
     roundtable_message_t *messages;
     size_t message_count;
+    time_t created_at;
 } roundtable_thread_t;
 
 /**
@@ -96,11 +99,11 @@ typedef struct roundtable_team_s {
  * @brief The server containing all the data
  */
 typedef struct roundtable_server_s {
-    roundtable_team_t *teams;
+    roundtable_team_t **teams;
     size_t team_count;
-    roundtable_client_t *clients;
+    roundtable_client_t **clients;
     size_t client_count;
-    roundtable_direct_message_t *direct_messages;
+    roundtable_direct_message_t **direct_messages;
     size_t message_count;
     router_t *router;
 } roundtable_server_t;

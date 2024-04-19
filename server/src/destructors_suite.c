@@ -10,7 +10,7 @@
 #include "server.h"
 
 
-static void destroy_clients(roundtable_client_t *clients, size_t size)
+static void destroy_clients(roundtable_client_t **clients, size_t size)
 {
     for (size_t i = 0; i < size; i++) {
         destroy_client(clients[i]);
@@ -18,7 +18,7 @@ static void destroy_clients(roundtable_client_t *clients, size_t size)
     free(clients);
 }
 
-static void destroy_teams(roundtable_team_t *teams, size_t size)
+static void destroy_teams(roundtable_team_t **teams, size_t size)
 {
     for (size_t i = 0; i < size; i++) {
         destroy_team(teams[i]);
@@ -35,11 +35,12 @@ static void destroy_messages(roundtable_message_t *messages, size_t size)
 }
 
 static void destroy_direct_messages(
-    roundtable_direct_message_t *direct_messages, size_t size)
+    roundtable_direct_message_t **direct_messages, size_t size)
 {
     for (size_t i = 0; i < size; i++) {
-        destroy_messages(direct_messages[i].messages,
-            direct_messages[i].message_count);
+        destroy_messages(direct_messages[i]->messages,
+            direct_messages[i]->message_count);
+        free(direct_messages[i]);
     }
     free(direct_messages);
 }

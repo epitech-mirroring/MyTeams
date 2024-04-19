@@ -8,7 +8,6 @@
 
 #include <stdlib.h>
 #include "../include/server.h"
-#include "network/router.h"
 
 roundtable_server_t *create_server(int port)
 {

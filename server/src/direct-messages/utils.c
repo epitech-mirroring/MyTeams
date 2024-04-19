@@ -12,14 +12,14 @@
 void roundtable_server_add_direct_message(roundtable_server_t *server,
     roundtable_direct_message_t *direct_message)
 {
-    roundtable_direct_message_t *new_direct_messages = NULL;
+    roundtable_direct_message_t **new_direct_messages = NULL;
 
     new_direct_messages = realloc(server->direct_messages,
-        sizeof(roundtable_direct_message_t) * (server->message_count + 1));
+        sizeof(roundtable_direct_message_t *) * (server->message_count + 1));
     if (new_direct_messages == NULL)
         return;
     server->direct_messages = new_direct_messages;
-    server->direct_messages[server->message_count] = *direct_message;
+    server->direct_messages[server->message_count] = direct_message;
     server->message_count++;
 }
 

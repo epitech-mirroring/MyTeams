@@ -14,10 +14,21 @@
 #include "server_data.h"
 #include "routes.h"
 
-void bind_routes(roundtable_server_t *server)
+void bind_routes(roundtable_server_t *s)
 {
-    router_add_route(server->router, "/login", login_route, server);
-    router_add_route(server->router, "/logout", logout_route, server);
+    router_add_route(s->router, "/login", login_route, s);
+    router_add_route(s->router, "/logout", logout_route, s);
+    router_add_route(s->router, "/messages/send", send_dm_route, s);
+    router_add_route(s->router, "/messages", get_dms_route, s);
+    router_add_route(s->router, "/teams/create", create_team_route, s);
+    router_add_route(s->router, "/teams", get_teams_route, s);
+    router_add_route(s->router, "/teams/join", join_team_route, s);
+    router_add_route(s->router, "/teams/leave", leave_team_route, s);
+    router_add_route(s->router, "/teams/users", team_users_route, s);
+    router_add_route(s->router, "/teams/channels/create",
+        create_channel_route, s);
+    router_add_route(s->router, "/user", user_route, s);
+    router_add_route(s->router, "/users", users_route, s);
 }
 
 static roundtable_server_t *get_server(bool write, void *data)
@@ -33,6 +44,7 @@ static void stop(int sig)
 {
     roundtable_server_t *server = get_server(false, NULL);
 
+    (void)sig;
     if (server)
         server->router->ws_manager->running = false;
 }
