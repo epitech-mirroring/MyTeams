@@ -15,24 +15,28 @@
 #include "routes.h"
 #include "server_utils.h"
 
+const roundtable_route_t ROUTES[] = {
+    {"/login", login_route},
+    {"/logout", logout_route},
+    {"/messages/send", send_dm_route},
+    {"/messages", get_dms_route},
+    {"/teams/create", create_team_route},
+    {"/teams", get_teams_route},
+    {"/teams/join", join_team_route},
+    {"/teams/leave", leave_team_route},
+    {"/teams/users", team_users_route},
+    {"/teams/channels/create", create_channel_route},
+    {"/teams/channels", get_channels_routes},
+    {"/teams/channels/threads/create", create_thread_route},
+    {"/user", user_route},
+    {"/users", users_route},
+    {NULL, NULL}
+};
+
 void bind_routes(roundtable_server_t *s)
 {
-    router_add_route(s->router, "/login", login_route, s);
-    router_add_route(s->router, "/logout", logout_route, s);
-    router_add_route(s->router, "/messages/send", send_dm_route, s);
-    router_add_route(s->router, "/messages", get_dms_route, s);
-    router_add_route(s->router, "/teams/create", create_team_route, s);
-    router_add_route(s->router, "/teams", get_teams_route, s);
-    router_add_route(s->router, "/teams/join", join_team_route, s);
-    router_add_route(s->router, "/teams/leave", leave_team_route, s);
-    router_add_route(s->router, "/teams/users", team_users_route, s);
-    router_add_route(s->router, "/teams/channels/create",
-    create_channel_route, s);
-    router_add_route(s->router, "/teams/channels", get_channels_routes, s);
-    router_add_route(s->router, "/user", user_route, s);
-    router_add_route(s->router, "/users", users_route, s);
-    router_add_route(s->router, "/teams/channels/thread/create",
-    create_thread_route, s);
+    for (size_t i = 0; ROUTES[i].path; i++)
+        router_add_route(s->router, ROUTES[i].path, ROUTES[i].handler, s);
 }
 
 static roundtable_server_t *get_server(bool write, void *data)
