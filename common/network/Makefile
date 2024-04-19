@@ -21,6 +21,7 @@ SOURCES			=	src/sockets/waiting_sockets.c	\
 					src/router/control.c			\
 					src/router/handler.c			\
 					src/router/routing.c			\
+					src/router/middlewares.c		\
 					src/dto/request.c				\
 					src/dto/request_utils.c			\
 					src/dto/request_getters.c		\
