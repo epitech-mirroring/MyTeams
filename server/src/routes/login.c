@@ -7,7 +7,6 @@
 */
 
 #include "server.h"
-#include "json/json.h"
 #include "server_utils.h"
 #include "network/dto.h"
 
@@ -19,11 +18,9 @@ static roundtable_client_t *get_create_client(
 
     if (!client) {
         client = roundtable_server_create_client(server, username);
-        response->status = 201;
-        response->status_message = strdup(get_status_message(201));
+        *response = create_success(201, "");
     } else {
-        response->status = 200;
-        response->status_message = strdup(get_status_message(200));
+        *response = create_success(200, "");
     }
     client->status = ONLINE;
     return client;
