@@ -13,6 +13,8 @@ void on_command_2(char **parsed_cmd, client_t *client)
         return subscribe(parsed_cmd, client);
     if (strcmp(parsed_cmd[0], "/subscribed") == 0)
         return subscribed(parsed_cmd, client);
+    if (strcmp(parsed_cmd[0], "/unsubscribe") == 0)
+        return unsubscribe(parsed_cmd, client);
     printf("Unknown command\n");
 }
 
