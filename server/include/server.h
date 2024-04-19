@@ -187,6 +187,28 @@ void roundtable_channel_add_thread(roundtable_channel_t *channel,
  */
 roundtable_channel_t *roundtable_channel_create(const char *name,
     const char *description, roundtable_team_t *team);
+
+/**
+ * @brief Get a channel by its UUID
+ * @param team the team the channel belongs to
+ * @param uuid the UUID of the channel to find
+ * @return The channel if found, NULL otherwise
+ * @note The channel must belong to the team
+ */
+roundtable_channel_t *roundtable_channel_find_by_uuid(roundtable_team_t *team,
+    uuid_t uuid);
+
+/**
+ * @brief Get a channel from a json object
+ * @param team The team to search in
+ * @param body The json object to search in
+ * @param key The key of the channel to find
+ * @return The channel if found, NULL otherwise
+ * @note The channel must belong to the team
+ */
+roundtable_channel_t *get_channel_from_json(roundtable_team_t *team,
+    json_object_t *body, char *key);
+
 // --------------------------- SERVER THREADS ------------------------------
 /**
  * @brief Add a message to a thread

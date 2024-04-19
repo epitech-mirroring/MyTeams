@@ -28,6 +28,7 @@ void bind_routes(roundtable_server_t *s)
     router_add_route(s->router, "/teams/users", team_users_route, s);
     router_add_route(s->router, "/teams/channels/create",
         create_channel_route, s);
+    router_add_route(s->router, "/teams/channels", get_channels_routes, s);
     router_add_route(s->router, "/user", user_route, s);
     router_add_route(s->router, "/users", users_route, s);
 }
