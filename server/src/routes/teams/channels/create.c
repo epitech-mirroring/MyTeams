@@ -17,7 +17,7 @@ static bool body_is_valid(json_object_t *body)
     bool name = json_object_has_key(body, "name");
     bool description = json_object_has_key(body, "description");
 
-    return sender && name && description;
+    return sender && name && description && team;
 }
 
 static const char *get_missing_key(json_object_t *body)
