@@ -60,5 +60,5 @@ response_t user_route(request_t *request, void *data)
     target = get_client(request, srv);
     if (!target)
         return create_error(404, "Client not found", "Sender not found");
-    return make_response(client);
+    return make_response(target);
 }
