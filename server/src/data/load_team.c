@@ -76,14 +76,12 @@ void deserialize_threads(json_array_t *threads, roundtable_channel_t *channel)
 void deserialize_thread(json_object_t *thread, roundtable_channel_t *channel)
 {
     roundtable_thread_t *new_thread = calloc(1, sizeof(roundtable_thread_t));
-    json_string_t *title = NULL;
     json_string_t *content = NULL;
     json_array_t *messages = NULL;
     json_number_t *timestamp = NULL;
 
     if (new_thread == NULL)
         return;
-    title = (json_string_t *) json_object_get(thread, "title");
     content = (json_string_t *) json_object_get(thread, "content");
     messages = (json_array_t *) json_object_get(thread, "messages");
     timestamp = (json_number_t *) json_object_get(thread, "timestamp");
@@ -91,7 +89,8 @@ void deserialize_thread(json_object_t *thread, roundtable_channel_t *channel)
         ((json_string_t *) json_object_get(thread, "sender_uuid"))->value));
     COPY_UUID(new_thread->uuid, *uuid_from_string(
             ((json_string_t *) json_object_get(thread, "uuid"))->value));
-    new_thread->title = strdup(title->value);
+    new_thread->title = strdup(((json_string_t *)
+        json_object_get(thread, "title"))->value);
     new_thread->content = strdup(content->value);
     new_thread->created_at = timestamp->value;
     deserialize_messages(messages, new_thread);
