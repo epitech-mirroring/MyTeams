@@ -25,7 +25,8 @@ void create_team_response_success(response_t *response,
     if (jobj_resp == NULL || jobj_send == NULL || team_uuid == NULL ||
         team_name == NULL || team_desc == NULL)
         return;
-    client_print_team(team_uuid->value, team_name->value, team_desc->value);
+    client_print_team_created(team_uuid->value, team_name->value,
+        team_desc->value);
 }
 
 void create_team_response(response_t *response, request_data_t *request_data)

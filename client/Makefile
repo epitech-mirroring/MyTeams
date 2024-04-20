@@ -28,6 +28,14 @@ SOURCES			= 	src/main.c											\
 					src/commands/create/create_channel.c 				\
 					src/commands/create/create_thread.c 				\
 					src/commands/create/create_reply.c 					\
+					src/commands/events/events.c 						\
+					src/commands/events/logged_in.c 					\
+					src/commands/events/logged_out.c 					\
+					src/commands/events/dm_received.c 					\
+					src/commands/events/team_created.c 					\
+					src/commands/events/channel_created.c 				\
+					src/commands/events/thread_created.c 				\
+					src/commands/events/thread_replied.c 				\
 					src/utils/utils.c 									\
 
 

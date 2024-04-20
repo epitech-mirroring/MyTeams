@@ -16,8 +16,6 @@ void logout_rep(response_t *response, request_data_t *request_data)
     cli->waiting_for_response = false;
     if (response->status == 204) {
         cli->is_logged = false;
-        cli->user_uuid = NULL;
-        cli->user_name = NULL;
         printf("CLI : Successfully logged out\n");
     }
 }
@@ -50,5 +48,12 @@ void logout(char **parsed_cmd, client_t *client)
         printf("You are not logged in\n");
         return;
     }
+    request_logout(client);
+}
+
+void logout_when_leaving(client_t *client)
+{
+    if (client->is_logged == false)
+        return;
     request_logout(client);
 }

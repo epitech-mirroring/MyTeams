@@ -7,12 +7,7 @@
 
 #include "myclient.h"
 #include "network/manager.h"
-
-static void reset_fd_set(fd_set *readfds, int fd)
-{
-    FD_ZERO(readfds);
-    FD_SET(fd, readfds);
-}
+#include "network/sockets.h"
 
 static client_t *init_struct(api_client_t *api_handler)
 {
@@ -23,10 +18,12 @@ static client_t *init_struct(api_client_t *api_handler)
     }
     client->is_logged = false;
     client->waiting_for_response = false;
+    client->running = true;
+    client->buffer = calloc(1024, sizeof(char));
     client->user_name = NULL;
     client->user_uuid = NULL;
     client->context = malloc(sizeof(context_t));
-    if (client->context == NULL) {
+    if (client->context == NULL || client->buffer == NULL) {
         exit(84);
     }
     client->context->team_uuid = NULL;
@@ -36,7 +33,7 @@ static client_t *init_struct(api_client_t *api_handler)
     return client;
 }
 
-static bool read_loop(int fd, char *cmd, bool *running, client_t *client)
+static bool read_loop(int fd, char *cmd, client_t *client)
 {
     char buf[1];
     long status;
@@ -46,7 +43,7 @@ static bool read_loop(int fd, char *cmd, bool *running, client_t *client)
         exit(84);
     if (status == 0) {
         printf("Exiting client\n");
-        *running = false;
+        client->running = false;
         return false;
     }
     strncat(cmd, buf, 1);
@@ -58,44 +55,46 @@ static bool read_loop(int fd, char *cmd, bool *running, client_t *client)
     return true;
 }
 
-static void read_bytes(int fd, char *buffer, bool *running, client_t *client)
+static void read_bytes(int fd, char *buffer, client_t *client)
 {
     char cmd[1024] = {0};
 
     strcpy(cmd, buffer);
-    while (*running) {
-        if (!read_loop(fd, cmd, running, client))
+    while (client->running) {
+        if (!read_loop(fd, cmd, client))
             break;
     }
     memset(buffer, 0, 1024);
     strcpy(buffer, cmd);
 }
 
-void shell(client_t *client, fd_set readfds, char *buffer, bool *running)
+bool callback(waiting_socket_t *socket)
 {
-    int select_ret;
+    client_t *client = (client_t *)socket->data;
 
-    write(1, "> ", 2);
-    reset_fd_set(&readfds, 0);
-    select_ret = select(1, &readfds, NULL, NULL, NULL);
-    if (select_ret == -1) {
-        exit(84);
+    if (client->waiting_for_response == false) {
+        read_bytes(0, client->buffer, client);
     }
-    if (select_ret > 0 && FD_ISSET(0, &readfds)) {
-        read_bytes(0, buffer, running, client);
-    }
+    return true;
 }
 
 int main_loop(client_t *client)
 {
-    fd_set readfds = {0};
-    char buffer[1024] = {0};
-    bool running = true;
+    waiting_socket_t *ws = waiting_sockets_add_socket(
+        client->api_handler->ws_manager->ws, 0, READ, &callback);
 
-    while (running) {
-        if (client->waiting_for_response == false) {
-            shell(client, readfds, buffer, &running);
-        }
+    ws->data = client;
+    client->is_event = true;
+    send_events(client);
+    while (client->running) {
+        if (client->is_event == false)
+            send_events(client);
+        ws_manager_run_once(client->api_handler->ws_manager);
+    }
+    if (client->is_logged == true) {
+        logout_when_leaving(client);
+    }
+    while (client->waiting_for_response) {
         ws_manager_run_once(client->api_handler->ws_manager);
     }
     return 0;
