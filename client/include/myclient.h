@@ -51,7 +51,7 @@ void on_command(char *cmd, client_t *client);
 char **parse_command(char *cmd);
 
 size_t tab_len(char **tab);
-char *add_bearer(char *uuid);
+char *add_bearer(const char *uuid);
 
 
 void help(char **parsed_cmd);
@@ -64,3 +64,10 @@ void messages(char **parsed_cmd, client_t *client);
 void subscribe(char **parsed_cmd, client_t *client);
 void subscribed(char **parsed_cmd, client_t *client);
 void unsubscribe(char **parsed_cmd, client_t *client);
+void use(char **parsed_cmd, client_t *client);
+
+void create(char **parsed_cmd, client_t *client);
+void create_team(char **parsed_cmd, client_t *client);
+void create_channel(char **parsed_cmd, client_t *client);
+void create_thread(char **parsed_cmd, client_t *client);
+void create_reply(char **parsed_cmd, client_t *client);

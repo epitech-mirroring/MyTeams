@@ -22,6 +22,12 @@ SOURCES			= 	src/main.c											\
 					src/commands/subscribe.c 							\
 					src/commands/subscribed.c 							\
 					src/commands/unsubscribe.c 							\
+					src/commands/use.c 									\
+					src/commands/create/create.c 						\
+					src/commands/create/create_team.c 					\
+					src/commands/create/create_channel.c 				\
+					src/commands/create/create_thread.c 				\
+					src/commands/create/create_reply.c 					\
 					src/utils/utils.c 									\
 
 
