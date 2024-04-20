@@ -323,3 +323,32 @@ roundtable_message_t *roundtable_reply_create(const char *content,
  */
 roundtable_thread_t *get_thread_from_json(roundtable_channel_t *channel,
     json_object_t *body, char *key);
+/**
+ * @brief Get a thread from a parameter
+ * @param channel The channel to search in
+ * @param request The request to search in
+ * @param server The server to search in
+ * @param key The key of the thread to find
+ * @return The thread if found, NULL otherwise
+ */
+roundtable_thread_t *get_thread_from_param(roundtable_channel_t *channel,
+    request_t *request, roundtable_server_t *server, char *key);
+/**
+ * @brief Get a channel from a parameter
+ * @param team The team to search in
+ * @param request The request to search in
+ * @param server The server to search in
+ * @param key The key of the channel to find
+ * @return The channel if found, NULL otherwise
+ */
+roundtable_channel_t *get_channel_from_param(roundtable_team_t *team,
+    request_t *request, roundtable_server_t *server, char *key);
+/**
+ * @brief Get a team from a parameter
+ * @param request The request to search in
+ * @param server The server to search in
+ * @param key The key of the team to find
+ * @return The team if found, NULL otherwise
+ */
+roundtable_team_t *get_team_from_param(request_t *request,
+    roundtable_server_t *server, char *key);
