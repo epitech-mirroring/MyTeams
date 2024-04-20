@@ -14,9 +14,9 @@ void roundtable_event_team_created(roundtable_server_t *server,
     json_object_t *data = NULL;
     roundtable_client_t *client = NULL;
 
-    for (size_t i = 0; i < team->subscriber_count; i++) {
+    for (size_t i = 0; i < server->client_count; i++) {
         client = roundtable_server_get_client_by_uuid(server,
-            team->subscribers[i]);
+            server->clients[i]->uuid);
         data = json_object_create(NULL);
         json_object_add(data, (json_t *) json_string_create("team_uuid",
             uuid_to_string(team->uuid)));
