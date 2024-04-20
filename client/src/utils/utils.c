@@ -15,3 +15,14 @@ size_t tab_len(char **tab)
         i++;
     return i;
 }
+
+char *add_bearer(char *uuid)
+{
+    char *bearer = malloc(sizeof(char) * (strlen(uuid) + 8));
+
+    if (bearer == NULL)
+        return NULL;
+    strcpy(bearer, "Bearer ");
+    strcat(bearer, uuid);
+    return bearer;
+}

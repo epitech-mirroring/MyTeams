@@ -13,9 +13,8 @@
 
 static uuid_t *get_thread_uuid(request_t *request)
 {
-    if (request_has_param(request, "thread-uuid")) {
+    if (request_has_param(request, "thread-uuid"))
         return uuid_from_string(request_get_param(request, "thread-uuid"));
-    }
     return NULL;
 }
 
@@ -31,6 +30,8 @@ static json_object_t *add_object_thread(roundtable_thread_t *thread)
         thread->content));
     json_object_add(thread_json, (json_t *)json_number_create("timestamp",
         thread->created_at));
+    json_object_add(thread_json, (json_t *)json_string_create("sender_uuid",
+        uuid_to_string(thread->sender_uuid)));
     return thread_json;
 }
 
@@ -75,38 +76,37 @@ static char *get_missing_key(request_t *request)
     return NULL;
 }
 
-static response_t validate_request_body(request_t *req,
-    roundtable_server_t *srv, roundtable_team_t *team,
-    roundtable_channel_t *channel)
+static response_t validate_request_body(request_t *request,
+    roundtable_server_t *server)
 {
-    roundtable_client_t *client = get_client_from_header(srv, req);
+    roundtable_client_t *client = get_client_from_header(server, request);
+    roundtable_channel_t *channel = NULL;
+    roundtable_team_t *team = NULL;
     response_t rep = {0};
 
-    if (!team)
-        return create_error(404, "Team not found", "Team not found");
-    if (!channel)
-        return create_error(404, "Channel not found", "Channel not found");
     if (!client)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
+    team = get_team_from_param(request, server, "team-uuid");
+    if (!team)
+        return create_error(404, "Team not found", "Team not found");
+    channel = get_channel_from_param(team, request, server, "channel-uuid");
+    if (!channel)
+        return create_error(404, "Channel not found", "Channel not found");
     if (!roundtable_team_has_subscriber(team, client))
         return create_error(403, "Forbidden", "Client not a subscriber");
-    return get_thread_list(channel, get_thread_uuid(req), rep);
+    if (request_has_param(request, "thread-uuid") && get_thread_from_string(
+        channel, request_get_param(request, "thread-uuid")) == NULL)
+        return create_error(404, "Thread not found", "Thread not found");
+    return get_thread_list(channel, get_thread_uuid(request), rep);
 }
 
 response_t get_threads_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *)data;
-    roundtable_channel_t *channel = NULL;
-    roundtable_team_t *team = NULL;
 
+    if (!IS_METHOD(request, "GET"))
+        return create_error(405, "Method not allowed", "Only GET");
     if (!has_mandatory_param(request))
         return create_error(400, "Bad Request", get_missing_key(request));
-    team = roundtable_server_get_team_by_uuid(server,
-    *uuid_from_string(request_get_param(request, "team-uuid")));
-    channel = roundtable_channel_find_by_uuid(team,
-    *uuid_from_string(request_get_param(request, "channel-uuid")));
-    if (request_has_param(request, "thread-uuid") && get_thread_from_string(
-        channel, request_get_param(request, "thread-uuid")) == NULL)
-        return create_error(404, "Thread not found", "Thread not found");
-    return validate_request_body(request, server, team, channel);
+    return validate_request_body(request, server);
 }

@@ -46,8 +46,10 @@ SOURCES			= 	src/main.c							\
 					src/routes/teams/is-subscribed.c	\
 					src/routes/teams/channels/create.c	\
 					src/routes/teams/channels/index.c	\
-					src/routes/teams/channels/threads/create.c	\
-					src/routes/teams/channels/threads/index.c	\
+					src/routes/teams/channels/threads/create.c   \
+					src/routes/teams/channels/threads/index.c	 \
+					src/routes/teams/channels/threads/message.c \
+					src/routes/teams/channels/threads/reply.c 	 \
 
 
 TESTS			=

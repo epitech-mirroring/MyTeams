@@ -51,6 +51,7 @@ void on_command(char *cmd, client_t *client);
 char **parse_command(char *cmd);
 
 size_t tab_len(char **tab);
+char *add_bearer(char *uuid);
 
 
 void help(char **parsed_cmd);
@@ -60,3 +61,6 @@ void user(char **parsed_cmd, client_t *client);
 void users(char **parsed_cmd, client_t *client);
 void cmd_send(char **parsed_cmd, client_t *client);
 void messages(char **parsed_cmd, client_t *client);
+void subscribe(char **parsed_cmd, client_t *client);
+void subscribed(char **parsed_cmd, client_t *client);
+void unsubscribe(char **parsed_cmd, client_t *client);

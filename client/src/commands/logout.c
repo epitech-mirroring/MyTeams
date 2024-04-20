@@ -12,8 +12,6 @@
 void logout_rep(response_t *response, request_data_t *request_data)
 {
     client_t *cli = (client_t *)request_data->data;
-    json_object_t *jobj = NULL;
-    json_string_t *str = NULL;
 
     cli->waiting_for_response = false;
     if (response->status == 204) {
@@ -26,17 +24,16 @@ void logout_rep(response_t *response, request_data_t *request_data)
 
 static void request_logout(client_t *client)
 {
-    json_object_t *jobj = json_object_create("root");
-    json_string_t *uuid = json_string_create("user_uuid", client->user_uuid);
+    char *uuid = add_bearer(client->user_uuid);
     request_t *request = calloc(1, sizeof(request_t));
 
-    if (jobj == NULL || uuid == NULL || request == NULL) {
+    if (uuid == NULL || request == NULL) {
         printf("Error: malloc failed\n");
         return;
     }
-    json_object_add(jobj, (json_t *)uuid);
     request->route = (route_t){"POST", "/logout"};
-    request->body = json_serialize((json_t *)jobj);
+    request_add_header(request, "Authorization", uuid);
+    request->body = strdup("");
     api_client_send_request(client->api_handler, request, &logout_rep, client);
     client->waiting_for_response = true;
 }

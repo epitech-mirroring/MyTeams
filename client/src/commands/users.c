@@ -9,7 +9,7 @@
 #include "logging_client.h"
 #include "json/json.h"
 
-void display_users(json_array_t *arr)
+static void display_users(json_array_t *arr)
 {
     int i = 0;
     json_object_t *user = NULL;
@@ -49,17 +49,16 @@ void users_response(response_t *response, request_data_t *request_data)
 
 static void send_users(client_t *client)
 {
-    json_object_t *jobj = json_object_create("root");
-    json_string_t *uuid = json_string_create("user_uuid", client->user_uuid);
     request_t *request = calloc(1, sizeof(request_t));
+    char *uuid = add_bearer(client->user_uuid);
 
-    if (jobj == NULL || uuid == NULL || request == NULL) {
+    if (uuid == NULL || request == NULL) {
         printf("Error: malloc failed\n");
         return;
     }
-    json_object_add(jobj, (json_t *)uuid);
     request->route = (route_t){"GET", "/users"};
-    request->body = json_serialize((json_t *)jobj);
+    request_add_header(request, "Authorization", uuid);
+    request->body = strdup("");
     api_client_send_request(client->api_handler, request, &users_response,
         client);
     client->waiting_for_response = true;

@@ -19,6 +19,9 @@ SOURCES			= 	src/main.c											\
 					src/commands/users.c 								\
 					src/commands/send.c 								\
 					src/commands/messages.c 							\
+					src/commands/subscribe.c 							\
+					src/commands/subscribed.c 							\
+					src/commands/unsubscribe.c 							\
 					src/utils/utils.c 									\
 
 

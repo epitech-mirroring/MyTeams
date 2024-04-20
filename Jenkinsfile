@@ -33,7 +33,7 @@ pipeline {
                         if (ignoredFiles.contains(file)) {
                             errorCountToIgnore++
                         } else {
-                            echo "File: ${file}, Line: ${line}, Type: ${type}, Code: ${code}"
+                            unstable "File: ${file}, Line: ${line}, Type: ${type}, Code: ${code}"
                         }
                     }
                     // Archive the report

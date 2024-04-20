@@ -54,12 +54,12 @@ static response_t create_thread_response_body(roundtable_thread_t *thread)
 }
 
 static response_t create_thread_response(roundtable_channel_t *channel,
-    json_object_t *body)
+    json_object_t *body, roundtable_client_t *client)
 {
     roundtable_thread_t *thread = roundtable_thread_create(
         ((json_string_t *) json_object_get(body, "title"))->value,
         ((json_string_t *) json_object_get(body, "message"))->value,
-        channel);
+        channel, client);
 
     return create_thread_response_body(thread);
 }
@@ -68,8 +68,7 @@ static response_t validate_request(request_t *req, roundtable_server_t *srv,
     roundtable_client_t *client, json_object_t *body)
 {
     roundtable_team_t *team = get_team_from_json(srv, body, "team_uuid");
-    roundtable_channel_t *channel = get_channel_from_json(team, body,
-        "channel_uuid");
+    roundtable_channel_t *channel = NULL;
 
     if (!request_has_header(req, "Authorization"))
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
@@ -79,9 +78,11 @@ static response_t validate_request(request_t *req, roundtable_server_t *srv,
         return create_error(404, "Team not found", "Team not found");
     if (!roundtable_team_has_subscriber(team, client))
         return create_error(403, "Forbidden", "Client not a subscriber");
+    channel = get_channel_from_json(team, body,
+    "channel_uuid");
     if (!channel)
         return create_error(404, "Channel not found", "Channel not found");
-    return create_thread_response(channel, body);
+    return create_thread_response(channel, body, client);
 }
 
 response_t create_thread_route(request_t *request, void *data)
