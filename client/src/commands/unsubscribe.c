@@ -71,10 +71,6 @@ void unsubscribe(char **parsed_cmd, client_t *client)
         printf("Usage: /unsubscribe [team_uuid]\n");
         return;
     }
-    if (uuid_from_string(parsed_cmd[1]) == NULL) {
-        printf("Error: invalid uuid\n");
-        return;
-    }
     if (client->is_logged == false) {
         client_error_unauthorized();
         return;

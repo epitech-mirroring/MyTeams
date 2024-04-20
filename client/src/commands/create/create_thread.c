@@ -21,7 +21,7 @@ static void create_thread_response_error(response_t *response,
     json_string_t *chan_uuid = (json_string_t *)json_object_get(jobj_send,
         "channel_uuid");
 
-    if (error == NULL)
+    if (error == NULL || team_uuid == NULL || chan_uuid == NULL)
         return;
     if (strstr(error->value, "Team") != NULL)
         client_error_unknown_team(team_uuid->value);

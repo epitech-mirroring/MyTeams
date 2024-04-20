@@ -144,9 +144,5 @@ void subscribed(char **parsed_cmd, client_t *client)
         send_subscribed(client);
         return;
     }
-    if (uuid_from_string(parsed_cmd[1]) == NULL) {
-        printf("Error: invalid uuid\n");
-        return;
-    }
     send_users_subscribed(client, parsed_cmd[1]);
 }
