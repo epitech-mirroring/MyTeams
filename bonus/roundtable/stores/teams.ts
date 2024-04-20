@@ -71,12 +71,35 @@ export const useTeamsStore = defineStore('teams', {
         }
       }
     },
+    addMessage(team: Team, channel: Channel, thread: Thread, message: Message) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t) {
+        const c = t.channels.find(c => c.uuid === channel.uuid)
+        if (c) {
+          const th = c.threads.find(th => th.uuid === thread.uuid)
+          if (th)
+            th.messages.push(message)
+        }
+      }
+    },
+    setThreadMessages(team: Team, channel: Channel, thread: Thread, messages: Message[]) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t) {
+        const c = t.channels.find(c => c.uuid === channel.uuid)
+        if (c) {
+          const th = c.threads.find(th => th.uuid === thread.uuid)
+          if (th)
+            th.messages = messages
+        }
+      }
+    }
   }
 })
 
 export interface Message {
   sender_uuid: string
   content: string
+  timestamp: number
 }
 
 export interface Thread {

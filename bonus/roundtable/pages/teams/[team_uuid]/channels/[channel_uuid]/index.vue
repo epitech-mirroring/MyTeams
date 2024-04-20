@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { replyToThread } from "~/composables/threads";
+import type { Thread } from "~/stores/teams";
+
 const route = useRoute()
 const teamUUID = computed(() => route.params['team_uuid'] as string)
 const channelUUID = computed(() => route.params['channel_uuid'] as string)
@@ -38,26 +41,60 @@ const handleCreateThread = () => {
   content.value = "";
   isModalOpen.value = false;
 };
+
+const handleCreateReply = (thread: Thread) => {
+  const content = document.getElementById("create-reply-content") as HTMLInputElement;
+
+  if (!content.value) return;
+  if (!team.value || !channel.value) return;
+  replyToThread(team.value, channel.value, thread, content.value);
+
+  content.value = "";
+};
 </script>
 
 <template>
   <div v-if="userSubscribed && channel" class="channel-page">
     <div class="threads" v-if="channel.threads.length > 0">
       <div class="thread" v-for="thread in channel.threads" :key="thread.uuid">
-        <div class="thread-header">
-          <div class="thread-header-left">
-            <span class="thread-title">{{ thread.title }}</span>
-            <span class="thread-time">
+        <div class="thread-first">
+          <div class="thread-header">
+            <div class="thread-header-left">
+              <span class="thread-title">{{ thread.title }}</span>
+              <span class="thread-time">
               {{ new Date(thread.timestamp * 1000).toLocaleDateString() }} @ {{ new Date(thread.timestamp * 100).toLocaleTimeString() }}
             </span>
+            </div>
+            <div class="thread-author">
+              <span>{{ userStore.getUser(thread.sender_uuid)?.username }}</span>
+              <img class="author-avatar" :src="'https://api.dicebear.com/8.x/lorelei/svg?flip=true&seed=' + thread.sender_uuid"  alt=""/>
+            </div>
           </div>
-          <div class="thread-author">
-            <span>{{ userStore.getUser(thread.sender_uuid)?.username }}</span>
-            <img class="author-avatar" :src="'https://api.dicebear.com/8.x/lorelei/svg?flip=true&seed=' + thread.sender_uuid"  alt=""/>
+          <div class="thread-content">
+            <span>{{ thread.content }}</span>
           </div>
         </div>
-        <div class="thread-content">
-          <span>{{ thread.content }}</span>
+        <div class="thread-replies">
+          <div class="thread-reply" v-for="(reply, index) in thread.messages" :key="index">
+            <div class="thread-reply-head">
+              <div class="thread-reply-author">
+                <img class="author-avatar" :src="'https://api.dicebear.com/8.x/lorelei/svg?flip=true&seed=' + reply.sender_uuid"  alt=""/>
+                <span class="author-name">{{ userStore.getUser(reply.sender_uuid)?.username }}</span>
+              </div>
+              <span class="reply-time">
+                {{ new Date(reply.timestamp * 1000).toLocaleDateString() }} @ {{ new Date(reply.timestamp * 100).toLocaleTimeString() }}
+              </span>
+            </div>
+            <div class="thread-reply-content">
+              <span>{{ reply.content }}</span>
+            </div>
+          </div>
+          <div class="thread-create-reply">
+            <input type="text" placeholder="Reply" id="create-reply-content" />
+            <div class="thread-create-reply-button" @click="handleCreateReply(thread)">
+              <i class="fa-duotone fa-paper-plane fa-fw"></i>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -108,45 +145,124 @@ const handleCreateThread = () => {
   .thread {
     @apply flex flex-col items-start justify-start;
     @apply w-full;
-    @apply bg-gray-100;
+    @apply bg-white;
     @apply rounded-md;
     @apply shadow-md;
-    @apply p-4;
     @apply space-y-2;
+    @apply border-2 border-gray-200;
 
-    .thread-header {
-      @apply flex flex-row items-center justify-between;
+    .thread-first {
       @apply w-full;
+      @apply space-y-4;
+      @apply bg-gray-100;
+      @apply p-4;
+      @apply rounded-b-md;
 
-      .thread-header-left {
-        @apply flex flex-col items-start;
+      .thread-header {
+        @apply flex flex-row items-center justify-between;
+        @apply w-full;
 
-        .thread-title {
-          @apply text-xl;
-          @apply font-bold;
+        .thread-header-left {
+          @apply flex flex-col items-start;
+
+          .thread-title {
+            @apply text-xl;
+            @apply font-bold;
+          }
+
+          .thread-time {
+            @apply text-gray-400;
+          }
         }
 
-        .thread-time {
-          @apply text-gray-400;
+        .thread-author {
+          @apply flex flex-row items-center;
+          @apply space-x-2;
+
+          .author-avatar {
+            @apply w-8 h-8 rounded-full;
+          }
+
+          span {
+            @apply text-gray-400;
+          }
         }
       }
 
-      .thread-author {
-        @apply flex flex-row items-center;
-        @apply space-x-2;
-
-        .author-avatar {
-          @apply w-8 h-8 rounded-full;
-        }
-
-        span {
-          @apply text-gray-400;
-        }
+      .thread-content {
+        @apply text-gray-700;
       }
     }
 
-    .thread-content {
-      @apply text-gray-700;
+    .thread-replies {
+      @apply w-full;
+      @apply text-gray-400;
+
+      .thread-reply {
+        @apply flex flex-col items-start justify-start;
+        @apply w-full;
+        @apply space-x-2;
+        @apply p-2;
+
+        .thread-reply-head {
+          @apply flex flex-row items-center justify-between;
+          @apply w-full;
+
+          .thread-reply-author {
+            @apply flex flex-row items-center;
+            @apply space-x-2;
+
+            .author-avatar {
+              @apply w-8 h-8 rounded-full;
+            }
+
+            .author-name {
+              @apply text-gray-700;
+            }
+          }
+
+          .reply-time {
+            @apply text-gray-400;
+            @apply text-xs;
+          }
+        }
+
+        .thread-reply-content {
+          @apply text-gray-700;
+        }
+      }
+
+      .thread-create-reply {
+        @apply flex flex-row items-center justify-between;
+        @apply w-full;
+        @apply space-x-2;
+        @apply px-2;
+        @apply mb-2;
+
+        input {
+          @apply w-full;
+          @apply p-2 px-4;
+          @apply rounded-full;
+          @apply border-2 border-gray-100;
+          @apply text-gray-700;
+        }
+
+        .thread-create-reply-button {
+          @apply flex flex-row items-center justify-center;
+          @apply w-8 h-8;
+          @apply rounded-full;
+          @apply cursor-pointer;
+          @apply transition-all duration-300;
+
+          i {
+            @apply text-blue-500;
+          }
+
+          &:hover {
+            @apply bg-blue-100;
+          }
+        }
+      }
     }
   }
 
