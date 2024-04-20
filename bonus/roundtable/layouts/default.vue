@@ -23,6 +23,6 @@ import Navbar from "~/components/navbar.vue";
   .content {
     @apply flex-1;
     @apply pl-4;
-    @apply overflow-y-auto overflow-x-hidden;
+    @apply overflow-hidden;
   }
 </style>

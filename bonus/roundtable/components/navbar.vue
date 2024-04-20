@@ -1,38 +1,33 @@
 <script setup lang="ts">
 const teamsStore = useTeamsStore();
-const userStore = useUserStore();
+const userStore = useUsersStore();
 const router = useRouter();
 
 const isLogged = computed(() => userStore.isLogged);
+const user = computed(() => userStore.user);
 
 watch(isLogged, (value) => {
   if (!value) {
     router.push({path: "/login"});
-  } else {
-    refresh();
+    return;
   }
 });
 
 onMounted(() => {
   if (!isLogged.value) {
     router.push({path: "/login"});
-  } else {
-    refresh();
+    return;
   }
 })
-
-const refresh = () => {
-  teamsStore.fetchTeams();
-};
 </script>
 
 <template>
   <div class="navbar">
     <div class="navbar-title">
-      <img src="https://via.placeholder.com/255" alt="logo" />
+      <img src="~/assets/images/logo.png" alt="logo" />
       <span>RoundTable</span>
     </div>
-    <div class="navbar-groups">
+    <div class="navbar-groups" v-if="user">
       <div class="navbar-group">
         <div class="navbar-group-header">
           <div class="navbar-group-header-icon">
@@ -51,9 +46,9 @@ const refresh = () => {
           <span>Teams</span>
         </div>
         <div class="navbar-group-items">
-          <div v-for="team in teamsStore.teams" :key="team.uuid" class="navbar-group-item team">
+          <div v-for="team in teamsStore.getTeams" :key="team.uuid" class="navbar-group-item team">
             <router-link :to="'/teams/' + team.uuid">{{ team.name }}</router-link>
-            <i :class="{'fas': true, 'fa-wifi-slash': !teamsStore.isSubscribed(team), 'fa-wifi': teamsStore.isSubscribed(team)}"></i>
+            <i :class="{'fas': true, 'fa-wifi-slash': !teamsStore.isSubscribed(user.uuid, team), 'fa-wifi': teamsStore.isSubscribed(user.uuid, team)}"></i>
           </div>
         </div>
       </div>
@@ -61,14 +56,14 @@ const refresh = () => {
     <div class="navbar-footer">
       <div class="footer-left">
         <div class="avatar">
-          <img src="https://via.placeholder.com/125" alt="avatar" />
+          <img :src="'https://api.dicebear.com/8.x/lorelei/svg?flip=true&seed=' + user?.uuid" alt="avatar" />
           <div class="status" :class="[userStore.user?.status]">
             <span>{{ userStore.user?.status }}</span>
           </div>
         </div>
         <span>{{ userStore.user?.username }}</span>
       </div>
-      <i class="fas fa-sign-out-alt fa-fw logout" @click="userStore.logout"></i>
+      <i class="fas fa-sign-out-alt fa-fw logout" @click="logout()"></i>
     </div>
   </div>
 </template>
@@ -80,6 +75,8 @@ const refresh = () => {
   @apply p-4;
   @apply h-full;
   @apply min-w-[200px];
+  @apply bg-white;
+  @apply z-10;
 
   .navbar-title {
     @apply flex flex-row items-center justify-start;

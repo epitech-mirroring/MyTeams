@@ -5,71 +5,100 @@ export const useTeamsStore = defineStore('teams', {
     }
   },
   getters: {
-    getTeams(): Team[] { return this.teams }
+    getTeams(): Team[] { return this.teams },
+    getTeam: (state) => (uuid: string) => state.teams.find(team => team.uuid === uuid),
+    isSubscribed: (state) => (uuid: string, team: Team) => {
+      const t = state.teams.find(t => t.uuid === team.uuid)
+      return t ? t.subscribers.includes(uuid) : false
+    }
   },
   actions: {
-    fetchTeams() {
-      const userStore = useUserStore()
-
-      if (!userStore.isLogged)
-        return
-      fetch('http://127.0.0.1:8080/teams', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+    addTeam(team: Team) {
+      if (!this.teams.find(t => t.uuid === team.uuid))
+        this.teams.push(team)
+    },
+    removeTeam(uuid: string) {
+      const index = this.teams.findIndex(team => team.uuid === uuid)
+      if (index !== -1) {
+        this.teams.splice(index, 1)
+      }
+    },
+    addSubscriber(uuid: string, team: Team) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t && !t.subscribers.includes(uuid))
+        t.subscribers.push(uuid)
+    },
+    removeSubscriber(uuid: string, team: Team) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t) {
+        const index = t.subscribers.findIndex(sub => sub === uuid)
+        if (index !== -1) {
+          t.subscribers.splice(index, 1)
         }
-      })
-        .then(res => res.json())
-        .then((teamsIn: {team_uuid: string, team_name: string, team_description: string}[]) => {
-          this.teams = teamsIn.map(team => ({
-            uuid: team.team_uuid,
-            name: team.team_name,
-            description: team.team_description,
-            subscribers: []
-          }))
-
-          for (const team of this.teams) {
-            fetch('http://127.0.0.1:8080/teams/users?team-uuid=' + team.uuid, {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${userStore.currentUser?.uuid}`,
-              }
-            }).catch()
-              .then(res => res.json())
-              .then((subscribers: {uuid: string, username: string, status: string}[]) => {
-                team.subscribers = subscribers.map(subscriber => subscriber.uuid)
-              })
+      }
+    },
+    addChannel(team: Team, channel: Channel) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t && !t.channels.find(c => c.uuid === channel.uuid))
+        t.channels.push(channel)
+    },
+    removeChannel(team: Team, uuid: string) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t) {
+        const index = t.channels.findIndex(c => c.uuid === uuid)
+        if (index !== -1) {
+          t.channels.splice(index, 1)
+        }
+      }
+    },
+    addThread(team: Team, channel: Channel, thread: Thread) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t) {
+        const c = t.channels.find(c => c.uuid === channel.uuid)
+        if (c && !c.threads.find(th => th.uuid === thread.uuid))
+          c.threads.push(thread)
+      }
+    },
+    removeThread(team: Team, channel: Channel, uuid: string) {
+      const t = this.teams.find(t => t.uuid === team.uuid)
+      if (t) {
+        const c = t.channels.find(c => c.uuid === channel.uuid)
+        if (c) {
+          const index = c.threads.findIndex(th => th.uuid === uuid)
+          if (index !== -1) {
+            c.threads.splice(index, 1)
           }
-        })
-    },
-    getTeam(uuid: string): Team | undefined {
-      return this.teams.find(team => team.uuid === uuid)
-    },
-    isSubscribed(team: Team): boolean {
-      const userStore = useUserStore()
-      return team.subscribers.includes(userStore.currentUser?.uuid || '')
-    },
-    joinTeam(team: Team) {
-      const userStore = useUserStore()
-      fetch('http://127.0.0.1:8080/teams/join', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userStore.currentUser?.uuid}`
-        },
-        body: JSON.stringify({team_uuid: team.uuid})
-      }).then(value => {
-        if (value.status === 204) {
-          team.subscribers.push(userStore.currentUser?.uuid || '')
         }
-      })
-    }
+      }
+    },
   }
 })
+
+export interface Message {
+  sender_uuid: string
+  content: string
+}
+
+export interface Thread {
+  uuid: string
+  sender_uuid: string
+  title: string
+  content: string
+  timestamp: number
+  messages: Message[]
+}
+
+export interface Channel {
+  uuid: string
+  name: string
+  description: string
+  threads: Thread[]
+}
 
 export interface Team {
   uuid: string
   name: string
   description: string
   subscribers: string[]
+  channels: Channel[]
 }

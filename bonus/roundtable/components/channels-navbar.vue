@@ -1,14 +1,34 @@
 <script setup lang="ts">
+import type { Channel } from "~/stores/teams";
+
 const teamsStore = useTeamsStore();
-const userStore = useUserStore();
+const userStore = useUsersStore();
 const route = useRoute();
-const team = computed(() => teamsStore.getTeam(route.params['team-uuid'] as string));
+const router = useRouter();
+const team = computed(() => teamsStore.getTeam(route.params['team_uuid'] as string));
+const channelUUID = computed(() => route.params['channel_uuid'] as string | null);
+const channel = computed(() => team.value ? team.value.channels.find(channel => channel.uuid === channelUUID.value) : null);
+
+const openChannel = (channel: Channel) => {
+  if (!team.value) return;
+  router.push(`/teams/${team.value.uuid}/channels/${channel.uuid}`);
+};
 </script>
 
 <template>
   <div class="channels-navbar">
     <div class="navbar-title">
+      <i class="navbar-title-icon fas fa-hashtag"></i>
       <span>Channels</span>
+    </div>
+    <div class="navbar-items" v-if="team">
+      <div class="navbar-item" v-for="channel in team.channels" :key="channel.uuid" @click="openChannel(channel)" :class="{ 'selected': channel.uuid === channelUUID }">
+        <div class="item-header">
+          <i class="icon fa-duotone fa-comments"></i>
+          <span class="name">{{ channel.name }}</span>
+        </div>
+        <span class="description">{{ channel.description }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -20,143 +40,57 @@ const team = computed(() => teamsStore.getTeam(route.params['team-uuid'] as stri
   @apply p-4;
   @apply h-full;
   @apply min-w-[200px];
+  @apply bg-white;
+  @apply z-0;
 
   .navbar-title {
     @apply flex flex-row items-center justify-start;
-    @apply mb-4;
-
-    img {
-      @apply w-8 h-8;
-      @apply mr-2;
-    }
+    @apply mb-8;
 
     span {
       @apply text-xl;
       @apply font-bold;
     }
-  }
 
-  .navbar-groups {
-    @apply flex flex-col;
-    @apply space-y-4;
-    @apply w-full h-full;
-
-    .navbar-group {
-      @apply flex flex-col;
-      @apply space-y-4;
-
-      .navbar-group-header {
-        @apply flex flex-row items-center justify-start;
-        @apply text-lg;
-        @apply font-bold;
-        @apply text-gray-800;
-        @apply space-x-2;
-
-        .navbar-group-header-icon {
-          @apply w-6 max-w-6;
-          @apply flex flex-row items-center justify-center;
-        }
-      }
-
-      .navbar-group-items {
-        @apply flex flex-col;
-        @apply space-y-2;
-
-        .navbar-group-item {
-          @apply flex flex-row items-center justify-start;
-          @apply text-base;
-          @apply text-gray-700;
-          @apply space-x-2;
-        }
-
-        .team {
-          @apply flex flex-row items-center justify-start;
-          @apply cursor-pointer;
-          @apply hover:text-gray-900;
-
-          i {
-            @apply text-xs;
-            @apply text-gray-500;
-
-            &.fa-wifi-slash {
-              @apply text-red-500;
-            }
-          }
-        }
-      }
+    .navbar-title-icon {
+      @apply w-6 max-w-6;
+      @apply flex flex-row items-center justify-center;
     }
   }
 
-  .navbar-footer {
-    @apply flex flex-row items-center justify-between;
-    @apply mt-auto;
-    @apply text-base;
-    @apply text-gray-700;
-    @apply space-x-2;
+  .navbar-items {
+    @apply flex flex-col items-start justify-start;
     @apply w-full;
-    @apply relative;
 
-    .footer-left {
-      @apply flex flex-row items-center justify-start;
-      @apply space-x-2;
-
-      .avatar {
-        @apply w-6 h-6;
-        @apply rounded-full;
-        @apply overflow-hidden;
-
-        img {
-          @apply w-full h-full;
-        }
-
-        .status {
-          @apply absolute;
-          @apply w-2 h-2;
-          content: '';
-          @apply rounded-full;
-          @apply border-2 border-white;
-          @apply bottom-0 left-0;
-          @apply translate-x-4;
-          @apply transition-all duration-300;
-          @apply flex flex-row items-center justify-center;
-
-          &.ONLINE {
-            @apply bg-green-500;
-            @apply border-2 border-white;
-            @apply bottom-0 right-0;
-          }
-
-          span {
-            @apply text-xs text-white font-bold;
-            @apply tracking-tight;
-            @apply sr-only;
-            @apply opacity-0;
-            @apply transition-opacity duration-300 delay-100;
-          }
-
-          &:hover {
-            @apply w-16 h-5;
-            @apply translate-y-1;
-
-            span {
-              @apply not-sr-only;
-              @apply opacity-100;
-            }
-          }
-        }
-      }
-
-      span {
-        @apply text-base;
-        @apply font-bold;
-        @apply text-gray-800;
-        @apply capitalize;
-      }
-    }
-
-    .logout {
+    .navbar-item {
+      @apply flex flex-col items-start justify-start;
+      @apply w-full;
+      @apply p-1;
+      @apply rounded-md;
       @apply cursor-pointer;
-      @apply hover:text-red-500;
+      @apply transition-all duration-300 ease-in-out;
+
+      .item-header {
+        @apply flex flex-row items-center justify-start;
+        @apply text-base;
+        @apply space-x-0.5;
+
+        .name {
+          @apply font-bold;
+        }
+      }
+
+      .description {
+        @apply text-gray-400;
+      }
+
+      &:hover {
+        @apply bg-gray-200;
+      }
+
+      &.selected {
+        @apply bg-gray-200;
+      }
     }
   }
 }

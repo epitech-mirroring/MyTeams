@@ -1,28 +1,38 @@
 <script setup lang="ts">
 const route = useRoute()
-const teamUUID = computed(() => route.params['team-uuid'] as string)
+const teamUUID = computed(() => route.params['team_uuid'] as string)
 const teamsStore = useTeamsStore();
+const userStore = useUsersStore();
 const team = computed(() => teamsStore.getTeam(teamUUID.value));
-const isUserSubscribed = computed(() => team.value ? teamsStore.isSubscribed(team.value) : false);
+const user = computed(() => userStore.user);
+const userSubscribed = computed(() => user.value && team.value ? teamsStore.isSubscribed(user.value?.uuid, team.value) : false);
 
-
-watch(isUserSubscribed, () => {
-  if (isUserSubscribed.value) {
-    setPageLayout('team');
+watch(userSubscribed, (value) => {
+  if (!value) {
+    setPageLayout("default");
   } else {
-    setPageLayout('default');
+    setPageLayout("team");
   }
-})
+});
+
+onMounted(() => {
+  if (!userSubscribed.value) {
+    setPageLayout("default");
+  } else {
+    setPageLayout("team");
+  }
+});
 </script>
 
 <template>
-  <div v-if="isUserSubscribed">
+  <div v-if="userSubscribed">
+    <p>Team page</p>
   </div>
   <div v-else class="join-team-page">
     <span class="join-message">
       You are not subscribed to this team
     </span>
-    <div class="join-button" @click="team ? teamsStore.joinTeam(team) : null">
+    <div class="join-button" @click="team ? joinTeam(team) : null">
       <span>Join team</span>
       <div class="ripple"></div>
       <div class="ripple"></div>

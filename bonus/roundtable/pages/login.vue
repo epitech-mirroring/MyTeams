@@ -1,27 +1,26 @@
 <script setup lang="ts">
 
-import { useUserStore } from "~/stores/user";
+import { useUsersStore } from "~/stores/users";
 
-const userStore = useUserStore();
+const userStore = useUsersStore();
 const isLogged = computed(() => userStore.isLogged);
 const router = useRouter();
 
-const login = () => {
+const login = async () => {
   const username = document.getElementById("username") as HTMLInputElement;
 
   if (username.value) {
-    userStore.login(username.value);
+    await loginWithUsername(username.value);
+    if (isLogged.value) {
+      setTimeout(() => {
+        router.push({path: "/"});
+      }, 1000);
+    }
   }
 };
 
-watch(isLogged, (value) => {
-  if (value) {
-    router.push({path: "/"});
-  }
-});
-
 definePageMeta({
-  layout: false
+  layout: "default",
 })
 
 </script>
@@ -30,7 +29,7 @@ definePageMeta({
   <div class="main-container">
     <div class="login-container">
       <div class="login-header">
-        <img class="login-logo" src="https://via.placeholder.com/50" alt="logo" />
+        <img class="login-logo" src="~/assets/images/logo.png" alt="logo" />
         <div class="login-title">
           Login
         </div>
@@ -50,7 +49,7 @@ definePageMeta({
             <p >Welcome back, <span>{{ userStore.currentUser?.username }}</span></p>
           </div>
           <div class="login-actions">
-            <button class="logout-button" @click="userStore.logout">Logout</button>
+            <button class="logout-button" @click="logout">Logout</button>
           </div>
         </div>
       </div>
@@ -81,6 +80,10 @@ definePageMeta({
 
         .login-title {
           @apply text-2xl font-bold;
+        }
+
+        .login-logo {
+          @apply w-9 h-10;
         }
       }
 
