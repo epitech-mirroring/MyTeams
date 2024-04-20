@@ -30,6 +30,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/create/create_reply.c 					\
 					src/commands/info/info.c 							\
 					src/commands/info/info_user.c 						\
+					src/commands/info/info_team.c 						\
 					src/commands/events/events.c 						\
 					src/commands/events/logged_in.c 					\
 					src/commands/events/logged_out.c 					\
