@@ -19,6 +19,7 @@
 #include "uuid/uuid.h"
 #include "network/api_client.h"
 #include "network/dto.h"
+#include "json/json.h"
 
 #define _GNU_SOURCE
 
@@ -26,6 +27,17 @@
 #define MAX_NAME_LENGTH 32
 #define MAX_DESCRIPTION_LENGTH 255
 #define MAX_BODY_LENGTH 512
+
+enum client_event {
+    LOGGED_IN,
+    LOGGED_OUT,
+    DM_RECEIVED,
+    TEAM_CREATED,
+    CHANNEL_CREATED,
+    THREAD_CREATED,
+    THREAD_REPLIED,
+    NONE,
+};
 
 typedef struct context_s {
     char const *team_uuid;
@@ -39,8 +51,18 @@ typedef struct client_s {
     char const *user_name;
     bool is_logged;
     bool waiting_for_response;
+    bool running;
+    bool is_event;
+    char *buffer;
     api_client_t *api_handler;
 } client_t;
+
+typedef struct event_bindig_s {
+    enum client_event event;
+    void (*callback)(json_object_t *data, client_t *client);
+} event_binding_t;
+
+extern const event_binding_t event_bindings[];
 
 int client(int ac, char **av);
 
@@ -52,7 +74,7 @@ char **parse_command(char *cmd);
 
 size_t tab_len(char **tab);
 char *add_bearer(const char *uuid);
-
+void logout_when_leaving(client_t *client);
 
 void help(char **parsed_cmd);
 void logout(char **parsed_cmd, client_t *client);
@@ -71,3 +93,5 @@ void create_team(char **parsed_cmd, client_t *client);
 void create_channel(char **parsed_cmd, client_t *client);
 void create_thread(char **parsed_cmd, client_t *client);
 void create_reply(char **parsed_cmd, client_t *client);
+
+void send_events(client_t *client);
