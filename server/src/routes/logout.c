@@ -25,5 +25,6 @@ response_t logout_route(request_t *request, void *data)
     if (client->status == OFFLINE)
         return create_error(409, "Conflict", "Client already offline");
     client->status = OFFLINE;
+    roundtable_event_logged_out(server, client);
     return create_success(204, "");
 }

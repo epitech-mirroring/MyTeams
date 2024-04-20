@@ -331,3 +331,54 @@ Test(json, safety_checks)
     free(obj);
     cr_assert(true);
 }
+
+Test(json_parser, json_parse_array_of_objects_with_int)
+{
+
+    FILE *file = fopen("../../tests/json/json_parse_array_of_objects_with_int.json", "wr");
+    char *str = "[\n"
+                "    {\n"
+                "        \"type\": 0,\n"
+                "        \"data\": {\n"
+                "            \"user_uuid\": \"e2dec3ccddd9c67f1c0135e1f294eab2\",\n"
+                "            \"username\": \"marius\"\n"
+                "        }\n"
+                "    }\n"
+                "]";
+    fwrite(str, 1, strlen(str), file);
+    fclose(file);
+
+    json_array_t *json = (json_array_t *) json_load_from_file("../../tests/json/json_parse_array_of_objects_with_int.json");
+
+    cr_assert(json->base.type == JSON_OBJECT_TYPE_ARRAY);
+    cr_assert_eq(json->size, 1);
+
+    json_object_t *obj = (json_object_t *) json_array_get(json, 0);
+    cr_assert(obj != NULL);
+    cr_assert(obj->base.type == JSON_OBJECT_TYPE_OBJECT);
+    cr_assert(obj->size == 2);
+
+    json_number_t *type = (json_number_t *) json_object_get(obj, "type");
+    cr_assert(type != NULL);
+    cr_assert(type->base.type == JSON_OBJECT_TYPE_NUMBER);
+    cr_assert_eq(type->value, 0);
+
+    json_object_t *data = (json_object_t *) json_object_get(obj, "data");
+    cr_assert(data != NULL);
+    cr_assert(data->base.type == JSON_OBJECT_TYPE_OBJECT);
+    cr_assert(data->size == 2);
+
+    json_string_t *user_uuid = (json_string_t *) json_object_get(data, "user_uuid");
+    cr_assert(user_uuid != NULL);
+    cr_assert(user_uuid->base.type == JSON_OBJECT_TYPE_STRING);
+    cr_assert_str_eq(user_uuid->value, "e2dec3ccddd9c67f1c0135e1f294eab2");
+
+    json_string_t *username = (json_string_t *) json_object_get(data, "username");
+    cr_assert(username != NULL);
+    cr_assert(username->base.type == JSON_OBJECT_TYPE_STRING);
+    cr_assert_str_eq(username->value, "marius");
+
+    json_destroy((json_t *) json);
+    free(json);
+    remove("../../tests/json/json_parse_array_of_objects_with_int.json");
+}

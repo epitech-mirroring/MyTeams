@@ -10,6 +10,7 @@
 #include "json/json.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 json_object_t *json_object_create(const char *key)
 {

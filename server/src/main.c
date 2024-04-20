@@ -34,6 +34,7 @@ const roundtable_route_t ROUTES[] = {
     {"/teams/is-subscribed", is_subscribed_route},
     {"/user", user_route},
     {"/users", users_route},
+    {"/events", events_route},
     {NULL, NULL}
 };
 

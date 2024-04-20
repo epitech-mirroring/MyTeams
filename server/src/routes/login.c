@@ -23,6 +23,7 @@ static roundtable_client_t *get_create_client(
         *response = create_success(200, "");
     }
     client->status = ONLINE;
+    roundtable_event_logged_in(server, client);
     return client;
 }
 

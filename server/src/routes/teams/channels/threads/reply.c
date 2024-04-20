@@ -61,6 +61,7 @@ static response_t create_reply_response_body(roundtable_thread_t *thread,
     json_object_destroy(response_body);
     response = create_success(201, response_body_str);
     free(response_body_str);
+    roundtable_event_thread_reply(thread->channel->team->server, thread);
     return response;
 }
 
@@ -89,12 +90,15 @@ response_t create_reply_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
     json_object_t *body = (json_object_t *) json_parse(request->body);
-    roundtable_client_t *client = get_client_from_header(server, request);
+    roundtable_client_t *client = NULL;
 
     if (strcmp(request->route.method, "POST") != 0)
         return create_error(405, "Method not allowed", "Only POST");
     if (!request_has_header(request, "Authorization"))
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
+    client = get_client_from_header(server, request);
+    if (!client)
+        return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (body == NULL || !body_is_valid(body))
         return create_error(400, "Invalid body", get_missing_key(body));
     return validate_request(server, client, body);
