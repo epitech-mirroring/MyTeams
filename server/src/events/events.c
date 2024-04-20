@@ -35,6 +35,8 @@ void roundtable_server_clear_events(roundtable_server_t *server,
         roundtable_server_destroy_event(client->events[i]);
     }
     free(client->events);
+    client->events = calloc(1, sizeof(events_t *));
+    client->event_count = 0;
 }
 
 events_t *roundtable_server_create_event(events_type_t type,
