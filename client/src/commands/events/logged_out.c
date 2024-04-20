@@ -18,8 +18,8 @@ void logged_out_callback(json_object_t *data, client_t *client)
     if (user_uuid == NULL || username == NULL)
         return;
     client_event_logged_out(user_uuid->value, username->value);
-    if (strcmp(user_uuid->value, client->user_uuid) == 0) {
-        client->is_logged = false;
+    if (client->is_logged == false && strcmp(user_uuid->value,
+        client->user_uuid) == 0) {
         client->user_uuid = NULL;
         client->user_name = NULL;
     }
