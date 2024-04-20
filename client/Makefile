@@ -33,6 +33,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/events/logged_out.c 					\
 					src/commands/events/dm_received.c 					\
 					src/commands/events/team_created.c 					\
+					src/commands/events/channel_created.c 				\
 					src/utils/utils.c 									\
 
 
