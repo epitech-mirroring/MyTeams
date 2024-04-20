@@ -27,6 +27,7 @@ void roundtable_server_send_dm(roundtable_server_t *server,
     new_message = roundtable_message_create(s, message);
     if (new_message == NULL)
         return;
+    roundtable_event_dm_received(server, new_message, r, s);
     roundtable_direct_message_add_message(direct_message, new_message);
 }
 

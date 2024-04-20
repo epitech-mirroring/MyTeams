@@ -50,6 +50,7 @@ static response_t create_thread_response_body(roundtable_thread_t *thread)
     json_object_destroy(body);
     response = create_success(201, body_str);
     free(body_str);
+    roundtable_event_thread_created(thread->channel->team->server, thread);
     return response;
 }
 

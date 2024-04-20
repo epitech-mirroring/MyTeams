@@ -45,6 +45,7 @@ static response_t create_channel_response_body(roundtable_channel_t *channel)
     json_object_destroy(body);
     response = create_success(201, body_str);
     free(body_str);
+    roundtable_event_channel_created(channel->team->server, channel);
     return response;
 }
 

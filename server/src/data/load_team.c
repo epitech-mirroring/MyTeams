@@ -15,7 +15,6 @@ void deserialize_team(roundtable_server_t *server, json_object_t *team)
 {
     roundtable_team_t *new_team = calloc(1, sizeof(roundtable_team_t));
     json_string_t *uuid = NULL;
-    json_string_t *name = NULL;
     json_string_t *description = NULL;
     json_array_t *subscribers = NULL;
     json_array_t *channels = NULL;
@@ -23,13 +22,14 @@ void deserialize_team(roundtable_server_t *server, json_object_t *team)
     if (new_team == NULL)
         return;
     uuid = (json_string_t *) json_object_get(team, "uuid");
-    name = (json_string_t *) json_object_get(team, "name");
     description = (json_string_t *) json_object_get(team, "description");
     subscribers = (json_array_t *) json_object_get(team, "subscribers");
     channels = (json_array_t *) json_object_get(team, "channels");
     COPY_UUID(new_team->uuid, *uuid_from_string(uuid->value));
-    new_team->name = strdup(name->value);
+    new_team->name = strdup(
+            ((json_string_t *) json_object_get(team, "name"))->value);
     new_team->description = strdup(description->value);
+    new_team->server = server;
     deserialize_subscribers(server, subscribers, new_team);
     deserialize_channels(channels, new_team);
     roundtable_server_add_team(server, new_team);
@@ -62,6 +62,7 @@ void deserialize_channel(json_object_t *channel, roundtable_team_t *team)
     new_channel->name = strdup(name->value);
     new_channel->description = strdup(description->value);
     deserialize_threads(threads, new_channel);
+    new_channel->team = team;
     roundtable_team_add_channel(team, new_channel);
 }
 
@@ -76,13 +77,11 @@ void deserialize_threads(json_array_t *threads, roundtable_channel_t *channel)
 void deserialize_thread(json_object_t *thread, roundtable_channel_t *channel)
 {
     roundtable_thread_t *new_thread = calloc(1, sizeof(roundtable_thread_t));
-    json_string_t *content = NULL;
     json_array_t *messages = NULL;
     json_number_t *timestamp = NULL;
 
     if (new_thread == NULL)
         return;
-    content = (json_string_t *) json_object_get(thread, "content");
     messages = (json_array_t *) json_object_get(thread, "messages");
     timestamp = (json_number_t *) json_object_get(thread, "timestamp");
     COPY_UUID(new_thread->sender_uuid, *uuid_from_string(
@@ -91,8 +90,10 @@ void deserialize_thread(json_object_t *thread, roundtable_channel_t *channel)
             ((json_string_t *) json_object_get(thread, "uuid"))->value));
     new_thread->title = strdup(((json_string_t *)
         json_object_get(thread, "title"))->value);
-    new_thread->content = strdup(content->value);
+    new_thread->content = strdup(((json_string_t *)
+        json_object_get(thread, "content"))->value);
     new_thread->created_at = timestamp->value;
     deserialize_messages(messages, new_thread);
+    new_thread->channel = channel;
     roundtable_channel_add_thread(channel, new_thread);
 }

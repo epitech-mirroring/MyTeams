@@ -352,3 +352,26 @@ roundtable_channel_t *get_channel_from_param(roundtable_team_t *team,
  */
 roundtable_team_t *get_team_from_param(request_t *request,
     roundtable_server_t *server, char *key);
+// --------------------------- SERVER EVENTS --------------------------------
+void roundtable_server_send_event(roundtable_server_t *server,
+    roundtable_client_t *client, events_t *event);
+events_t *roundtable_server_create_event(events_type_t type,
+    json_object_t *data);
+void roundtable_server_clear_events(roundtable_server_t *server,
+    roundtable_client_t *client);
+void roundtable_server_destroy_event(events_t *event);
+void roundtable_event_logged_in(roundtable_server_t *server,
+    roundtable_client_t *client);
+void roundtable_event_logged_out(roundtable_server_t *server,
+    roundtable_client_t *client);
+void roundtable_event_dm_received(roundtable_server_t *server,
+    roundtable_message_t *msg, roundtable_client_t *receiver,
+    roundtable_client_t *sender);
+void roundtable_event_thread_reply(roundtable_server_t *server,
+    roundtable_thread_t *thread);
+void roundtable_event_thread_created(roundtable_server_t *server,
+    roundtable_thread_t *thread);
+void roundtable_event_channel_created(roundtable_server_t *server,
+    roundtable_channel_t *channel);
+void roundtable_event_team_created(roundtable_server_t *server,
+    roundtable_team_t *team);

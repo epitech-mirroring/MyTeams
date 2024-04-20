@@ -11,6 +11,7 @@
 #include <string.h>
 #include "uuid/uuid.h"
 #include "network/router.h"
+#include "json/json.h"
 #include <time.h>
 
 /**
@@ -18,6 +19,10 @@
  * @note This is a macro because the uuid_t type is an array of 16unsigned char
  */
 #define COPY_UUID(dest, src) uuid_copy(dest, src)
+
+typedef struct roundtable_server_s roundtable_server_t;
+typedef struct roundtable_team_s roundtable_team_t;
+typedef struct roundtable_channel_s roundtable_channel_t;
 
 /**
  * @brief A message sent by a client in a thread or a direct message
@@ -39,6 +44,7 @@ typedef struct roundtable_thread_s {
     roundtable_message_t *messages;
     size_t message_count;
     time_t created_at;
+    roundtable_channel_t *channel;
 } roundtable_thread_t;
 
 /**
@@ -51,6 +57,7 @@ typedef struct roundtable_channel_s {
     char *description;
     roundtable_thread_t *threads;
     size_t thread_count;
+    roundtable_team_t *team;
 } roundtable_channel_t;
 
 /**
@@ -74,15 +81,6 @@ typedef enum roundtable_status_s {
 } roundtable_status_t;
 
 /**
- * @brief A client registered in the server
- */
-typedef struct roundtable_client_s {
-    uuid_t uuid;
-    char *username;
-    roundtable_status_t status;
-} roundtable_client_t;
-
-/**
  * @brief A team in the server
  * @note A team can have multiple channels and subscribers
  */
@@ -94,7 +92,41 @@ typedef struct roundtable_team_s {
     size_t channel_count;
     uuid_t *subscribers;
     size_t subscriber_count;
+    roundtable_server_t *server;
 } roundtable_team_t;
+
+/**
+ * @brief The events that can be sent to the clients
+ */
+typedef enum events_type_e {
+    LOGGED_IN,
+    LOGGED_OUT,
+    DM_RECEIVED,
+    TEAM_CREATED,
+    CHANNEL_CREATED,
+    THREAD_CREATED,
+    THREAD_REPLIED,
+} events_type_t;
+
+/**
+ * @brief The events that can be sent to the clients
+ */
+typedef struct events_s {
+    events_type_t type;
+    json_object_t *data;
+} events_t;
+
+/**
+ * @brief A client registered in the server
+ */
+typedef struct roundtable_client_s {
+    uuid_t uuid;
+    char *username;
+    roundtable_status_t status;
+    events_t **events;
+    size_t event_count;
+} roundtable_client_t;
+
 
 /**
  * @brief The server containing all the data

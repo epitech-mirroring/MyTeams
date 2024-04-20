@@ -81,7 +81,7 @@ response_t get_channels_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (!request_has_param(request, "team-uuid"))
         return create_error(403, "Forbidden", "Missing 'team-uuid'");
-    if (!channel_uuid || request_has_param(request, "channel-uuid"))
+    if (request_has_param(request, "channel-uuid") && !channel_uuid)
         return create_error(404, "Channel not found", "Channel not found");
     team = get_team_from_param(request, server, "team-uuid");
     if (!team)
