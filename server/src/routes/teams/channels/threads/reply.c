@@ -19,7 +19,7 @@ static bool body_is_valid(json_object_t *body)
     bool description = json_object_has_key(body, "thread_uuid");
     bool message = json_object_has_key(body, "message");
 
-    if (message){
+    if (message) {
         message_content = json_object_has_key(((json_object_t *)
             json_object_get(body, "message")), "content");
     }
