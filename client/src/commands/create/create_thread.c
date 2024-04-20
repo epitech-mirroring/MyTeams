@@ -67,8 +67,8 @@ void create_thread_response(response_t *response, request_data_t *request_data)
     }
 }
 
-static json_object_t *create_thread_json(char *team_uuid, char *chan_uuid,
-    char *title, char *body)
+static json_object_t *create_thread_json(const char *team_uuid,
+    const char *chan_uuid, const char *title, const char *body)
 {
     json_object_t *jobj = json_object_create("root");
     json_string_t *team_uuid_json = json_string_create("team_uuid", team_uuid);
