@@ -32,9 +32,6 @@ void user_response(response_t *response, request_data_t *request_data)
 {
     client_t *cli = (client_t *)request_data->data;
     json_object_t *jobj = NULL;
-    json_string_t *uuid = NULL;
-    json_string_t *username = NULL;
-    json_string_t *status = NULL;
 
     cli->waiting_for_response = false;
     if (response->status == 200) {
@@ -72,7 +69,7 @@ void user(char **parsed_cmd, client_t *client)
         return;
     }
     if (uuid_from_string(parsed_cmd[1]) == NULL) {
-        printf("Error: invalid uuid\n");
+        client_error_unknown_user(parsed_cmd[1]);
         return;
     }
     if (client->is_logged == false) {
