@@ -56,26 +56,37 @@ static response_t get_channels_list(roundtable_team_t *team,
     return rep;
 }
 
-response_t get_channels_route(request_t *request, void *data)
+static response_t check_connection_request(request_t *request)
 {
-    roundtable_server_t *server = (roundtable_server_t *)data;
-    roundtable_client_t *client = NULL;
-    uuid_t *channel_uuid = get_channel_uuid_param(request);
-    roundtable_team_t *team = NULL;
     response_t rep = {0};
 
     if (!IS_METHOD(request, "GET"))
         return create_error(405, "Method disallowed", "Only GET Allowed");
     if (!request_has_header(request, "Authorization"))
         return create_error(401, "Unauthorized", "Missing 'Authorization`");
-    client = get_client_from_header(server, request);
+    return rep;
+}
+
+response_t get_channels_route(request_t *request, void *data)
+{
+    roundtable_server_t *server = (roundtable_server_t *)data;
+    roundtable_client_t *client = get_client_from_header(server, request);
+    uuid_t *channel_uuid = get_channel_uuid_param(request);
+    roundtable_team_t *team = NULL;
+    response_t rep = check_connection_request(request);
+
+    if (rep.status != 0)
+        return rep;
     if (!client)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (!request_has_param(request, "team-uuid"))
         return create_error(403, "Forbidden", "Missing 'team-uuid'");
     if (!channel_uuid || request_has_param(request, "channel-uuid"))
         return create_error(404, "Channel not found", "Channel not found");
-    team = roundtable_server_get_team_by_uuid(server,
-    *uuid_from_string(request_get_param(request, "team-uuid")));
+    team = get_team_from_param(request, server, "team-uuid");
+    if (!team)
+        return create_error(404, "Team not found", "Team not found");
+    if (!roundtable_team_has_subscriber(team, client))
+        return create_error(403, "Forbidden", "Client not a subscriber");
     return get_channels_list(team, channel_uuid, rep);
 }
