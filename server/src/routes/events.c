@@ -6,6 +6,7 @@
 ** You can even have multiple lines if you want !
 */
 
+#include <stdlib.h>
 #include "server.h"
 #include "server_utils.h"
 #include "network/dto.h"
@@ -18,6 +19,8 @@ static json_object_t *dto_event(events_t *event)
 
     json_object_add(json, (json_t *) type);
     json_object_add(json, (json_t *) data);
+    free(event->data->base.key);
+    event->data->base.key = strdup("data");
     return json;
 }
 
