@@ -13,6 +13,8 @@ json_object_t *serialize_thread(roundtable_thread_t *thread)
     json_object_t *json = json_object_create(NULL);
     json_string_t *uuid = json_string_create("uuid",
         uuid_to_string(thread->uuid));
+    json_string_t *sender = json_string_create("sender_uuid",
+        uuid_to_string(thread->sender_uuid));
     json_string_t *title = json_string_create("title", thread->title);
     json_string_t *content = json_string_create("content", thread->content);
     json_number_t *timestamp = json_number_create("timestamp",
@@ -25,5 +27,6 @@ json_object_t *serialize_thread(roundtable_thread_t *thread)
     json_object_add(json, (json_t *) content);
     json_object_add(json, (json_t *) timestamp);
     json_object_add(json, (json_t *) replies);
+    json_object_add(json, (json_t *) sender);
     return json;
 }
