@@ -384,6 +384,7 @@
             "thread_uuid": "String",
             "title": "String",
             "message": "String",
+            "sender_uuid": "String",
             "timestamp": Number
         }
     ]

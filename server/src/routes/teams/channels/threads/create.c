@@ -54,12 +54,12 @@ static response_t create_thread_response_body(roundtable_thread_t *thread)
 }
 
 static response_t create_thread_response(roundtable_channel_t *channel,
-    json_object_t *body)
+    json_object_t *body, roundtable_client_t *client)
 {
     roundtable_thread_t *thread = roundtable_thread_create(
         ((json_string_t *) json_object_get(body, "title"))->value,
         ((json_string_t *) json_object_get(body, "message"))->value,
-        channel);
+        channel, client);
 
     return create_thread_response_body(thread);
 }
@@ -81,7 +81,7 @@ static response_t validate_request(request_t *req, roundtable_server_t *srv,
         return create_error(403, "Forbidden", "Client not a subscriber");
     if (!channel)
         return create_error(404, "Channel not found", "Channel not found");
-    return create_thread_response(channel, body);
+    return create_thread_response(channel, body, client);
 }
 
 response_t create_thread_route(request_t *request, void *data)

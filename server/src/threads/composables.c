@@ -10,12 +10,14 @@
 #include "server.h"
 
 roundtable_thread_t *roundtable_thread_create(const char *title,
-    const char *message, roundtable_channel_t *channel)
+    const char *message, roundtable_channel_t *channel,
+    roundtable_client_t *sender)
 {
     roundtable_thread_t *thread = malloc(sizeof(roundtable_thread_t));
 
     if (thread == NULL)
         return NULL;
+    COPY_UUID(thread->sender_uuid, sender->uuid);
     COPY_UUID(thread->uuid, *uuid_generate());
     thread->title = strdup(title);
     thread->message_count = 0;

@@ -231,7 +231,8 @@ void roundtable_thread_add_message(roundtable_thread_t *thread,
  * @note The thread is automatically added to the channel
  */
 roundtable_thread_t *roundtable_thread_create(const char *title,
-    const char *message, roundtable_channel_t *channel);
+    const char *message, roundtable_channel_t *channel,
+    roundtable_client_t *sender);
 
 // ---------------------- SERVER DIRECT MESSAGES ---------------------------
 /**

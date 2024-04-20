@@ -13,9 +13,8 @@
 
 static uuid_t *get_thread_uuid(request_t *request)
 {
-    if (request_has_param(request, "thread-uuid")) {
+    if (request_has_param(request, "thread-uuid"))
         return uuid_from_string(request_get_param(request, "thread-uuid"));
-    }
     return NULL;
 }
 
@@ -31,6 +30,8 @@ static json_object_t *add_object_thread(roundtable_thread_t *thread)
         thread->content));
     json_object_add(thread_json, (json_t *)json_number_create("timestamp",
         thread->created_at));
+    json_object_add(thread_json, (json_t *)json_string_create("sender_uuid",
+        uuid_to_string(thread->sender_uuid)));
     return thread_json;
 }
 
