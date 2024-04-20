@@ -20,7 +20,7 @@ const event_binding_t event_bindings[] = {
 };
 
 static void handle_events_callback(json_object_t *data,
-    enum client_event event, client_t *client)
+    client_event_t event, client_t *client)
 {
     for (size_t i = 0; event_bindings[i].event != NONE; i++) {
         if (event_bindings[i].event == event) {

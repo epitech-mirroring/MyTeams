@@ -28,7 +28,7 @@
 #define MAX_DESCRIPTION_LENGTH 255
 #define MAX_BODY_LENGTH 512
 
-enum client_event {
+typedef enum client_event_e {
     LOGGED_IN,
     LOGGED_OUT,
     DM_RECEIVED,
@@ -37,7 +37,7 @@ enum client_event {
     THREAD_CREATED,
     THREAD_REPLIED,
     NONE,
-};
+} client_event_t;
 
 typedef struct context_s {
     char const *team_uuid;
@@ -58,7 +58,7 @@ typedef struct client_s {
 } client_t;
 
 typedef struct event_bindig_s {
-    enum client_event event;
+    client_event_t event;
     void (*callback)(json_object_t *data, client_t *client);
 } event_binding_t;
 
@@ -93,6 +93,12 @@ void create_team(char **parsed_cmd, client_t *client);
 void create_channel(char **parsed_cmd, client_t *client);
 void create_thread(char **parsed_cmd, client_t *client);
 void create_reply(char **parsed_cmd, client_t *client);
+
+void info(char **parsed_cmd, client_t *client);
+void info_user(client_t *client);
+void info_team(client_t *client);
+void info_channel(client_t *client);
+void info_thread(client_t *client);
 
 void send_events(client_t *client);
 void logged_in_callback(json_object_t *data, client_t *client);

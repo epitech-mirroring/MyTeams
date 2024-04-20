@@ -9,6 +9,12 @@
 #include "logging_client.h"
 #include "json/json.h"
 
+static void is_already_subscribed(int status)
+{
+    if (status == 409)
+        printf("Error: already subscribed to this team\n");
+}
+
 void subscribe_response(response_t *response, request_data_t *request_data)
 {
     client_t *cli = (client_t *)request_data->data;
@@ -30,6 +36,7 @@ void subscribe_response(response_t *response, request_data_t *request_data)
             return;
         client_error_unknown_team(team_uuid->value);
     }
+    is_already_subscribed(response->status);
 }
 
 static void send_subscribe(client_t *client, char *team_uuid)
@@ -58,10 +65,6 @@ void subscribe(char **parsed_cmd, client_t *client)
 
     if (len != 2) {
         printf("Usage: /subscribe [team_uuid]\n");
-        return;
-    }
-    if (uuid_from_string(parsed_cmd[1]) == NULL) {
-        printf("Error: invalid uuid\n");
         return;
     }
     if (client->is_logged == false) {
