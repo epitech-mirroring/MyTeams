@@ -31,6 +31,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/info/info.c 							\
 					src/commands/info/info_user.c 						\
 					src/commands/info/info_team.c 						\
+					src/commands/info/info_channel.c 					\
 					src/commands/events/events.c 						\
 					src/commands/events/logged_in.c 					\
 					src/commands/events/logged_out.c 					\

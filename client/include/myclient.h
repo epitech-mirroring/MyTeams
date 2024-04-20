@@ -97,6 +97,7 @@ void create_reply(char **parsed_cmd, client_t *client);
 void info(char **parsed_cmd, client_t *client);
 void info_user(client_t *client);
 void info_team(client_t *client);
+void info_channel(client_t *client);
 
 void send_events(client_t *client);
 void logged_in_callback(json_object_t *data, client_t *client);
