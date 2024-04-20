@@ -98,3 +98,4 @@ void send_events(client_t *client);
 void logged_in_callback(json_object_t *data, client_t *client);
 void logged_out_callback(json_object_t *data, client_t *client);
 void dm_received_callback(json_object_t *data, client_t *client);
+void team_created_callback(json_object_t *data, client_t *client);
