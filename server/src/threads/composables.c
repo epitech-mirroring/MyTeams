@@ -56,8 +56,11 @@ roundtable_message_t *roundtable_reply_create(const char *content,
 roundtable_thread_t *get_thread_from_string(roundtable_channel_t *channel,
     char *uuid)
 {
-    return roundtable_thread_find_by_uuid(channel,
-        *uuid_from_string(uuid));
+    uuid_t *uuid_parsed = uuid_from_string(uuid);
+
+    if (uuid_parsed == NULL)
+        return NULL;
+    return roundtable_thread_find_by_uuid(channel, uuid_parsed);
 }
 
 roundtable_thread_t *get_thread_from_json(roundtable_channel_t *channel,
