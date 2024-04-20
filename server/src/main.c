@@ -29,6 +29,7 @@ const roundtable_route_t ROUTES[] = {
     {"/teams/channels", get_channels_route},
     {"/teams/channels/threads", get_threads_route},
     {"/teams/channels/threads/create", create_thread_route},
+    {"/teams/channels/threads/reply", create_reply_route},
     {"/user", user_route},
     {"/users", users_route},
     {NULL, NULL}
