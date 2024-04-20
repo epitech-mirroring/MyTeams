@@ -69,7 +69,7 @@ void user(char **parsed_cmd, client_t *client)
         return;
     }
     if (uuid_from_string(parsed_cmd[1]) == NULL) {
-        printf("Error: invalid uuid\n");
+        client_error_unknown_user(parsed_cmd[1]);
         return;
     }
     if (client->is_logged == false) {

@@ -9,14 +9,28 @@
 #include "logging_client.h"
 #include "json/json.h"
 
-//TODO: handle error, you need to get the error message from the response
-// and compare it to known if the error come from the team uuid or the
-// channel uuid
 static void create_reply_response_error(response_t *response,
-    request_data_t *request_data)
+    request_data_t *request)
 {
-    (void)response;
-    (void)request_data;
+    json_object_t *jobj = (json_object_t *)json_parse(response->body);
+    json_object_t *jobj_send = (json_object_t *)json_parse(request->req->body);
+    json_string_t *error = (json_string_t *)json_object_get(jobj,
+        "error_name");
+    json_string_t *team_uuid = (json_string_t *)json_object_get(jobj_send,
+        "team_uuid");
+    json_string_t *chan_uuid = (json_string_t *)json_object_get(jobj_send,
+        "channel_uuid");
+    json_string_t *thread_uuid = (json_string_t *)json_object_get(jobj_send,
+        "thread_uuid");
+
+    if (error == NULL)
+        return;
+    if (strstr(error->value, "Team") != NULL)
+        client_error_unknown_team(team_uuid->value);
+    if (strstr(error->value, "Channel") != NULL)
+        client_error_unknown_channel(chan_uuid->value);
+    if (strstr(error->value, "Thread") != NULL)
+        client_error_unknown_thread(thread_uuid->value);
 }
 
 static void create_reply_response_success(response_t *response,
@@ -27,7 +41,7 @@ static void create_reply_response_success(response_t *response,
     json_object_t *jobj_send =
         (json_object_t *)json_parse(request_data->req->body);
     json_string_t *thread_uuid =
-        (json_string_t *)json_object_get(jobj_resp, "thread_uuid");
+        (json_string_t *)json_object_get(jobj_send, "thread_uuid");
     json_number_t *thread_ts =
         (json_number_t *)json_object_get(jobj_resp, "timestamp");
     json_object_t *message =
@@ -48,7 +62,7 @@ void create_reply_response(response_t *response,
     client_t *cli = (client_t *)request_data->data;
 
     cli->waiting_for_response = false;
-    if (response->status == 200) {
+    if (response->status == 201) {
         create_reply_response_success(response, request_data);
     }
     if (response->status == 401 || response->status == 403) {
