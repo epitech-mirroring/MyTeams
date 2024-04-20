@@ -68,7 +68,7 @@ roundtable_thread_t *get_thread_from_json(roundtable_channel_t *channel,
     if (uuid_json == NULL || uuid_json->type != JSON_OBJECT_TYPE_STRING)
         return NULL;
     uuid_str = ((json_string_t *) uuid_json)->value;
-    if (uuid_str == NULL || strlen(uuid_str) != 32)
+    if (uuid_str == NULL || !uuid_from_string(uuid_str))
         return NULL;
     return roundtable_thread_find_by_uuid(channel,
         *uuid_from_string(uuid_str));
