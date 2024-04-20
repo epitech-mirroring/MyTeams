@@ -17,6 +17,12 @@
  * @return the newly created server or NULL if an error occurred
  */
 roundtable_server_t *create_server(int port);
+// --------------------------- SERVER ROUTER -------------------------------
+typedef struct roundtable_route_s {
+    char *path;
+    response_t (*handler)(request_t *req, void *data);
+} roundtable_route_t;
+extern const roundtable_route_t ROUTES[];
 // --------------------------- SERVER DESTRUCTORS --------------------------
 /**
  * @brief Destroy a server (including all clients, teams, channels,
@@ -187,6 +193,28 @@ void roundtable_channel_add_thread(roundtable_channel_t *channel,
  */
 roundtable_channel_t *roundtable_channel_create(const char *name,
     const char *description, roundtable_team_t *team);
+
+/**
+ * @brief Get a channel by its UUID
+ * @param team the team the channel belongs to
+ * @param uuid the UUID of the channel to find
+ * @return The channel if found, NULL otherwise
+ * @note The channel must belong to the team
+ */
+roundtable_channel_t *roundtable_channel_find_by_uuid(roundtable_team_t *team,
+    uuid_t uuid);
+
+/**
+ * @brief Get a channel from a json object
+ * @param team The team to search in
+ * @param body The json object to search in
+ * @param key The key of the channel to find
+ * @return The channel if found, NULL otherwise
+ * @note The channel must belong to the team
+ */
+roundtable_channel_t *get_channel_from_json(roundtable_team_t *team,
+    json_object_t *body, char *key);
+
 // --------------------------- SERVER THREADS ------------------------------
 /**
  * @brief Add a message to a thread
@@ -195,6 +223,17 @@ roundtable_channel_t *roundtable_channel_create(const char *name,
  */
 void roundtable_thread_add_message(roundtable_thread_t *thread,
     roundtable_message_t *message);
+/**
+ * @brief Create a thread
+ * @param name The name of the thread
+ * @param channel The channel the thread belongs to
+ * @return The newly created thread or NULL if an error occurred
+ * @note The thread is automatically added to the channel
+ */
+roundtable_thread_t *roundtable_thread_create(const char *title,
+    const char *message, roundtable_channel_t *channel,
+    roundtable_client_t *sender);
+
 // ---------------------- SERVER DIRECT MESSAGES ---------------------------
 /**
  * @brief Add a direct message to the server
@@ -249,3 +288,67 @@ roundtable_message_t *roundtable_message_create(roundtable_client_t *sender,
 void roundtable_server_send_dm(roundtable_server_t *server,
     roundtable_client_t *sender, roundtable_client_t *receiver,
     json_object_t *message);
+/**
+ * @brief Get a direct message from a json object
+ * @param server The server to search in
+ * @param body The json object to search in
+ * @param key The key of the direct message to find
+ * @return The direct message if found, NULL otherwise
+ */
+roundtable_thread_t *roundtable_thread_find_by_uuid(
+    roundtable_channel_t *channel, uuid_t uuid);
+/**
+ *  @brief Get a thread from a string
+ *  @param channel The channel to search in
+ *  @param uuid The string representation of the thread's UUID
+ *  @return The thread if found, NULL otherwise
+ */
+roundtable_thread_t *get_thread_from_string(roundtable_channel_t *channel,
+    char *uuid);
+
+/**
+ * @brief Create a reply to a message
+ * @param content The content of the reply
+ * @param sender The sender of the reply
+ * @return The newly created reply or NULL if an error occurred
+ */
+roundtable_message_t *roundtable_reply_create(const char *content,
+    roundtable_client_t *sender, roundtable_thread_t *thread);
+/**
+ * @brief Get a thread from a json object
+ * @param channel The channel to search in
+ * @param body The json object to search in
+ * @param key The key of the thread to find
+ * @return The thread if found, NULL otherwise
+ */
+roundtable_thread_t *get_thread_from_json(roundtable_channel_t *channel,
+    json_object_t *body, char *key);
+/**
+ * @brief Get a thread from a parameter
+ * @param channel The channel to search in
+ * @param request The request to search in
+ * @param server The server to search in
+ * @param key The key of the thread to find
+ * @return The thread if found, NULL otherwise
+ */
+roundtable_thread_t *get_thread_from_param(roundtable_channel_t *channel,
+    request_t *request, roundtable_server_t *server, char *key);
+/**
+ * @brief Get a channel from a parameter
+ * @param team The team to search in
+ * @param request The request to search in
+ * @param server The server to search in
+ * @param key The key of the channel to find
+ * @return The channel if found, NULL otherwise
+ */
+roundtable_channel_t *get_channel_from_param(roundtable_team_t *team,
+    request_t *request, roundtable_server_t *server, char *key);
+/**
+ * @brief Get a team from a parameter
+ * @param request The request to search in
+ * @param server The server to search in
+ * @param key The key of the team to find
+ * @return The team if found, NULL otherwise
+ */
+roundtable_team_t *get_team_from_param(request_t *request,
+    roundtable_server_t *server, char *key);

@@ -33,6 +33,7 @@ typedef struct roundtable_message_s {
  */
 typedef struct roundtable_thread_s {
     uuid_t uuid;
+    uuid_t sender_uuid;
     char *title;
     char *content;
     roundtable_message_t *messages;
