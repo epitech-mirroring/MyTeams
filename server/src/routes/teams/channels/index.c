@@ -35,7 +35,6 @@ static json_object_t *add_object_team(roundtable_channel_t *channel)
 static response_t get_channels_list(roundtable_team_t *team,
     uuid_t *channel_in_param, response_t rep)
 {
-    char *response_body_str = NULL;
     json_array_t *response_body_array = json_array_create(NULL);
     json_object_t *channels = NULL;
     roundtable_channel_t *channel = NULL;
@@ -74,7 +73,7 @@ response_t get_channels_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (!request_has_param(request, "team-uuid"))
         return create_error(403, "Forbidden", "Missing 'team-uuid'");
-    if (!channel_uuid && request_has_param(request, "channel-uuid"))
+    if (!channel_uuid || request_has_param(request, "channel-uuid"))
         return create_error(404, "Channel not found", "Channel not found");
     team = roundtable_server_get_team_by_uuid(server,
     *uuid_from_string(request_get_param(request, "team-uuid")));
