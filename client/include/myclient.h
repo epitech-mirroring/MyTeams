@@ -97,3 +97,4 @@ void create_reply(char **parsed_cmd, client_t *client);
 void send_events(client_t *client);
 void logged_in_callback(json_object_t *data, client_t *client);
 void logged_out_callback(json_object_t *data, client_t *client);
+void dm_received_callback(json_object_t *data, client_t *client);

@@ -31,6 +31,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/events/events.c 						\
 					src/commands/events/logged_in.c 					\
 					src/commands/events/logged_out.c 					\
+					src/commands/events/dm_received.c 					\
 					src/utils/utils.c 									\
 
 
