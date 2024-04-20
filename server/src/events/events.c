@@ -29,7 +29,8 @@ void roundtable_server_destroy_event(events_t *event)
 }
 
 void roundtable_server_clear_events(roundtable_server_t *server,
-    roundtable_client_t *client) {
+    roundtable_client_t *client)
+{
     for (size_t i = 0; i < client->event_count; i++) {
         roundtable_server_destroy_event(client->events[i]);
     }
