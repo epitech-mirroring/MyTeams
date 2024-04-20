@@ -42,6 +42,7 @@ static response_t create_team_response(roundtable_team_t *team)
     json_object_destroy(body);
     response = create_success(201, body_str);
     free(body_str);
+    roundtable_event_team_created(team->server, team);
     return response;
 }
 

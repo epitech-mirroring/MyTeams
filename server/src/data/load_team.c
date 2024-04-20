@@ -32,6 +32,7 @@ void deserialize_team(roundtable_server_t *server, json_object_t *team)
     new_team->description = strdup(description->value);
     deserialize_subscribers(server, subscribers, new_team);
     deserialize_channels(channels, new_team);
+    new_team->server = server;
     roundtable_server_add_team(server, new_team);
 }
 
@@ -62,6 +63,7 @@ void deserialize_channel(json_object_t *channel, roundtable_team_t *team)
     new_channel->name = strdup(name->value);
     new_channel->description = strdup(description->value);
     deserialize_threads(threads, new_channel);
+    new_channel->team = team;
     roundtable_team_add_channel(team, new_channel);
 }
 
@@ -94,5 +96,6 @@ void deserialize_thread(json_object_t *thread, roundtable_channel_t *channel)
     new_thread->content = strdup(content->value);
     new_thread->created_at = timestamp->value;
     deserialize_messages(messages, new_thread);
+    new_thread->channel = channel;
     roundtable_channel_add_thread(channel, new_thread);
 }

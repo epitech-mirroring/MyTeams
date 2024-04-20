@@ -24,6 +24,7 @@ roundtable_thread_t *roundtable_thread_create(const char *title,
     thread->content = strdup(message);
     thread->created_at = time(NULL);
     thread->messages = NULL;
+    thread->channel = channel;
     roundtable_channel_add_thread(channel, thread);
     return thread;
 }

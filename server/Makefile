@@ -21,6 +21,14 @@ SOURCES			= 	src/main.c							\
 					src/threads/composables.c			\
 					src/direct-messages/utils.c			\
 					src/direct-messages/composables.c	\
+					src/events/events.c					\
+					src/events/event_logged_in.c		\
+					src/events/event_logged_out.c		\
+					src/events/event_dm_received.c		\
+					src/events/event_thread_replied.c	\
+					src/events/event_thread_created.c	\
+					src/events/event_channel_created.c	\
+					src/events/event_team_created.c		\
 					src/data/load.c						\
 					src/data/load_team.c				\
 					src/data/load_messages.c			\
@@ -36,6 +44,7 @@ SOURCES			= 	src/main.c							\
 					src/routes/logout.c					\
 					src/routes/user.c					\
 					src/routes/users.c					\
+					src/routes/events.c					\
 					src/routes/messages/send.c			\
 					src/routes/messages/index.c			\
 					src/routes/teams/create.c			\

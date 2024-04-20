@@ -41,6 +41,8 @@ roundtable_client_t *roundtable_server_create_client(
     uuid_copy(new_client->uuid, *uuid_generate());
     new_client->username = strdup(username);
     new_client->status = OFFLINE;
+    new_client->events = calloc(1, sizeof(events_t *));
+    new_client->event_count = 0;
     roundtable_server_add_client(server, new_client);
     return new_client;
 }

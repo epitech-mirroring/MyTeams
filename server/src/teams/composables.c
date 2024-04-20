@@ -33,6 +33,7 @@ roundtable_team_t *roundtable_server_create_team(
     new_team->subscribers = NULL;
     new_team->channel_count = 0;
     new_team->subscriber_count = 0;
+    new_team->server = server;
     roundtable_server_add_team(server, new_team);
     return new_team;
 }

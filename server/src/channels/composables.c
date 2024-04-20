@@ -21,6 +21,7 @@ roundtable_channel_t *roundtable_channel_create(const char *name,
     channel->description = strdup(description);
     channel->thread_count = 0;
     channel->threads = NULL;
+    channel->team = team;
     roundtable_team_add_channel(team, channel);
     return channel;
 }

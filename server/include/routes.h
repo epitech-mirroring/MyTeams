@@ -132,7 +132,6 @@ response_t get_channels_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t create_thread_route(request_t *request, void *data);
-
 /**
  * @brief Route to get the list of all the threads
  * @param request the request to process
@@ -141,7 +140,6 @@ response_t create_thread_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t get_threads_route(request_t *request, void *data);
-
 /**
  * @brief Route to create a reply
  * @param request the request to process
@@ -150,7 +148,6 @@ response_t get_threads_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t create_reply_route(request_t *request, void *data);
-
 /**
  * @brief Route to get the list of all the replies
  * @param request the request to process
@@ -159,3 +156,12 @@ response_t create_reply_route(request_t *request, void *data);
  * @note see documentation/routes.md
  */
 response_t get_replies_route(request_t *req, void *data);
+/**
+ * @brief Route to get the list of all the events
+ * GET /events
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ * @note see documentation/routes.md
+ */
+response_t events_route(request_t *request, void *data);
