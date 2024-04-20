@@ -35,6 +35,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/events/team_created.c 					\
 					src/commands/events/channel_created.c 				\
 					src/commands/events/thread_created.c 				\
+					src/commands/events/thread_replied.c 				\
 					src/utils/utils.c 									\
 
 
