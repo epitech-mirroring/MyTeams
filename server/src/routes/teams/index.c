@@ -74,6 +74,8 @@ response_t get_teams_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (request_has_param(request, "team-uuid"))
         team_uuid = uuid_from_string(request_get_param(request, "team-uuid"));
+    if (!team_uuid && request_has_param(request, "team-uuid"))
+        return create_error(404, "Team not found", "Team not found");
     if (request_has_param(request, "only-joined"))
         only_joined = strcmp(request_get_param(request, "only-joined"),
             "true") == 0;
