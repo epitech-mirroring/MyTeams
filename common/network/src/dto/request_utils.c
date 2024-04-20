@@ -52,7 +52,7 @@ char *serialize_request_path(request_t *req)
 
     for (size_t i = 0; i < req->params_count; i++) {
         new_path = realloc(path, strlen(path) + strlen(req->params[i].key)
-            + strlen(req->params[i].value) + 2);
+            + strlen(req->params[i].value) + 3);
         if (new_path == NULL)
             return NULL;
         path = new_path;

@@ -93,8 +93,9 @@ int main_loop(client_t *client)
     }
     if (client->is_logged == true) {
         logout_when_leaving(client);
+        send_events(client);
     }
-    while (client->waiting_for_response) {
+    while (client->user_uuid != NULL) {
         ws_manager_run_once(client->api_handler->ws_manager);
     }
     return 0;
