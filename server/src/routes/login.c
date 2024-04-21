@@ -15,6 +15,7 @@ static roundtable_client_instance_t *get_create_client(
 {
     roundtable_client_t *client = roundtable_server_get_client_by_username(
         server, username);
+    roundtable_client_instance_t *instance = NULL;
 
     if (!client) {
         client = roundtable_server_create_client(server, username);
@@ -23,10 +24,11 @@ static roundtable_client_instance_t *get_create_client(
     } else {
         *response = create_success(200, "");
     }
+    instance = roundtable_client_instance_create(server, client);
     server_event_user_logged_in(uuid_to_string(client->uuid));
     client->status = ONLINE;
     roundtable_event_logged_in(server, client);
-    return roundtable_client_instance_create(server, client);
+    return instance;
 }
 
 response_t login_route(request_t *request, void *data)

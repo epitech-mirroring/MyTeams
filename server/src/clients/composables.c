@@ -87,8 +87,8 @@ roundtable_client_instance_t *get_instance_from_header(
     header = request_get_header(request, "Authorization");
     if (header == NULL)
         return NULL;
-    uuid_str = strndup(header, 32 + strlen("Bearer "));
-    instance_str = header + strlen("Bearer ") + 32;
+    uuid_str = strndup(header + strlen("Bearer "), 32);
+    instance_str = header + strlen("Bearer ") + 32 + 1;
     instance = get_instance_from_strings(server, uuid_str, instance_str);
     free(uuid_str);
     return instance;
