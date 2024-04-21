@@ -1,5 +1,12 @@
 <script setup lang="ts">
 
+definePageMeta({
+  layout: "default",
+});
+
+onMounted(() => {
+  setPageLayout("default");
+});
 </script>
 
 <template>

@@ -7,7 +7,7 @@ export const refreshThreadsOfChannel = async (team: Team, channel: Channel) => {
   const hasSubscribed = await isUserSubscribed(team)
   if (!hasSubscribed)
     return
-  const resp: Thread[] = await fetch(`http://127.0.0.1:8080/teams/channels/threads?team-uuid=${team.uuid}&channel-uuid=${channel.uuid}`, {
+  const resp: Thread[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads?team-uuid=${team.uuid}&channel-uuid=${channel.uuid}`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${userStore.currentUser?.uuid}`
@@ -38,7 +38,7 @@ export const replyToThread = async (team: Team, channel: Channel, thread: Thread
   const isSubscribed = await isUserSubscribed(team)
   if (!isSubscribed)
     return
-  const created: { timestamp: number } = await fetch('http://127.0.0.1:8080/teams/channels/threads/reply', {
+  const created: { timestamp: number } = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads/reply`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${userStore.currentUser?.uuid}`,
@@ -66,7 +66,7 @@ export const createThread = async (team: Team, channel: Channel, title: string, 
   const isSubscribed = await isUserSubscribed(team)
   if (!isSubscribed)
     return
-  const created: { thread_uuid: string, timestamp: number } = await fetch('http://127.0.0.1:8080/teams/channels/threads/create', {
+  const created: { thread_uuid: string, timestamp: number } = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads/create`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${userStore.currentUser?.uuid}`,
@@ -98,7 +98,7 @@ export const refreshMessagesOfThread = async (team: Team, channel: Channel) => {
   if (!hasSubscribed)
     return
   for (const thread of channel.threads) {
-    const resp: Message[] = await fetch(`http://127.0.0.1:8080/teams/channels/threads/messages?team-uuid=${team.uuid}&channel-uuid=${channel.uuid}&thread-uuid=${thread.uuid}`, {
+    const resp: Message[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads/messages?team-uuid=${team.uuid}&channel-uuid=${channel.uuid}&thread-uuid=${thread.uuid}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${userStore.currentUser?.uuid}`

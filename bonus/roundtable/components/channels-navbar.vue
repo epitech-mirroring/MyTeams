@@ -13,6 +13,20 @@ const openChannel = (channel: Channel) => {
   if (!team.value) return;
   router.push(`/teams/${team.value.uuid}/channels/${channel.uuid}`);
 };
+
+const channelModalOpen = ref(false);
+
+const handleCreateChannel = () => {
+  const name = document.getElementById("channel-name") as HTMLInputElement;
+  const description = document.getElementById("channel-description") as HTMLInputElement;
+
+  if (!name || !description || !team.value) return;
+
+  createChannel(team.value, name.value, description.value);
+  channelModalOpen.value = false;
+  name.value = "";
+  description.value = "";
+};
 </script>
 
 <template>
@@ -28,6 +42,30 @@ const openChannel = (channel: Channel) => {
           <span class="name">{{ channel.name }}</span>
         </div>
         <span class="description">{{ channel.description }}</span>
+      </div>
+      <div class="navbar-item" id="create-channel" @click="channelModalOpen = true">
+        <div class="item-header">
+          <i class="icon fa-duotone fa-plus"></i>
+          <span class="name">Create Channel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-if="channelModalOpen" class="modal" @click="channelModalOpen = false">
+    <div class="modal-content" @click.stop>
+      <div class="inputs">
+        <div class="input-group">
+          <label for="channel-name">Channel Name</label>
+          <input type="text" id="channel-name" />
+        </div>
+        <div class="input-group">
+          <label for="channel-description">Channel Description</label>
+          <input type="text" id="channel-description" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-action close" @click="channelModalOpen = false">Cancel</button>
+        <button class="modal-action validate" @click="handleCreateChannel">Create</button>
       </div>
     </div>
   </div>
@@ -61,6 +99,7 @@ const openChannel = (channel: Channel) => {
   .navbar-items {
     @apply flex flex-col items-start justify-start;
     @apply w-full;
+    @apply gap-4;
 
     .navbar-item {
       @apply flex flex-col items-start justify-start;
@@ -69,6 +108,26 @@ const openChannel = (channel: Channel) => {
       @apply rounded-md;
       @apply cursor-pointer;
       @apply transition-all duration-300 ease-in-out;
+
+      &#create-channel {
+        @apply mt-2;
+        @apply bg-gray-100;
+
+        .item-header {
+          @apply text-sm;
+          @apply space-x-2;
+          @apply transition-all duration-300 ease-in-out;
+          @apply text-gray-400;
+
+          .name {
+            @apply font-normal;
+          }
+
+          &:hover {
+            @apply text-gray-500;
+          }
+        }
+      }
 
       .item-header {
         @apply flex flex-row items-center justify-start;

@@ -10,7 +10,7 @@ export const useUsersStore = defineStore('users', {
   getters: {
     // for computed properties
     onlineUsers(): User[] {
-      return this.userList.filter(user => user.status === UserStatus.ONLINE)
+      return this.userList.filter(user => user.status !== UserStatus.OFFLINE)
     },
     currentUser(): User | null {
       return this.user
@@ -46,8 +46,12 @@ export const useUsersStore = defineStore('users', {
       if (user) {
         user.status = status
       }
+      if (this.user?.uuid === uuid) {
+        this.user = {...this.user, status}
+      }
     }
-  }
+  },
+  persist: true
 })
 
 export enum UserStatus {

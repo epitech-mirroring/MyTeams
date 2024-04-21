@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { replyToThread } from "~/composables/threads";
 import type { Thread } from "~/stores/teams";
+import { getAvatar } from "~/composables/users";
 
 const route = useRoute()
 const teamUUID = computed(() => route.params['team_uuid'] as string)
@@ -14,19 +15,25 @@ const userSubscribed = computed(() => user.value && team.value ? teamsStore.isSu
 const isModalOpen = ref(false);
 
 watch(userSubscribed, (value) => {
-  if (!value) {
-    setPageLayout("default");
-  } else {
-    setPageLayout("team");
-  }
+  // Wait for hydration
+  setTimeout(() => {
+    if (!value) {
+      setPageLayout("default");
+    } else {
+      setPageLayout("team");
+    }
+  }, 0);
 });
 
 onMounted(() => {
-  if (!userSubscribed.value) {
-    setPageLayout("default");
-  } else {
-    setPageLayout("team");
-  }
+  // Wait for hydration
+  setTimeout(() => {
+    if (!userSubscribed.value) {
+      setPageLayout("default");
+    } else {
+      setPageLayout("team");
+    }
+  }, 0);
 });
 
 const handleCreateThread = () => {
@@ -43,7 +50,7 @@ const handleCreateThread = () => {
 };
 
 const handleCreateReply = (thread: Thread) => {
-  const content = document.getElementById("create-reply-content") as HTMLInputElement;
+  const content = document.getElementById("create-reply-content-" + thread.uuid) as HTMLInputElement;
 
   if (!content.value) return;
   if (!team.value || !channel.value) return;
@@ -62,12 +69,12 @@ const handleCreateReply = (thread: Thread) => {
             <div class="thread-header-left">
               <span class="thread-title">{{ thread.title }}</span>
               <span class="thread-time">
-              {{ new Date(thread.timestamp * 1000).toLocaleDateString() }} @ {{ new Date(thread.timestamp * 100).toLocaleTimeString() }}
+              {{ new Date(thread.timestamp * 1000).toLocaleDateString() }} @ {{ new Date(thread.timestamp * 1000).toLocaleTimeString() }}
             </span>
             </div>
             <div class="thread-author">
               <span>{{ userStore.getUser(thread.sender_uuid)?.username }}</span>
-              <img class="author-avatar" :src="'https://api.dicebear.com/8.x/lorelei/svg?flip=true&seed=' + thread.sender_uuid"  alt=""/>
+              <img class="author-avatar" :src="getAvatar(userStore.getUser(thread.sender_uuid))"  alt=""/>
             </div>
           </div>
           <div class="thread-content">
@@ -78,11 +85,11 @@ const handleCreateReply = (thread: Thread) => {
           <div class="thread-reply" v-for="(reply, index) in thread.messages" :key="index">
             <div class="thread-reply-head">
               <div class="thread-reply-author">
-                <img class="author-avatar" :src="'https://api.dicebear.com/8.x/lorelei/svg?flip=true&seed=' + reply.sender_uuid"  alt=""/>
+                <img class="author-avatar" :src="getAvatar(userStore.getUser(reply.sender_uuid))"  alt=""/>
                 <span class="author-name">{{ userStore.getUser(reply.sender_uuid)?.username }}</span>
               </div>
               <span class="reply-time">
-                {{ new Date(reply.timestamp * 1000).toLocaleDateString() }} @ {{ new Date(reply.timestamp * 100).toLocaleTimeString() }}
+                {{ new Date(reply.timestamp * 1000).toLocaleDateString() }} @ {{ new Date(reply.timestamp * 1000).toLocaleTimeString() }}
               </span>
             </div>
             <div class="thread-reply-content">
@@ -90,7 +97,7 @@ const handleCreateReply = (thread: Thread) => {
             </div>
           </div>
           <div class="thread-create-reply">
-            <input type="text" placeholder="Reply" id="create-reply-content" />
+            <input type="text" placeholder="Reply" :id="'create-reply-content-' + thread.uuid" @keyup.enter="handleCreateReply(thread)" />
             <div class="thread-create-reply-button" @click="handleCreateReply(thread)">
               <i class="fa-duotone fa-paper-plane fa-fw"></i>
             </div>
@@ -185,6 +192,7 @@ const handleCreateReply = (thread: Thread) => {
 
           span {
             @apply text-gray-400;
+            @apply capitalize;
           }
         }
       }
@@ -218,6 +226,7 @@ const handleCreateReply = (thread: Thread) => {
 
             .author-name {
               @apply text-gray-700;
+              @apply capitalize;
             }
           }
 
@@ -237,6 +246,7 @@ const handleCreateReply = (thread: Thread) => {
         @apply w-full;
         @apply space-x-2;
         @apply px-2;
+        @apply pr-12;
         @apply mb-2;
 
         input {

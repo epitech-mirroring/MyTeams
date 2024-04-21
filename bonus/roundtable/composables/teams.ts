@@ -2,12 +2,13 @@ import type { Team } from "~/stores/teams";
 import type { UserStatus } from "~/stores/users";
 import { refreshChannels } from "~/composables/channels";
 import { refreshThreads } from "~/composables/threads";
+import { refreshConversations } from "~/composables/messages";
 
 export const refreshTeams = async () => {
   const teams = useTeamsStore()
   const userStore = useUsersStore()
 
-  const resp: Team[] = await fetch('http://127.0.0.1:8080/teams', {
+  const resp: Team[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${userStore.currentUser?.uuid}`
@@ -24,6 +25,13 @@ export const refreshTeams = async () => {
     }))
 
   resp.forEach(team => teams.addTeam(team))
+
+  const teamUuids = resp.map(team => team.uuid)
+  const teamsInStore = teams.getTeams.map(team => team.uuid)
+  teamsInStore.forEach(uuid => {
+    if (!teamUuids.includes(uuid))
+      teams.removeTeam(uuid)
+  })
 }
 
 export const refreshSubscribersOfTeam = async (team: Team) => {
@@ -33,7 +41,7 @@ export const refreshSubscribersOfTeam = async (team: Team) => {
   const hasSubscribed = await isUserSubscribed(team)
   if (!hasSubscribed)
     return
-  const resp: {uuid: string, username: string, status: UserStatus}[] = await fetch(`http://127.0.0.1:8080/teams/users?team-uuid=${team.uuid}`, {
+  const resp: {uuid: string, username: string, status: UserStatus}[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/users?team-uuid=${team.uuid}`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${userStore.currentUser?.uuid}`
@@ -43,6 +51,15 @@ export const refreshSubscribersOfTeam = async (team: Team) => {
   resp.forEach(user => {
     userStore.addUser(user)
     teams.addSubscriber(user.uuid, team)
+  })
+
+  // Get subscribers in store to remove those who are not in the response
+  const subscribers = teams.getTeam(team.uuid)?.subscribers || []
+  subscribers.forEach(sub => {
+    if (!resp.find(u => u.uuid === sub)) {
+      console.log('Removing subscriber', sub)
+      teams.removeSubscriber(sub, team)
+    }
   })
 }
 
@@ -60,13 +77,14 @@ export const refreshAll = async () => {
   await refreshSubscribers()
   await refreshChannels()
   await refreshThreads()
+  await refreshConversations()
 }
 
 export const joinTeam = async (team: Team) => {
   const userStore = useUsersStore()
   const teams = useTeamsStore()
 
-  const resp = await fetch(`http://127.0.0.1:8080/teams/join`, {
+  const resp = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/join`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -83,7 +101,7 @@ export const leaveTeam = async (team: Team) => {
   const userStore = useUsersStore()
   const teams = useTeamsStore()
 
-  const resp = await fetch(`http://127.0.0.1:8080/teams/leave`, {
+  const resp = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/leave`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -94,4 +112,26 @@ export const leaveTeam = async (team: Team) => {
 
   if (resp.ok && userStore.currentUser)
     teams.removeSubscriber(userStore.currentUser.uuid, team)
+}
+
+export const createTeam = async (name: string, description: string) => {
+  const userStore = useUsersStore()
+  const teams = useTeamsStore()
+
+  const resp: {team_uuid: string} = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+    },
+    body: JSON.stringify({name, description})
+  }).then(res => res.json())
+
+  teams.addTeam({
+    uuid: resp.team_uuid,
+    name,
+    description,
+    subscribers: [],
+    channels: []
+  })
 }

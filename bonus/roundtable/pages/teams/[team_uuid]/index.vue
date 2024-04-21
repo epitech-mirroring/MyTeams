@@ -8,25 +8,47 @@ const user = computed(() => userStore.user);
 const userSubscribed = computed(() => user.value && team.value ? teamsStore.isSubscribed(user.value?.uuid, team.value) : false);
 
 watch(userSubscribed, (value) => {
-  if (!value) {
-    setPageLayout("default");
-  } else {
-    setPageLayout("team");
-  }
+  setTimeout(() => {
+    if (!value) {
+      setPageLayout("default");
+    } else {
+      setPageLayout("team");
+    }
+  }, 0);
 });
 
 onMounted(() => {
-  if (!userSubscribed.value) {
-    setPageLayout("default");
-  } else {
-    setPageLayout("team");
-  }
+  // Wait for hydration
+  setTimeout(() => {
+    if (!userSubscribed.value) {
+      setPageLayout("default");
+    } else {
+      setPageLayout("team");
+    }
+  }, 0);
 });
 </script>
 
 <template>
   <div v-if="userSubscribed">
-    <p>Team page</p>
+    <div class="users-subscribed">
+      <div class="user-header">
+        <h1>Users</h1>
+      </div>
+      <div class="users-grid">
+        <div v-for="user in team?.subscribers.map(uuid => userStore.getUser(uuid))" :key="user?.uuid" class="user" v-if="user">
+          <div class="user-avatar">
+            <img :src="getAvatar(user)" alt="" />
+          </div>
+          <div class="user-name">
+            <span>{{ user?.username }}</span>
+          </div>
+          <div class="user-status" :class="user?.status">
+            <span>{{ user?.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div v-else class="join-team-page">
     <span class="join-message">
@@ -42,6 +64,95 @@ onMounted(() => {
 </template>
 
 <style scoped lang="postcss">
+
+.users-subscribed {
+  @apply flex flex-col items-start justify-start;
+  @apply h-screen;
+  @apply w-full;
+  @apply relative;
+  @apply space-y-4;
+
+  .user-header {
+    @apply text-gray-400 text-2xl;
+  }
+
+  .users-grid {
+    @apply grid grid-cols-3 gap-4;
+
+    .user {
+      @apply flex flex-col items-center justify-center;
+      @apply bg-gray-100 rounded-md;
+      @apply aspect-square;
+      @apply p-4;
+      @apply relative;
+      @apply border-2 border-gray-200;
+      @apply shadow-md;
+
+      .user-avatar {
+        @apply w-16 h-16;
+      }
+
+      .user-name {
+        @apply text-gray-800 text-lg;
+        @apply capitalize;
+      }
+
+      .user-status {
+        @apply absolute;
+        @apply w-3 h-3;
+        content: '';
+        @apply rounded-full;
+        @apply border-2 border-white;
+        @apply top-1/2 left-1/2;
+        @apply translate-x-3;
+        @apply transition-all duration-300;
+        @apply flex flex-row items-center justify-center;
+
+        &.ONLINE {
+          @apply bg-green-500;
+          @apply border-2 border-white;
+          @apply bottom-0 right-0;
+        }
+
+        &.OFFLINE {
+          @apply bg-gray-500;
+          @apply border-2 border-white;
+          @apply bottom-0 right-0;
+        }
+
+        &.AWAY {
+          @apply bg-yellow-500;
+          @apply border-2 border-white;
+          @apply bottom-0 right-0;
+        }
+
+        &.BUSY {
+          @apply bg-red-500;
+          @apply border-2 border-white;
+          @apply bottom-0 right-0;
+        }
+
+        span {
+          @apply text-xs text-white font-bold;
+          @apply tracking-tight;
+          @apply sr-only;
+          @apply opacity-0;
+          @apply transition-opacity duration-300 delay-100;
+        }
+
+        &:hover {
+          @apply w-16 h-5;
+          @apply translate-y-1;
+
+          span {
+            @apply not-sr-only;
+            @apply opacity-100;
+          }
+        }
+      }
+    }
+  }
+}
 
 .join-team-page {
   @apply flex flex-col items-center justify-center;

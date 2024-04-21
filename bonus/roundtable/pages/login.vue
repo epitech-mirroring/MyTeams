@@ -20,8 +20,15 @@ const login = async () => {
 };
 
 definePageMeta({
-  layout: "default",
+  layout: false
 })
+
+onMounted(() => {
+  if (isLogged.value) {
+    router.push({path: "/"});
+  }
+  setPageLayout(false);
+});
 
 </script>
 
@@ -37,7 +44,7 @@ definePageMeta({
       <div v-if="!isLogged" class="login-form">
         <div class="input-group">
           <label for="username">Username</label>
-          <input type="text" id="username" />
+          <input type="text" id="username" @keyup.enter="login" />
         </div>
         <div class="login-actions">
           <button class="login-button" @click="login">Login / Sign Up</button>

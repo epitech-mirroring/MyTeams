@@ -10,6 +10,10 @@ export const useTeamsStore = defineStore('teams', {
     isSubscribed: (state) => (uuid: string, team: Team) => {
       const t = state.teams.find(t => t.uuid === team.uuid)
       return t ? t.subscribers.includes(uuid) : false
+    },
+    getChannels: (state) => (team: Team | string) => {
+      const t = typeof team === 'string' ? state.teams.find(t => t.uuid === team) : team
+      return t ? t.channels : []
     }
   },
   actions: {
@@ -93,7 +97,8 @@ export const useTeamsStore = defineStore('teams', {
         }
       }
     }
-  }
+  },
+  persist: true
 })
 
 export interface Message {
