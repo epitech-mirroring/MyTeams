@@ -29,3 +29,8 @@
  * @brief Maximum length of a body
  */
 #define MAX_BODY_LENGTH 512
+
+/**
+ * @brief Time between two requests in milliseconds
+ */
+#define TIME_BETWEEN_REQUESTS 100

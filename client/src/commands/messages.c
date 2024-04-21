@@ -53,7 +53,7 @@ void messages_response(response_t *response, request_data_t *request_data)
 
 static void send_messages(client_t *client, char *user_uuid)
 {
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
     request_t *request = calloc(1, sizeof(request_t));
 
     if (bearer == NULL || request == NULL)

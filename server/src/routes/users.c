@@ -47,7 +47,7 @@ static response_t make_response(roundtable_client_t *client,
 response_t users_route(request_t *request, void *data)
 {
     roundtable_server_t *srv = (roundtable_server_t *)data;
-    roundtable_client_t *client = NULL;
+    roundtable_client_instance_t *instance = NULL;
     response_t rep = {0};
     bool only_connected = false;
 
@@ -55,9 +55,9 @@ response_t users_route(request_t *request, void *data)
         return create_error(405, "Method not allowed", "Only GET");
     if (!request_has_header(request, "Authorization"))
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
-    client = get_client_from_header(srv, request);
-    if (!client)
+    instance = get_instance_from_header(data, request);
+    if (!instance)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     only_connected = is_connected(request, srv);
-    return make_response(client, srv, only_connected, rep);
+    return make_response(instance->client, srv, only_connected, rep);
 }

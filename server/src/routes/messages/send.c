@@ -42,7 +42,7 @@ response_t send_dm_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
     json_object_t *body = (json_object_t *) json_parse(request->body);
-    roundtable_client_t *sender = NULL;
+    roundtable_client_instance_t *sender = NULL;
     roundtable_client_t *receiver = NULL;
 
     if (!IS_METHOD(request, "POST"))
@@ -51,13 +51,13 @@ response_t send_dm_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (!body || !body_is_valid(body))
         return create_error(400, "Invalid body", get_missing_key(body));
-    sender = get_client_from_header(server, request);
+    sender = get_instance_from_header(server, request);
     if (!sender)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     receiver = get_client_from_json(server, body, "recipient_uuid");
     if (!receiver)
         return create_error(404, "Client not found", "Receiver not found");
-    roundtable_server_send_dm(server, sender, receiver,
+    roundtable_server_send_dm(server, sender->client, receiver,
         ((json_object_t *) json_object_get(body, "message")));
-    return server_event_success(sender, receiver, body);
+    return server_event_success(sender->client, receiver, body);
 }

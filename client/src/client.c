@@ -11,24 +11,25 @@
 #include "logging_client.h"
 #include "network/manager.h"
 #include "network/sockets.h"
+#include <sys/time.h>
 
 static client_t *init_struct(api_client_t *api_handler)
 {
     client_t *client = malloc(sizeof(client_t));
 
-    if (client == NULL) {
+    if (client == NULL)
         exit(84);
-    }
     client->is_logged = false;
     client->waiting_for_response = false;
+    client->is_event = true;
     client->running = true;
     client->buffer = calloc(1024, sizeof(char));
     client->user_name = NULL;
     client->user_uuid = NULL;
+    client->instance_id = 0;
     client->context = malloc(sizeof(context_t));
-    if (client->context == NULL || client->buffer == NULL) {
+    if (client->context == NULL || client->buffer == NULL)
         exit(84);
-    }
     client->context->team_uuid = NULL;
     client->context->channel_uuid = NULL;
     client->context->thread_uuid = NULL;
@@ -81,22 +82,35 @@ bool callback(waiting_socket_t *socket)
     return true;
 }
 
+static void send_running_events(client_t *client)
+{
+    struct timeval tv;
+    long current_time = 0;
+    static long client_time = 0;
+    long time_spent = 0;
+
+    gettimeofday(&tv, NULL);
+    current_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    time_spent = (current_time - client_time);
+    if (time_spent >= TIME_BETWEEN_REQUESTS && client->is_event == false) {
+        client_time = current_time;
+        send_events(client);
+    }
+}
+
 int main_loop(client_t *client)
 {
     waiting_socket_t *ws = waiting_sockets_add_socket(
         client->api_handler->ws_manager->ws, 0, READ, &callback);
 
     ws->data = client;
-    client->is_event = true;
     send_events(client);
     while (client->running) {
-        if (client->is_event == false)
-            send_events(client);
+        send_running_events(client);
         ws_manager_run_once(client->api_handler->ws_manager);
     }
     if (client->is_logged == true) {
         logout_when_leaving(client);
-        send_events(client);
     }
     while (client->user_uuid != NULL) {
         ws_manager_run_once(client->api_handler->ws_manager);

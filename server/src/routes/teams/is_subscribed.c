@@ -12,7 +12,7 @@
 
 response_t is_subscribed_route(request_t *request, void *data)
 {
-    roundtable_client_t *client = NULL;
+    roundtable_client_instance_t *instance = NULL;
     roundtable_team_t *team = NULL;
 
     if (!IS_METHOD(request, "GET"))
@@ -21,14 +21,14 @@ response_t is_subscribed_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (!request_has_param(request, "team-uuid"))
         return create_error(400, "Invalid param", "Missing 'team-uuid'");
-    client = get_client_from_header(data, request);
-    if (!client)
+    instance = get_instance_from_header(data, request);
+    if (!instance)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     team = get_team_from_string(data, request_get_param(request,
         "team-uuid"));
     if (!team)
         return create_error(404, "Team not found", "Team not found");
-    if (!roundtable_team_has_subscriber(team, client))
+    if (!roundtable_team_has_subscriber(team, instance->client))
         return create_success(200, "{\"subscribed\": false}");
     return create_success(200, "{\"subscribed\": true}");
 }

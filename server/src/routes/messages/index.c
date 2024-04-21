@@ -27,7 +27,7 @@ static char *serialize(roundtable_direct_message_t *dm)
 response_t get_dms_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
-    roundtable_client_t *s = NULL;
+    roundtable_client_instance_t *s = NULL;
     roundtable_client_t *r = NULL;
 
     if (!IS_METHOD(request, "GET"))
@@ -36,7 +36,7 @@ response_t get_dms_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (!request_has_param(request, "uuid"))
         return create_error(400, "Invalid request", "Missing 'uuid' param");
-    s = get_client_from_header(server, request);
+    s = get_instance_from_header(server, request);
     if (!s)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     r = roundtable_server_get_client_by_uuid(server, *uuid_from_string(
@@ -44,5 +44,6 @@ response_t get_dms_route(request_t *request, void *data)
     if (!r)
         return create_error(404, "Client not found", "Receiver not found");
     return create_success(200,
-        serialize(roundtable_server_find_direct_message(server, s, r)));
+        serialize(roundtable_server_find_direct_message(server,
+        s->client, r)));
 }

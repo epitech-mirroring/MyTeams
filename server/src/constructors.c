@@ -24,6 +24,8 @@ roundtable_server_t *create_server(int port)
     server->team_count = 0;
     host.ip = "127.0.0.1";
     host.port = port;
+    server->instance_count = 0;
+    server->instances = calloc(1, sizeof(roundtable_client_instance_t *));
     server->router = router_init(host);
     return server;
 }

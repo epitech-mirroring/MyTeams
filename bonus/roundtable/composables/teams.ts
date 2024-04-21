@@ -11,7 +11,7 @@ export const refreshTeams = async () => {
   const resp: Team[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     }
   }).then(res => res.json())
     .then(teams => teams.map((team: { team_uuid: string, team_name: string, team_description: string }) => {
@@ -44,7 +44,7 @@ export const refreshSubscribersOfTeam = async (team: Team) => {
   const resp: {uuid: string, username: string, status: UserStatus}[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/users?team-uuid=${team.uuid}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     }
   }).then(res => res.json())
 
@@ -88,7 +88,7 @@ export const joinTeam = async (team: Team) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     },
     body: JSON.stringify({team_uuid: team.uuid})
   }).then()
@@ -105,7 +105,7 @@ export const leaveTeam = async (team: Team) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     },
     body: JSON.stringify({team_uuid: team.uuid})
   }).then()
@@ -122,7 +122,7 @@ export const createTeam = async (name: string, description: string) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     },
     body: JSON.stringify({name, description})
   }).then(res => res.json())

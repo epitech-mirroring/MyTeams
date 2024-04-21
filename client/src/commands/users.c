@@ -50,7 +50,7 @@ void users_response(response_t *response, request_data_t *request_data)
 static void send_users(client_t *client)
 {
     request_t *request = calloc(1, sizeof(request_t));
-    char *uuid = add_bearer(client->user_uuid);
+    char *uuid = add_bearer(client->user_uuid, client->instance_id);
 
     if (uuid == NULL || request == NULL) {
         printf("Error: malloc failed\n");

@@ -17,7 +17,7 @@ pipeline {
                     if (response.status != 200 ) {
                         error "Failed to get the list of versions from the GitHub Container Registry"
                     }
-                    if (response.status == 200) {
+                    if (response.status == 200 && env.BRANCH_NAME != 'main') {
                         def versions = readJSON text: response.content
                         def version = versions.find { it.metadata.container.tags.contains(IMAGE_VERSION) }
                         if (version != null) {
@@ -156,17 +156,22 @@ pipeline {
             }
         }
         stage('📦 Push Package') {
-            when {
-               branch 'main'
-            }
             steps {
                 script {
+                    // add '-preview' to the version if the branch is not main
+                    if (env.BRANCH_NAME != 'main') {
+                        IMAGE_VERSION += '-preview'
+                    }
                     // login to the GitHub Container Registry
                     sh 'echo $GHCR_TOKEN_PSW | docker login ghcr.io -u $GHCR_TOKEN_USR --password-stdin'
                     // Build the image
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} ."
                     // tag the image
                     sh "docker tag ${IMAGE_NAME}:${IMAGE_VERSION} ghcr.io/${IMAGE_NAME}:${IMAGE_VERSION}"
+                    // Add the latest tag
+                    if (env.BRANCH_NAME == 'main') {
+                        sh "docker tag ${IMAGE_NAME}:${IMAGE_VERSION} ghcr.io/${IMAGE_NAME}:latest"
+                    }
                     // push the image
                     sh "docker push ghcr.io/${IMAGE_NAME}:$IMAGE_VERSION"
                 }

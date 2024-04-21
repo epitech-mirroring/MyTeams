@@ -61,7 +61,7 @@ static response_t handle_get_teams(roundtable_server_t *server,
 response_t get_teams_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
-    roundtable_client_t *client = NULL;
+    roundtable_client_instance_t *instance = NULL;
     uuid_t *team_uuid = NULL;
     bool only_joined = false;
 
@@ -69,8 +69,8 @@ response_t get_teams_route(request_t *request, void *data)
         return create_error(405, "Method not allowed", "Only GET");
     if (!request_has_header(request, "Authorization"))
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
-    client = get_client_from_header(server, request);
-    if (!client)
+    instance = get_instance_from_header(server, request);
+    if (!instance)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (request_has_param(request, "team-uuid"))
         team_uuid = uuid_from_string(request_get_param(request, "team-uuid"));
@@ -79,5 +79,5 @@ response_t get_teams_route(request_t *request, void *data)
     if (request_has_param(request, "only-joined"))
         only_joined = strcmp(request_get_param(request, "only-joined"),
             "true") == 0;
-    return handle_get_teams(server, client, team_uuid, only_joined);
+    return handle_get_teams(server, instance->client, team_uuid, only_joined);
 }

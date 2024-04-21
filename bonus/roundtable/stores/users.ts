@@ -64,4 +64,5 @@ export interface User {
   uuid: string
   username: string
   status: UserStatus
+  instance_id?: number
 }

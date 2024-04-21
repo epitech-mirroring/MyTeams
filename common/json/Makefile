@@ -26,7 +26,7 @@ TESTS			=	../../tests/json/json_parser.c		\
 # Compiler and linker settings
 NAME 			=   libjson.a
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
+FLAGS			= 	-W -Wall -Wextra -I./include -L../../libs \
 					-lmy -I../../include $(shell [ uname != "Darwin" ] \
 					&& echo "--std=gnu99 -D__GNU_SOURCE")
 OBJS			= 	$(SOURCES:.c=.o)
@@ -48,6 +48,14 @@ RUNNING = [$(YELLOW)~$(RESET)]
 SUCCESS = [$(GREEN)✔$(RESET)]
 FAILURE = [$(RED)✘$(RESET)]
 SKIPPED = [$(MAGENTA)@$(RESET)]
+
+# If the IS_PROD variable is set to 1, the binary will be optimized
+# with the -O3 flag and if it is set to 0, the binary we add --coverage -g3
+ifeq ($(IS_PROD), 1)
+	FLAGS	+= -O3
+else
+	FLAGS	+= --coverage -g3
+endif
 
 all:		$(NAME)
 
