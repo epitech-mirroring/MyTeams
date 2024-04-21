@@ -37,6 +37,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/info/info_thread.c 					\
 					\
 					src/commands/list/list.c 							\
+					src/commands/list/list_teams.c 						\
 					\
 					src/commands/events/events.c 						\
 					src/commands/events/logged_in.c 					\
