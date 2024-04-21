@@ -13,7 +13,7 @@ pipeline {
         stage ('🚀 Preliminary tests') {
             steps {
                 script {
-                    def response = httpRequest 'https://api.github.com/orgs/epitech-mirroring/packages/container/rountable-server/versions'
+                    def response = httpRequest customHeaders: [[name:'Authorization',value:"Bearer ${GHCR_TOKEN_PSW}"],[name: 'X-GitHub-Api-Version', value:'2022-11-28'], url:'https://api.github.com/orgs/epitech-mirroring/packages/container/rountable-server/versions'
                     /*
                     if (response.status != 200 ) {
                         error "Failed to get the list of versions from the GitHub Container Registry"
