@@ -11,18 +11,19 @@ pipeline {
     }
     stages {
         stage ('🚀 Preliminary tests') {
-        steps {
-            script {
-                def response = httpRequest 'https://api.github.com/orgs/epitech-mirroring/packages/container/rountable-server/versions'
-                /*
-                if (response.status != 200 ) {
-                    error "Failed to get the list of versions from the GitHub Container Registry"
-                }
-                */
-                def versions = readJSON text: response.content
-                def version = versions.find { it.name == IMAGE_VERSION }
-                if (version != null) {
-                    error "The version ${IMAGE_VERSION} already exists in the GitHub Container Registry"
+            steps {
+                script {
+                    def response = httpRequest 'https://api.github.com/orgs/epitech-mirroring/packages/container/rountable-server/versions'
+                    /*
+                    if (response.status != 200 ) {
+                        error "Failed to get the list of versions from the GitHub Container Registry"
+                    }
+                    */
+                    def versions = readJSON text: response.content
+                    def version = versions.find { it.name == IMAGE_VERSION }
+                    if (version != null) {
+                        error "The version ${IMAGE_VERSION} already exists in the GitHub Container Registry"
+                    }
                 }
             }
         }
