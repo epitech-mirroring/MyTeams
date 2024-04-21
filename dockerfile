@@ -20,6 +20,9 @@ ENV LD_LIBRARY_PATH=/root/libs/myteams
 #expose the port 8080 for myteams_server app
 EXPOSE 8080
 
+#add volume for the data.json file
+VOLUME /root/data.json
+
 # run the project
 CMD ["./myteams_server", "8080"]
 
