@@ -176,6 +176,18 @@ void roundtable_team_remove_subscriber(roundtable_team_t *team,
  */
 roundtable_team_t *get_team_from_string(
     roundtable_server_t *server, char *uuid_str);
+/**
+ * @brief Transform a string into a status
+ * @param status The string to transform
+ * @return The status if found, OFFLINE otherwise
+ */
+roundtable_status_t status_from_string(char *status);
+/**
+ * @brief Transform a status into a string
+ * @param status The status to transform
+ * @return The string representation of the status
+ */
+const char *status_to_string(roundtable_status_t status);
 // --------------------------- SERVER CHANNELS -----------------------------
 /**
  * @brief Add a thread to a channel
@@ -353,6 +365,15 @@ roundtable_channel_t *get_channel_from_param(roundtable_team_t *team,
  */
 roundtable_team_t *get_team_from_param(request_t *request,
     roundtable_server_t *server, char *key);
+/**
+ * @brief Get all direct messages from a client (both sent and received)
+ * @param server the server to search in
+ * @param client the client to search for
+ * @return an array of direct messages (can be empty)
+ * @note The array must be freed after use
+ */
+roundtable_direct_message_t **roundtable_server_get_messages_from_client(
+    roundtable_server_t *server, roundtable_client_t *client);
 // --------------------------- SERVER EVENTS --------------------------------
 void roundtable_server_send_event(roundtable_server_t *server,
     roundtable_client_t *client, events_t *event);

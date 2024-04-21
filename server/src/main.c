@@ -19,6 +19,7 @@ const roundtable_route_t ROUTES[] = {
     {"/login", login_route},
     {"/logout", logout_route},
     {"/messages/send", send_dm_route},
+    {"/messages/conversations", list_direct_messages_route},
     {"/messages", get_dms_route},
     {"/teams/create", create_team_route},
     {"/teams", get_teams_route},
@@ -31,9 +32,11 @@ const roundtable_route_t ROUTES[] = {
     {"/teams/channels/threads/create", create_thread_route},
     {"/teams/channels/threads/reply", create_reply_route},
     {"/teams/channels/threads/messages", get_replies_route},
+    {"/teams/is-subscribed", is_subscribed_route},
     {"/user", user_route},
     {"/users", users_route},
     {"/events", events_route},
+    {"/status", update_status_route},
     {NULL, NULL}
 };
 

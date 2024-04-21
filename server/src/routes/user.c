@@ -35,7 +35,7 @@ static response_t make_response(roundtable_client_t *client)
     json_object_add(response_body, (json_t *) json_string_create("name",
         client->username));
     json_object_add(response_body, (json_t *) json_string_create("status",
-        client->status == ONLINE ? "ONLINE" : "OFFLINE"));
+        status_to_string(client->status)));
     response_body_str = json_serialize((json_t *) response_body);
     rep = create_success(200, response_body_str);
     response_add_header(&rep, "Content-Type", "application/json");

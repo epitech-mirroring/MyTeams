@@ -27,7 +27,7 @@ static char *serialize_users(roundtable_server_t *server,
         json_object_add(user_obj, (json_t *) json_string_create("username",
             user->username));
         json_object_add(user_obj, (json_t *) json_string_create("status",
-            user->status == ONLINE ? "ONLINE" : "OFFLINE"));
+            status_to_string(user->status)));
         json_array_add(array, (json_t *) user_obj);
     }
     serialized = json_serialize((json_t *) array);

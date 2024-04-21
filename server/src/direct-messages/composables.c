@@ -84,3 +84,26 @@ roundtable_message_t *roundtable_message_create(roundtable_client_t *s,
     new_message->created_at = time(NULL);
     return new_message;
 }
+
+roundtable_direct_message_t **roundtable_server_get_messages_from_client(
+    roundtable_server_t *server, roundtable_client_t *client)
+{
+    roundtable_direct_message_t **messages = calloc(1,
+        sizeof(roundtable_direct_message_t *));
+    roundtable_direct_message_t **tmp = NULL;
+    size_t count = 0;
+
+    for (size_t i = 0; i < server->message_count; i++) {
+        if (uuid_compare(server->direct_messages[i]->sender_uuid, client->uuid)
+        || uuid_compare(
+        server->direct_messages[i]->receiver_uuid, client->uuid)) {
+            tmp = realloc(messages, sizeof(roundtable_direct_message_t *)
+                * (count + 2));
+            messages = tmp;
+            messages[count] = server->direct_messages[i];
+            messages[count + 1] = NULL;
+            count++;
+        }
+    }
+    return messages;
+}
