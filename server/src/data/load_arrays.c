@@ -34,6 +34,8 @@ void deserialize_client(roundtable_server_t *server, json_object_t *client)
     new_client->status = OFFLINE;
     new_client->events = calloc(1, sizeof(events_t *));
     new_client->event_count = 0;
+    server_event_user_loaded(uuid_to_string(new_client->uuid),
+    new_client->username);
     roundtable_server_add_client(server, new_client);
 }
 

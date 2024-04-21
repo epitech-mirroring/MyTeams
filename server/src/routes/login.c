@@ -19,8 +19,11 @@ static roundtable_client_t *get_create_client(
     if (!client) {
         client = roundtable_server_create_client(server, username);
         *response = create_success(201, "");
+        server_event_user_created(uuid_to_string(client->uuid), username);
+        server_event_user_logged_in(uuid_to_string(client->uuid));
     } else {
         *response = create_success(200, "");
+        server_event_user_logged_in(uuid_to_string(client->uuid));
     }
     client->status = ONLINE;
     roundtable_event_logged_in(server, client);
@@ -34,7 +37,6 @@ response_t login_route(request_t *request, void *data)
     json_object_t *body = (json_object_t *) json_parse(request->body);
     roundtable_client_t *c = NULL;
     json_object_t *response_body = json_object_create(NULL);
-    char *response_body_str = NULL;
 
     if (strcmp(request->route.method, "POST") != 0)
         return create_error(405, "Method not allowed", "Only POST");
@@ -44,9 +46,8 @@ response_t login_route(request_t *request, void *data)
         ((json_string_t *) json_object_get(body, "username"))->value, &r);
     json_object_add(response_body, (json_t *)
         json_string_create("user_uuid", uuid_to_string(c->uuid)));
-    response_body_str = json_serialize((json_t *) response_body);
-    r.body = strdup(response_body_str);
+    r.body = strdup(json_serialize((json_t *) response_body));
     response_add_header(&r, "Content-Type", "application/json");
-    destroy(response_body_str, (json_t *) body, (json_t *) response_body);
+    destroy(NULL, (json_t *) body, (json_t *) response_body);
     return r;
 }

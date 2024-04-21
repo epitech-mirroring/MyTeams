@@ -49,14 +49,19 @@ static response_t create_channel_response_body(roundtable_channel_t *channel)
     return response;
 }
 
-static response_t create_channel_response(roundtable_server_t *server,
-    roundtable_team_t *team, json_object_t *body)
+static response_t create_channel_response(roundtable_team_t *team,
+    json_object_t *body)
 {
+    char *team_uuid = uuid_to_string(team->uuid);
+    char *channel_uuid = NULL;
     roundtable_channel_t *channel = roundtable_channel_create(
         ((json_string_t *) json_object_get(body, "name"))->value,
         ((json_string_t *) json_object_get(body, "description"))->value,
         team);
 
+    channel_uuid = uuid_to_string(channel->uuid);
+    server_event_channel_created(team_uuid, channel_uuid,
+    channel->name);
     return create_channel_response_body(channel);
 }
 
@@ -81,5 +86,5 @@ response_t create_channel_route(request_t *request, void *data)
         return create_error(404, "Team not found", "Team not found");
     if (!roundtable_team_has_subscriber(team, client))
         return create_error(403, "Forbidden", "Client not a subscriber");
-    return create_channel_response(server, team, body);
+    return create_channel_response(team, body);
 }

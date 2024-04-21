@@ -9,6 +9,7 @@
 #pragma once
 #include "server_types.h"
 #include "json/json.h"
+#include "logging_server.h"
 
 // --------------------------- SERVER CONSTRUCTORS -------------------------
 /**
@@ -375,3 +376,12 @@ void roundtable_event_channel_created(roundtable_server_t *server,
     roundtable_channel_t *channel);
 void roundtable_event_team_created(roundtable_server_t *server,
     roundtable_team_t *team);
+
+/**
+ * @brief Add a subscriber to a team
+ * @param team The team to add the subscriber to
+ * @param client The client to add
+ * @return The event created
+ */
+void roundtable_create_team_event(roundtable_team_t *team,
+    roundtable_client_t *subscriber);
