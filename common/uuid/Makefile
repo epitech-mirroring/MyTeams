@@ -36,6 +36,14 @@ SUCCESS = [$(GREEN)✔$(RESET)]
 FAILURE = [$(RED)✘$(RESET)]
 SKIPPED = [$(MAGENTA)@$(RESET)]
 
+# If the IS_PROD variable is set to 1, the binary will be optimized
+# with the -O3 flag and if it is set to 0, the binary we add --coverage -g3
+ifeq ($(IS_PROD), 1)
+	FLAGS	+= -O3
+else
+	FLAGS	+= --coverage -g3
+endif
+
 all:		$(NAME)
 
 $(NAME):	$(OBJS)

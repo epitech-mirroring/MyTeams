@@ -20,7 +20,7 @@ CLIENT 			=   client/
 LOG				=	./build.log
 
 .PHONY: all clean fclean re tests_run clean_test \
-	$(LIBRARIES) $(SERVER) $(CLIENT) libraries
+	$(LIBRARIES) $(SERVER) $(CLIENT) libraries prod
 
 # Colors and formatting
 GREEN =		\033[1;32m
@@ -56,6 +56,10 @@ failed$(RESET)\n"; \
 			cat $(LOG); \
 			exit 1; \
 		fi
+
+prod: fclean
+	printf "$(SUCCESS) $(BLUE) 🎬  Building in production mode$(RESET)\n"
+	@export IS_PROD=1 && make all
 
 libraries: $(LIBRARIES)
 

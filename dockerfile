@@ -12,7 +12,7 @@ COPY . /root
 
 # run compilation of the project
 WORKDIR /root
-RUN make
+RUN make prod
 
 #set the env variable for LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/root/libs/myteams
