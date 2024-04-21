@@ -6,25 +6,25 @@
 */
 
 #include "myclient.h"
+#include "commands.h"
 
-void on_command_2(char **parsed_cmd, client_t *client)
-{
-    if (strcmp(parsed_cmd[0], "/subscribe") == 0)
-        return subscribe(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/subscribed") == 0)
-        return subscribed(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/unsubscribe") == 0)
-        return unsubscribe(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/use") == 0)
-        return use(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/create") == 0)
-        return create(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/list") == 0)
-        return list(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/info") == 0)
-        return info(parsed_cmd, client);
-    printf("Unknown command\n");
-}
+const command_t commands[] = {
+    {"/help", &help},
+    {"/login", &login},
+    {"/logout", &logout},
+    {"/user", &user},
+    {"/users", &users},
+    {"/send", &cmd_send},
+    {"/messages", &messages},
+    {"/subscribe", &subscribe},
+    {"/subscribed", &subscribed},
+    {"/unsubscribe", &unsubscribe},
+    {"/use", &use},
+    {"/create", &create},
+    {"/list", &list},
+    {"/info", &info},
+    {NULL, NULL}
+};
 
 void on_command(char *cmd, client_t *client)
 {
@@ -32,19 +32,11 @@ void on_command(char *cmd, client_t *client)
 
     if (parsed_cmd == NULL)
         return;
-    if (strcmp(parsed_cmd[0], "/help") == 0)
-        return help(parsed_cmd);
-    if (strcmp(parsed_cmd[0], "/login") == 0)
-        return login(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/logout") == 0)
-        return logout(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/user") == 0)
-        return user(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/users") == 0)
-        return users(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/send") == 0)
-        return cmd_send(parsed_cmd, client);
-    if (strcmp(parsed_cmd[0], "/messages") == 0)
-        return messages(parsed_cmd, client);
-    return on_command_2(parsed_cmd, client);
+    for (int i = 0; commands[i].cmd != NULL; i++) {
+        if (strcmp(parsed_cmd[0], commands[i].cmd) == 0) {
+            commands[i].func(parsed_cmd, client);
+            return;
+        }
+    }
+    printf("Unknown command\n");
 }

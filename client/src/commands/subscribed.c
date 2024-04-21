@@ -85,7 +85,7 @@ void users_subscribed_response(response_t *response,
     }
     if (response->status == 404) {
         client_error_unknown_team(
-            request_get_param(request_data->req, "team_uuid"));
+            request_get_param(request_data->req, "team-uuid"));
     }
     if (response->status == 403) {
         client_error_unauthorized();
