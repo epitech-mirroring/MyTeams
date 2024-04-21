@@ -100,3 +100,10 @@ void response_add_header(response_t *res, char *key, char *value);
  * @return the serialized buffer
  */
 char *serialize_request_path(request_t *req);
+// ------------------ UTILS ------------------
+/**
+ * @brief Convert a string to lowercase
+ * @param str the string to convert
+ * @return the converted string
+ */
+char *to_lower(const char *str);
