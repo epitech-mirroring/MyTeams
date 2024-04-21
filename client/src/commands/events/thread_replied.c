@@ -19,6 +19,7 @@ void thread_replied_callback(json_object_t *data, client_t *client)
     json_object_t *message = (json_object_t *)json_object_get(data, "message");
     json_string_t *content = NULL;
 
+    (void)client;
     if (team_uuid == NULL || thread_uuid == NULL || replier_uuid == NULL
         || message == NULL)
         return;

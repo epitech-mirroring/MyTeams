@@ -87,10 +87,11 @@ static void compare_help(char **parsed_cmd)
         "or does not have a help page\n", parsed_cmd[1]);
 }
 
-void help(char **parsed_cmd)
+void help(char **parsed_cmd, client_t *client)
 {
     size_t len = tab_len(parsed_cmd);
 
+    (void)client;
     if (len == 1)
         help_no_args();
     if (len == 2)

@@ -22,14 +22,14 @@ request_t *deserialize_request(char *buffer);
  * @param key the key of the header
  * @param value the value of the header
  */
-void request_add_header(request_t *req, char *key, char *value);
+void request_add_header(request_t *req, const char *key, const char *value);
 /**
  * @brief Add a param to a request
  * @param req request to add the param to
  * @param key the key of the param
  * @param value the value of the param
  */
-void request_add_param(request_t *req, char *key, char *value);
+void request_add_param(request_t *req, const char *key, const char *value);
 /**
  * @brief Check whether a request has a header
  * @param req the request to check
