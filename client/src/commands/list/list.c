@@ -2,18 +2,16 @@
 ** EPITECH PROJECT, 2024
 ** MyTeams
 ** File description:
-** info
+** list
 */
 
 #include "myclient.h"
 #include "logging_client.h"
 
-void info(char **parsed_cmd, client_t *client)
+void list(char **parsed_cmd, client_t *client)
 {
-    int len = tab_len(parsed_cmd);
-
-    if (len != 1) {
-        printf("Usage: /info\n");
+    if (tab_len(parsed_cmd) != 1) {
+        printf("Usage: /list\n");
         return;
     }
     if (client->is_logged == false) {
@@ -21,13 +19,13 @@ void info(char **parsed_cmd, client_t *client)
         return;
     }
     if (client->context->team_uuid == NULL) {
-        return info_user(client);
+        return list_teams(client);
     }
     if (client->context->channel_uuid == NULL) {
-        return info_team(client);
+        return list_channels(client);
     }
     if (client->context->thread_uuid == NULL) {
-        return info_channel(client);
+        return list_threads(client);
     }
-    info_thread(client);
+    list_replies(client);
 }
