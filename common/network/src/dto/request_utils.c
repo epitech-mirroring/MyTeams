@@ -38,10 +38,19 @@ void request_add_param(request_t *req, const char *key, const char *value)
 
 bool request_has_header(request_t *req, char *key)
 {
+    char *new_key = to_lower(key);
+    char *tmp_key = NULL;
+
     for (size_t i = 0; i < req->headers_count; i++) {
-        if (strcmp(req->headers[i].key, key) == 0)
+        tmp_key = to_lower(req->headers[i].key);
+        if (strcmp(req->headers[i].key, key) == 0) {
+            free(new_key);
+            free(tmp_key);
             return true;
+        }
+        free(tmp_key);
     }
+    free(new_key);
     return false;
 }
 
