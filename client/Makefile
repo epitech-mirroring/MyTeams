@@ -23,16 +23,25 @@ SOURCES			= 	src/main.c											\
 					src/commands/subscribed.c 							\
 					src/commands/unsubscribe.c 							\
 					src/commands/use.c 									\
+					\
 					src/commands/create/create.c 						\
 					src/commands/create/create_team.c 					\
 					src/commands/create/create_channel.c 				\
 					src/commands/create/create_thread.c 				\
 					src/commands/create/create_reply.c 					\
+					\
 					src/commands/info/info.c 							\
 					src/commands/info/info_user.c 						\
 					src/commands/info/info_team.c 						\
 					src/commands/info/info_channel.c 					\
 					src/commands/info/info_thread.c 					\
+					\
+					src/commands/list/list.c 							\
+					src/commands/list/list_teams.c 						\
+					src/commands/list/list_channels.c 					\
+					src/commands/list/list_threads.c 					\
+					src/commands/list/list_replies.c 					\
+					\
 					src/commands/events/events.c 						\
 					src/commands/events/logged_in.c 					\
 					src/commands/events/logged_out.c 					\

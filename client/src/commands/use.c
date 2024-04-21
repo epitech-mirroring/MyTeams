@@ -40,12 +40,6 @@ void use(char **parsed_cmd, client_t *client)
         client_error_unauthorized();
         return;
     }
-    for (int i = 1; i < len; i++) {
-        if (uuid_from_string(parsed_cmd[i]) == NULL) {
-            printf("Error: invalid uuid\n");
-            return;
-        }
-    }
     empty_context(client);
     set_context(client, parsed_cmd);
     printf("CLI : Context set to %s %s %s\n", client->context->team_uuid,
