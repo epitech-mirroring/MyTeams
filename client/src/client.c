@@ -11,6 +11,7 @@
 #include "logging_client.h"
 #include "network/manager.h"
 #include "network/sockets.h"
+#include <time.h>
 
 static client_t *init_struct(api_client_t *api_handler)
 {
@@ -81,6 +82,18 @@ bool callback(waiting_socket_t *socket)
     return true;
 }
 
+static void send_running_events(client_t *client)
+{
+    clock_t current_time = clock();
+    static clock_t client_time = 0;
+    double time_spent = (double)(current_time - client_time) / CLOCKS_PER_SEC;
+
+    if (time_spent >= 0.002 && client->is_event == false) {
+        client_time = clock();
+        send_events(client);
+    }
+}
+
 int main_loop(client_t *client)
 {
     waiting_socket_t *ws = waiting_sockets_add_socket(
@@ -90,8 +103,7 @@ int main_loop(client_t *client)
     client->is_event = true;
     send_events(client);
     while (client->running) {
-        if (client->is_event == false)
-            send_events(client);
+        send_running_events(client);
         ws_manager_run_once(client->api_handler->ws_manager);
     }
     if (client->is_logged == true) {
