@@ -99,8 +99,6 @@ roundtable_direct_message_t **roundtable_server_get_messages_from_client(
         server->direct_messages[i]->receiver_uuid, client->uuid)) {
             tmp = realloc(messages, sizeof(roundtable_direct_message_t *)
                 * (count + 2));
-            if (tmp == NULL)
-                return NULL;
             messages = tmp;
             messages[count] = server->direct_messages[i];
             messages[count + 1] = NULL;

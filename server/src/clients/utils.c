@@ -50,4 +50,3 @@ const char *status_to_string(roundtable_status_t status)
     }
     return "OFFLINE";
 }
-
