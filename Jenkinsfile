@@ -14,14 +14,12 @@ pipeline {
             steps {
                 script {
                     def response = httpRequest customHeaders: [[name:'Authorization',value:"Bearer ${GHCR_TOKEN_PSW}"],[name: 'X-GitHub-Api-Version', value:'2022-11-28']], url:'https://api.github.com/orgs/epitech-mirroring/packages/container/rountable-server/versions', validResponseCodes: '200:404'
-                    /*
                     if (response.status != 200 ) {
                         error "Failed to get the list of versions from the GitHub Container Registry"
                     }
-                    */
                     if (response.status == 200) {
                         def versions = readJSON text: response.content
-                        def version = versions.find { it.name == IMAGE_VERSION }
+                        def version = versions.find { it.metadata.container.tags.contains(IMAGE_VERSION) }
                         if (version != null) {
                             error "The version ${IMAGE_VERSION} already exists in the GitHub Container Registry"
                         }
