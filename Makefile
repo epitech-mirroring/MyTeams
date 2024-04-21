@@ -81,11 +81,10 @@ $@/$${LIB_NAME})$(RESET)"; \
 	fi; \
 	printf "$(RUNNING) $(BLUE) 🖇️   Linking include/\
 $${LOWERCASE_DIR}$(RESET)"; \
-	if [ -d include/$${LOWERCASE_DIR} ] || \
-	[ -f include/$${LOWERCASE_DIR} ]; then \
+	if [ -e include/$${LOWERCASE_DIR} ]; then \
 		printf "\r$(SKIPPED)\n"; \
 	else \
-		ln -s $(shell pwd)/$@/include/* include/ \
+		ln -fs $(shell pwd)/$@/include/* include/ \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 	fi;
 
@@ -151,8 +150,7 @@ $(RESET)"; \
 			fi; \
 			printf "$(RUNNING) $(RED) 🗑️   Deleting \
 include/$${LOWERCASE_DIR}$(RESET)"; \
-			if [ -d include/$${LOWERCASE_DIR} ] || \
-			[ -f include/$${LOWERCASE_DIR} ]; then \
+			if [ -e include/$${LOWERCASE_DIR} ]; then \
 				rm -f include/$${LOWERCASE_DIR} >> $(LOG) 2>&1 \
 				&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 			else \
