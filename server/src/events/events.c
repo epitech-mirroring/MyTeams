@@ -10,17 +10,17 @@
 #include "server.h"
 
 void roundtable_server_send_event(roundtable_server_t *server,
-    roundtable_client_t *client, events_t *event)
+    roundtable_client_instance_t *instance, events_t *event)
 {
     events_t **new_events = NULL;
 
-    new_events = realloc(client->events,
-        sizeof(events_t *) * (client->event_count + 1));
+    new_events = realloc(instance->events,
+        sizeof(events_t *) * (instance->event_count + 1));
     if (new_events == NULL)
         return;
-    client->events = new_events;
-    client->events[client->event_count] = event;
-    client->event_count++;
+    instance->events = new_events;
+    instance->events[instance->event_count] = event;
+    instance->event_count++;
 }
 
 void roundtable_server_destroy_event(events_t *event)
@@ -29,7 +29,7 @@ void roundtable_server_destroy_event(events_t *event)
 }
 
 void roundtable_server_clear_events(roundtable_server_t *server,
-    roundtable_client_t *client)
+    roundtable_client_instance_t *client)
 {
     for (size_t i = 0; i < client->event_count; i++) {
         roundtable_server_destroy_event(client->events[i]);

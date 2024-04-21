@@ -77,22 +77,22 @@ static char *get_missing_key(request_t *request)
 }
 
 static response_t validate_request_body(request_t *request,
-    roundtable_server_t *server)
+    roundtable_server_t *s)
 {
-    roundtable_client_t *client = get_client_from_header(server, request);
+    roundtable_client_instance_t *i = get_instance_from_header(s, request);
     roundtable_channel_t *channel = NULL;
     roundtable_team_t *team = NULL;
     response_t rep = {0};
 
-    if (!client)
+    if (!i)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
-    team = get_team_from_param(request, server, "team-uuid");
+    team = get_team_from_param(request, s, "team-uuid");
     if (!team)
         return create_error(404, "Team not found", "Team not found");
-    channel = get_channel_from_param(team, request, server, "channel-uuid");
+    channel = get_channel_from_param(team, request, s, "channel-uuid");
     if (!channel)
         return create_error(404, "Channel not found", "Channel not found");
-    if (!roundtable_team_has_subscriber(team, client))
+    if (!roundtable_team_has_subscriber(team, i->client))
         return create_error(403, "Forbidden", "Client not a subscriber");
     if (request_has_param(request, "thread-uuid") && get_thread_from_string(
         channel, request_get_param(request, "thread-uuid")) == NULL)

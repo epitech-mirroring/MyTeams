@@ -13,13 +13,13 @@ void roundtable_event_logged_in(roundtable_server_t *server,
 {
     json_object_t *data = NULL;
 
-    for (size_t i = 0; i < server->client_count; i++) {
+    for (size_t i = 0; i < server->instance_count; i++) {
         data = json_object_create(NULL);
         json_object_add(data, (json_t *) json_string_create("user_uuid",
             uuid_to_string(client->uuid)));
         json_object_add(data, (json_t *) json_string_create("username",
             client->username));
-        roundtable_server_send_event(server, server->clients[i],
+        roundtable_server_send_event(server, server->instances[i],
             roundtable_server_create_event(LOGGED_IN, data));
     }
 }

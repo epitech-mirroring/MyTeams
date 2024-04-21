@@ -56,6 +56,17 @@ void destroy_channel(roundtable_channel_t channel);
  * @param thread the thread to destroy
  */
 void destroy_thread(roundtable_thread_t thread);
+/**
+ * @brief Destroy a list of instances and free their memory
+ * @param instances the list of instances to destroy
+ */
+void destroy_instances(roundtable_client_instance_t **instances);
+/**
+ * @brief Destroy an instance and free its memory
+ * @param instance the instance to destroy
+ * @note This function does not free the instance's client
+ */
+void destroy_instance(roundtable_client_instance_t *instance);
 // --------------------------- SERVER CLIENTS ------------------------------
 /**
  * @brief Get a client by its UUID
@@ -89,12 +100,12 @@ void roundtable_server_add_client(roundtable_server_t *server,
 roundtable_client_t *roundtable_server_create_client(
     roundtable_server_t *server, const char *username);
 /**
- * @brief Get a client from a request authorization header
+ * @brief Get a client instance from a request authorization header
  * @param server The server to search in
  * @param request The request to get the client from
- * @return The client if found, NULL otherwise (no header, not a valid UUID)
+ * @return The instance if found, NULL otherwise (no header, not a valid UUID)
  */
-roundtable_client_t *get_client_from_header(
+roundtable_client_instance_t *get_instance_from_header(
     roundtable_server_t *server, request_t *request);
 /**
  * @brief Get a client from a json object
@@ -376,11 +387,11 @@ roundtable_direct_message_t **roundtable_server_get_messages_from_client(
     roundtable_server_t *server, roundtable_client_t *client);
 // --------------------------- SERVER EVENTS --------------------------------
 void roundtable_server_send_event(roundtable_server_t *server,
-    roundtable_client_t *client, events_t *event);
+    roundtable_client_instance_t *instance, events_t *event);
 events_t *roundtable_server_create_event(events_type_t type,
     json_object_t *data);
 void roundtable_server_clear_events(roundtable_server_t *server,
-    roundtable_client_t *client);
+    roundtable_client_instance_t *instance);
 void roundtable_server_destroy_event(events_t *event);
 void roundtable_event_logged_in(roundtable_server_t *server,
     roundtable_client_t *client);
@@ -397,7 +408,6 @@ void roundtable_event_channel_created(roundtable_server_t *server,
     roundtable_channel_t *channel);
 void roundtable_event_team_created(roundtable_server_t *server,
     roundtable_team_t *team);
-
 /**
  * @brief Add a subscriber to a team
  * @param team The team to add the subscriber to
@@ -406,3 +416,12 @@ void roundtable_event_team_created(roundtable_server_t *server,
  */
 void roundtable_create_team_event(roundtable_team_t *team,
     roundtable_client_t *subscriber);
+// --------------------------- SERVER INSTANCES ----------------------------
+roundtable_client_instance_t **roundtable_client_instances_find(
+    roundtable_server_t *server, roundtable_client_t *client);
+size_t get_instance_count(roundtable_server_t *server,
+    roundtable_client_t *client);
+void roundtable_client_instance_remove(roundtable_server_t *server,
+    roundtable_client_instance_t *instance);
+roundtable_client_instance_t *roundtable_client_instance_create(
+    roundtable_server_t *server, roundtable_client_t *client);
