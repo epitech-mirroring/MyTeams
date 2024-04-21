@@ -16,7 +16,7 @@ static void should_set_status_offline(roundtable_server_t *server,
     roundtable_client_t *client = instance->client;
     size_t instance_count = get_instance_count(server, client);
 
-    if (instance_count == 1)
+    if (instance_count > 1)
         return;
     client->status = OFFLINE;
     server_event_user_logged_out(uuid_to_string(client->uuid));
