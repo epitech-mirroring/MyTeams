@@ -14,7 +14,7 @@ TESTS			=	../../tests/uuid/test_uuid.c
 # Compiler and linker settings
 NAME 			=   libuuid.a
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -I./include -L../../libs \
+FLAGS			= 	-W -Wall -Wextra -I./include -L../../libs \
  					-I../../include
 OBJS			= 	$(SOURCES:.c=.o)
 TESTS_OBJS		= 	$(TESTS:.c=.o)
