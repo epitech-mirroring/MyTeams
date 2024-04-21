@@ -20,8 +20,9 @@ roundtable_client_instance_t **roundtable_client_instances_find(
     for (size_t i = 0; i < server->instance_count; i++) {
         if (uuid_compare(server->instances[i]->client->uuid, client->uuid)) {
             instances = realloc(instances,
-                sizeof(roundtable_client_instance_t *) * (instance_count + 1));
+                sizeof(roundtable_client_instance_t *) * (instance_count + 2));
             instances[instance_count] = server->instances[i];
+            instances[instance_count + 1] = NULL;
             instance_count++;
         }
     }
