@@ -10,7 +10,7 @@ export const refreshChannelsOfTeam = async (team: Team) => {
   const resp: Channel[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels?team-uuid=${team.uuid}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     }
   }).then(res => res.json())
     .then(channels => {

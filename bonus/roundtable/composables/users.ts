@@ -3,7 +3,7 @@ import { type User, UserStatus, useUsersStore } from "~/stores/users";
 import { refreshAll } from "~/composables/teams";
 
 export const loginWithUsername = async (username: string) => {
-  const r: {user_uuid: string} = await fetch(`${useRuntimeConfig().public.SERVER_URL}/login`, {
+  const r: {user_uuid: string, instance_id: number} = await fetch(`${useRuntimeConfig().public.SERVER_URL}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -12,7 +12,7 @@ export const loginWithUsername = async (username: string) => {
   }).then(res => res.json())
 
   const userStore = useUsersStore()
-  userStore.setUser({uuid: r.user_uuid, username: username, status: UserStatus.ONLINE})
+  userStore.setUser({uuid: r.user_uuid, username: username, status: UserStatus.ONLINE, instance_id: r.instance_id})
   await refreshAll();
   setInterval(refreshAll, 5000)
 }
@@ -23,7 +23,7 @@ export const logout = () => {
   fetch(`${useRuntimeConfig().public.SERVER_URL}/logout`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     }
   }).then(() => {
     userStore.setUser(null)
@@ -37,7 +37,7 @@ export const refreshUsers = async () => {
   const resp: User[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/users`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     }
   }).then(res => res.json())
     .then(users => {
@@ -72,7 +72,7 @@ export const isUserSubscribed = async (team: Team | undefined) => {
   const r: {subscribed: boolean} = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/is-subscribed?team-uuid=${team.uuid}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     },
   }).then(res => res.json())
 
@@ -92,7 +92,7 @@ export const updateStatus = async (status: UserStatus) => {
   const resp = await fetch(`${useRuntimeConfig().public.SERVER_URL}/status`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser!.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser!.uuid}_${userStore.currentUser?.instance_id}`
     },
     body: JSON.stringify({status})
   }).then()
