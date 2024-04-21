@@ -10,6 +10,16 @@
 #include "server_utils.h"
 #include "network/dto.h"
 
+static response_t server_event_success(roundtable_client_t *client,
+    roundtable_team_t *team)
+{
+    char *client_uuid = uuid_to_string(client->uuid);
+    char *team_uuid = uuid_to_string(team->uuid);
+
+    server_event_user_unsubscribed(team_uuid, client_uuid);
+    return create_success(204, "");
+}
+
 response_t leave_team_route(request_t *request, void *data)
 {
     json_object_t *body = (json_object_t *) json_parse(request->body);
@@ -31,5 +41,5 @@ response_t leave_team_route(request_t *request, void *data)
     if (!roundtable_team_has_subscriber(team, client))
         return create_error(409, "Not joined", "Client not a subscriber");
     roundtable_team_remove_subscriber(team, client);
-    return create_success(204, "");
+    return server_event_success(client, team);
 }

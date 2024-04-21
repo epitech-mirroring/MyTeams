@@ -10,6 +10,16 @@
 #include "server_utils.h"
 #include "network/dto.h"
 
+static response_t server_event_success(roundtable_client_t *client,
+    roundtable_team_t *team)
+{
+    char *team_uuid = uuid_to_string(team->uuid);
+    char *client_uuid = uuid_to_string(client->uuid);
+
+    server_event_user_subscribed(team_uuid, client_uuid);
+    return create_success(204, "");
+}
+
 response_t join_team_route(request_t *request, void *data)
 {
     json_object_t *body = (json_object_t *) json_parse(request->body);
@@ -31,5 +41,5 @@ response_t join_team_route(request_t *request, void *data)
     if (roundtable_team_has_subscriber(team, client))
         return create_error(409, "Already joined", "Client already joined");
     roundtable_team_add_subscriber(team, client);
-    return create_success(204, "");
+    return server_event_success(client, team);
 }

@@ -60,6 +60,8 @@ static response_t create_reply_response_body(roundtable_thread_t *thread,
     response_body_str = json_serialize((json_t *) response_body);
     json_object_destroy(response_body);
     response = create_success(201, response_body_str);
+    server_event_reply_created(uuid_to_string(thread->uuid), uuid_to_string(
+        reply->sender_uuid), reply->content);
     free(response_body_str);
     roundtable_event_thread_reply(thread->channel->team->server, thread);
     return response;

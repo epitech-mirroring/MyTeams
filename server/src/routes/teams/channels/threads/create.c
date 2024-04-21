@@ -62,6 +62,9 @@ static response_t create_thread_response(roundtable_channel_t *channel,
         ((json_string_t *) json_object_get(body, "message"))->value,
         channel, client);
 
+    server_event_thread_created(uuid_to_string(channel->uuid),
+    uuid_to_string(thread->uuid), uuid_to_string(client->uuid), thread->title,
+    thread->content);
     return create_thread_response_body(thread);
 }
 

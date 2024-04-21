@@ -30,7 +30,8 @@ static const char *get_missing_key(json_object_t *body)
     return NULL;
 }
 
-static response_t create_team_response(roundtable_team_t *team)
+static response_t create_team_response(roundtable_team_t *team,
+    roundtable_client_t *client)
 {
     json_object_t *body = json_object_create(NULL);
     char *body_str = NULL;
@@ -41,6 +42,7 @@ static response_t create_team_response(roundtable_team_t *team)
     body_str = json_serialize((json_t *) body);
     json_object_destroy(body);
     response = create_success(201, body_str);
+    roundtable_create_team_event(team, client);
     free(body_str);
     roundtable_event_team_created(team->server, team);
     return response;
@@ -67,5 +69,5 @@ response_t create_team_route(request_t *request, void *data)
         ((json_string_t *) json_object_get(body, "description"))->value);
     if (!team)
         return create_error(500, "Internal error", "Team creation failed");
-    return create_team_response(team);
+    return create_team_response(team, client);
 }
