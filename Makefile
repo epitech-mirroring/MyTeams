@@ -151,7 +151,8 @@ $(RESET)"; \
 			fi; \
 			printf "$(RUNNING) $(RED) 🗑️   Deleting \
 include/$${LOWERCASE_DIR}$(RESET)"; \
-			if [ -d include/$${LOWERCASE_DIR} ]; then \
+			if [ -d include/$${LOWERCASE_DIR} ] || \
+			[ -f include/$${LOWERCASE_DIR} ]; then \
 				rm -f include/$${LOWERCASE_DIR} >> $(LOG) 2>&1 \
 				&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 			else \
