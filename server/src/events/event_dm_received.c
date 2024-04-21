@@ -19,16 +19,15 @@ void roundtable_event_dm_received(roundtable_server_t *server,
     roundtable_client_instance_t **instances =
         roundtable_client_instances_find(server, receiver);
 
-    while (*instances) {
+    for (size_t i = 0; instances[i]; i++) {
         data = json_object_create(NULL);
         json_object_add(data, (json_t *) json_string_create("sender_uuid",
             uuid_to_string(sender->uuid)));
         free(message->base.key);
         message->base.key = strdup("message");
         json_object_add(data, (json_t *) message);
-        roundtable_server_send_event(server, *instances,
+        roundtable_server_send_event(server, instances[i],
             roundtable_server_create_event(DM_RECEIVED, data));
-        instances++;
     }
     free(instances);
 }
