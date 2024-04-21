@@ -22,7 +22,7 @@ void logout_rep(response_t *response, request_data_t *request_data)
 
 static void request_logout(client_t *client)
 {
-    char *uuid = add_bearer(client->user_uuid);
+    char *uuid = add_bearer(client->user_uuid, client->instance_id);
     request_t *request = calloc(1, sizeof(request_t));
 
     if (uuid == NULL || request == NULL) {

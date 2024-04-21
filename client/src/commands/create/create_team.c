@@ -49,7 +49,7 @@ static void send_create_team(client_t *client, char *team_name,
     json_object_t *jobj = json_object_create("root");
     json_string_t *name = json_string_create("name", team_name);
     json_string_t *desc = json_string_create("description", team_desc);
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL || jobj == NULL ||
         name == NULL || desc == NULL) {

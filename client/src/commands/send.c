@@ -39,7 +39,7 @@ static void send_send(client_t *client, char *user_uuid, char *message_body)
     json_string_t *body = json_string_create("content", message_body);
     json_object_t *message = json_object_create("message");
     request_t *request = calloc(1, sizeof(request_t));
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (jobj == NULL || request == NULL || recipient == NULL ||
         body == NULL || message == NULL || bearer == NULL)

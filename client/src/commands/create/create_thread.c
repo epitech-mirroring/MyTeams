@@ -94,7 +94,7 @@ static void send_create_thread(client_t *client, const char *title,
     request_t *request = calloc(1, sizeof(request_t));
     json_object_t *jobj = create_thread_json(client->context->team_uuid,
         client->context->channel_uuid, title, body);
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL || jobj == NULL) {
         printf("Error: malloc failed\n");

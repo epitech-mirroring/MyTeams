@@ -101,7 +101,7 @@ static void send_create_reply(client_t *client, char *body)
 {
     request_t *request = calloc(1, sizeof(request_t));
     json_object_t *jobj = create_reply_json(client, body);
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL || jobj == NULL) {
         printf("Error: malloc failed\n");

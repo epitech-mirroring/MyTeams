@@ -70,7 +70,7 @@ void list_replies_response(response_t *response, request_data_t *request_data)
 void list_replies(client_t *client)
 {
     request_t *request = calloc(1, sizeof(request_t));
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL) {
         printf("Error: malloc failed\n");
