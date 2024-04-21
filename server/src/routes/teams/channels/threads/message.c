@@ -6,16 +6,30 @@
 ** You can even have multiple lines if you want !
 */
 
-#include <stdlib.h>
 #include "server.h"
 #include "server_utils.h"
 #include "network/dto.h"
+
+static void add_content_as_message(roundtable_thread_t *thread,
+    json_array_t *messages)
+{
+    json_object_t *message = json_object_create(NULL);
+
+    json_object_add(message, (json_t *) json_string_create("sender_uuid",
+        uuid_to_string(thread->sender_uuid)));
+    json_object_add(message, (json_t *) json_string_create("content",
+        thread->content));
+    json_object_add(message, (json_t *) json_number_create("timestamp",
+        thread->created_at));
+    json_array_add(messages, (json_t *) message);
+}
 
 static response_t get_messages_list(roundtable_thread_t *thread)
 {
     json_array_t *messages = json_array_create(NULL);
     json_object_t *message = NULL;
 
+    add_content_as_message(thread, messages);
     for (size_t i = 0; i < thread->message_count; i++) {
         message = json_object_create(NULL);
         json_object_add(message, (json_t *) json_string_create("sender_uuid",
