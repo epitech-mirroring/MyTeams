@@ -62,7 +62,7 @@ void on_command(char *cmd, client_t *client);
  * @param client The client structure
  * @author @Marius-P1
  */
-void help(char **parsed_cmd);
+void help(char **parsed_cmd, client_t *client);
 
 /**
  * @brief Command '/login' that will log the user in

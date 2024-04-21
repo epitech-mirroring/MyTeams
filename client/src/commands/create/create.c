@@ -6,6 +6,7 @@
 */
 
 #include "myclient.h"
+#include "commands.h"
 #include "logging_client.h"
 #include "json/json.h"
 

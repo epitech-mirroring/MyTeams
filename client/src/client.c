@@ -6,6 +6,9 @@
 */
 
 #include "myclient.h"
+#include "commands.h"
+#include "teams_events.h"
+#include "logging_client.h"
 #include "network/manager.h"
 #include "network/sockets.h"
 
