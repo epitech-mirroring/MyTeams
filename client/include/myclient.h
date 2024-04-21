@@ -103,6 +103,7 @@ void info_thread(client_t *client);
 void list(char **parsed_cmd, client_t *client);
 void list_teams(client_t *client);
 void list_channels(client_t *client);
+void list_threads(client_t *client);
 
 void send_events(client_t *client);
 void logged_in_callback(json_object_t *data, client_t *client);
