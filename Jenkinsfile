@@ -17,7 +17,7 @@ pipeline {
                     if (response.status != 200 ) {
                         error "Failed to get the list of versions from the GitHub Container Registry"
                     }
-                    if (response.status == 200) {
+                    if (response.status == 200 && env.BRANCH_NAME != 'main') {
                         def versions = readJSON text: response.content
                         def version = versions.find { it.metadata.container.tags.contains(IMAGE_VERSION) }
                         if (version != null) {
