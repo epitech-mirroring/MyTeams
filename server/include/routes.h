@@ -173,3 +173,19 @@ response_t get_replies_route(request_t *req, void *data);
  * @note see documentation/routes.md
  */
 response_t events_route(request_t *request, void *data);
+/**
+ * @brief Route to update the status of a user
+ * POST /status
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ */
+response_t update_status_route(request_t *request, void *data);
+/**
+ * @brief Route to get the list of all the direct messages
+ * GET /messages
+ * @param request the request to process
+ * @param data the instance of roundtable_server_t
+ * @return the response
+ */
+response_t list_direct_messages_route(request_t *request, void *data);

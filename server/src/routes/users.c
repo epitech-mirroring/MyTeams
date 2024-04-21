@@ -35,7 +35,7 @@ static response_t make_response(roundtable_client_t *client,
         json_object_add(users, (json_t *)json_string_create("name",
             srv->clients[i]->username));
         json_object_add(users, (json_t *)json_string_create("status",
-            srv->clients[i]->status == ONLINE ? "ONLINE" : "OFFLINE"));
+            status_to_string(srv->clients[i]->status)));
         json_array_add(response_body_array, (json_t *)users);
     }
     response_body_str = json_serialize((json_t *)response_body_array);
