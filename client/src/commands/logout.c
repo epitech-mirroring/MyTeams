@@ -17,6 +17,9 @@ void logout_rep(response_t *response, request_data_t *request_data)
     if (response->status == 204) {
         cli->is_logged = false;
         printf("CLI : Successfully logged out\n");
+        client_event_logged_out(cli->user_uuid, cli->user_name);
+        cli->user_uuid = NULL;
+        cli->user_name = NULL;
     }
 }
 
