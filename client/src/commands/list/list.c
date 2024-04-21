@@ -6,6 +6,7 @@
 */
 
 #include "myclient.h"
+#include "commands.h"
 #include "logging_client.h"
 
 void list(char **parsed_cmd, client_t *client)

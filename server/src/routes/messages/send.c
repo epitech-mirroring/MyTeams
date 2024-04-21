@@ -29,6 +29,15 @@ static const char *get_missing_key(json_object_t *body)
     return NULL;
 }
 
+static response_t server_event_success(roundtable_client_t *sender,
+    roundtable_client_t *receiver, json_object_t *body)
+{
+    server_event_private_message_sended(uuid_to_string(sender->uuid),
+    uuid_to_string(receiver->uuid),
+    json_object_serialize((json_object_t *) json_object_get(body, "message")));
+    return create_success(204, "");
+}
+
 response_t send_dm_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
@@ -50,5 +59,5 @@ response_t send_dm_route(request_t *request, void *data)
         return create_error(404, "Client not found", "Receiver not found");
     roundtable_server_send_dm(server, sender, receiver,
         ((json_object_t *) json_object_get(body, "message")));
-    return create_success(204, "");
+    return server_event_success(sender, receiver, body);
 }

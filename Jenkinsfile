@@ -4,9 +4,29 @@ pipeline {
         // Set the ssh key for the mirror using secret private key
         PRIVATE_KEY = credentials('EPITECH_SSH_KEY')
         PUBLIC_KEY = credentials('EPITECH_SSH_PUBKEY')
+        GHCR_TOKEN = credentials('github-packages-token')
+        IMAGE_NAME = 'epitech-mirroring/rountable-server'
+        IMAGE_VERSION = '1.01'
         MIRROR_URL = 'git@github.com:EpitechPromo2027/B-NWP-400-NAN-4-1-myteams-marius.pain.git'
     }
     stages {
+        stage ('🚀 Preliminary tests') {
+            steps {
+                script {
+                    def response = httpRequest customHeaders: [[name:'Authorization',value:"Bearer ${GHCR_TOKEN_PSW}"],[name: 'X-GitHub-Api-Version', value:'2022-11-28']], url:'https://api.github.com/orgs/epitech-mirroring/packages/container/rountable-server/versions', validResponseCodes: '200:404'
+                    if (response.status != 200 ) {
+                        error "Failed to get the list of versions from the GitHub Container Registry"
+                    }
+                    if (response.status == 200) {
+                        def versions = readJSON text: response.content
+                        def version = versions.find { it.metadata.container.tags.contains(IMAGE_VERSION) }
+                        if (version != null) {
+                            error "The version ${IMAGE_VERSION} already exists in the GitHub Container Registry"
+                        }
+                    }
+                }
+            }
+        }
         stage('🕵️ Lint') {
             steps {
                 // Clean before linting
@@ -135,6 +155,23 @@ pipeline {
                 }
             }
         }
+        stage('📦 Push Package') {
+            when {
+               branch 'main'
+            }
+            steps {
+                script {
+                    // login to the GitHub Container Registry
+                    sh 'echo $GHCR_TOKEN_PSW | docker login ghcr.io -u $GHCR_TOKEN_USR --password-stdin'
+                    // Build the image
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} ."
+                    // tag the image
+                    sh "docker tag ${IMAGE_NAME}:${IMAGE_VERSION} ghcr.io/${IMAGE_NAME}:${IMAGE_VERSION}"
+                    // push the image
+                    sh "docker push ghcr.io/${IMAGE_NAME}:$IMAGE_VERSION"
+                }
+            }
+        }
     }
     post {
         // Clean after build
@@ -146,6 +183,7 @@ pipeline {
                     patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
                                [pattern: '.propsfile', type: 'EXCLUDE']])
             sh 'make fclean'
+            sh 'docker logout'
         }
     }
 }

@@ -12,39 +12,67 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <errno.h>
 #include <stdlib.h>
-#include <sys/select.h>
-#include <signal.h>
 #include "uuid/uuid.h"
 #include "network/api_client.h"
 #include "network/dto.h"
 #include "json/json.h"
+#include "teams_defines.h"
 
 #define _GNU_SOURCE
 
-#define MAX_NUM_ARGS 4
-#define MAX_NAME_LENGTH 32
-#define MAX_DESCRIPTION_LENGTH 255
-#define MAX_BODY_LENGTH 512
 
-typedef enum client_event_e {
-    LOGGED_IN,
-    LOGGED_OUT,
-    DM_RECEIVED,
-    TEAM_CREATED,
-    CHANNEL_CREATED,
-    THREAD_CREATED,
-    THREAD_REPLIED,
-    NONE,
-} client_event_t;
-
+// --------------------------- CLIENT CONTEXT ------------------------------
+/**
+ * @brief Structure that contains the context of the client
+ * It contains the team_uuid, channel_uuid and thread_uuid
+ * If the client is not in a team, channel or thread, the
+ * corresponding uuid is NULL
+ * The context is used to know in which team, channel or
+ * thread the client is when he uses commands like /list,
+ * /info or /create
+ * It will be updated when the client uses the /use command
+ *
+ * @param team_uuid The uuid of the team
+ * @param channel_uuid The uuid of the channel
+ * @param thread_uuid The uuid of the thread
+ * @author @Marius-P1
+ */
 typedef struct context_s {
     char const *team_uuid;
     char const *channel_uuid;
     char const *thread_uuid;
 } context_t;
 
+
+// --------------------------- CLIENT STRUCTURE ----------------------------
+
+/**
+ * @brief Structure that contains the client and its information
+ * It contains the context of the client, the user_uuid,
+ * the user_name, the status of the client (is_logged,
+ * waiting_for_response, running, is_event), the buffer
+ * of the client, the api_handler
+ * The client is used to store the information of the client
+ * and to know if the client is logged, waiting for a response,
+ * running or if it is an event
+ *
+ * @param context The context of the client
+ * @param user_uuid The uuid of the user
+ * @param user_name The name of the user
+ * @param is_logged The status of the client
+ * (true if the client is logged else false)
+ * @param waiting_for_response The status of the client
+ * (true if the client is waiting for a response else false)
+ * @param running The status of the client
+ * (true if the client is running else false)
+ * @param is_event The status of the client
+ * (true if the client is waiting for an event else false)
+ * @param buffer The buffer for the command of the client
+ * @param api_handler The api_handler
+ * (to send requests to the server)
+ * @author @Marius-P1
+ */
 typedef struct client_s {
     context_t *context;
     char const *user_uuid;
@@ -57,60 +85,93 @@ typedef struct client_s {
     api_client_t *api_handler;
 } client_t;
 
-typedef struct event_bindig_s {
-    client_event_t event;
-    void (*callback)(json_object_t *data, client_t *client);
-} event_binding_t;
 
-extern const event_binding_t event_bindings[];
+// --------------------------- CLIENT METHODS ------------------------------
 
+/**
+ * @brief Launch the client
+ * It will initialize the client and the api_handler
+ * Then it will read the input of the user and send
+ * the command to the server, and handle the response
+ *
+ * @param ac number of arguments
+ * @param av given arguments
+ * @return int 0 if the client worked successfully
+ * else 84 if an error occured
+ * @author @Marius-P1
+ */
 int client(int ac, char **av);
 
+
+// --------------------------- ERROR HANDLING ------------------------------
+
+/**
+ * @brief Check if the arguments given to the client are valid
+ * We need to have 3 arguments: the name of the program,
+ * the ip of the server and the port of the server
+ * The ip must be at the format "xxx.xxx.xxx.xxx"
+ * The port must be a positive number
+ * If the arguments are not valid, we print the help
+ *
+ * @param ac number of arguments
+ * @param av given arguments
+ * @return int 0 if the arguments are valid else 84
+ * @author @Marius-P1
+ */
 int is_valid_args(int ac, char **av);
+
+/**
+ * @brief Print the help of the client
+ * It will print the usage of the client and the
+ * description of the arguments
+ * The help is printed when the user gives the argument
+ * "-help" to the client or when the arguments are not valid
+ * @author @Marius-P1
+ */
 void print_help(void);
 
-void on_command(char *cmd, client_t *client);
+/**
+ * @brief Parse the command given by the user
+ * It will split the command into an array of strings
+ * The command is split by the space character
+ * The first element of the array is the command
+ * The other elements are the arguments of the command
+ * The arguments should be quoted with double quotes
+ * or it will be considered as an error
+ *
+ * @param cmd The command string given by the user
+ * @return char** The array of strings of the command
+ * @author @Marius-P1
+ */
 char **parse_command(char *cmd);
 
+
+// --------------------------- UTILS METHODS ------------------------------
+
+/**
+ * @brief Get the length of a tab of strings
+ * It will return the number of strings in the tab
+ * The tab should be NULL terminated
+ *
+ * @param tab The tab of strings
+ * @return size_t The number of strings in the tab
+ * @author @Marius-P1
+ */
 size_t tab_len(char **tab);
+
+/**
+ * @brief Create the bearer token for the client
+ * It will create the bearer token with the uuid
+ * of the client
+ * The bearer token is used to authenticate the client
+ * when he sends requests to the server
+ * The bearer token is created by adding "Bearer " before
+ * the uuid of the client
+ * The bearer token is used in the header of the request
+ * to authenticate the client
+ *
+ * @param uuid The uuid of the client
+ * @return char* The bearer token of the client
+ * @author @Marius-P1
+ */
 char *add_bearer(const char *uuid);
-void logout_when_leaving(client_t *client);
-
-void help(char **parsed_cmd);
-void logout(char **parsed_cmd, client_t *client);
-void login(char **parsed_cmd, client_t *client);
-void user(char **parsed_cmd, client_t *client);
-void users(char **parsed_cmd, client_t *client);
-void cmd_send(char **parsed_cmd, client_t *client);
-void messages(char **parsed_cmd, client_t *client);
-void subscribe(char **parsed_cmd, client_t *client);
-void subscribed(char **parsed_cmd, client_t *client);
-void unsubscribe(char **parsed_cmd, client_t *client);
-void use(char **parsed_cmd, client_t *client);
-
-void create(char **parsed_cmd, client_t *client);
-void create_team(char **parsed_cmd, client_t *client);
-void create_channel(char **parsed_cmd, client_t *client);
-void create_thread(char **parsed_cmd, client_t *client);
-void create_reply(char **parsed_cmd, client_t *client);
-
-void info(char **parsed_cmd, client_t *client);
-void info_user(client_t *client);
-void info_team(client_t *client);
-void info_channel(client_t *client);
-void info_thread(client_t *client);
-
-void list(char **parsed_cmd, client_t *client);
-void list_teams(client_t *client);
-void list_channels(client_t *client);
-void list_threads(client_t *client);
-void list_replies(client_t *client);
-
-void send_events(client_t *client);
-void logged_in_callback(json_object_t *data, client_t *client);
-void logged_out_callback(json_object_t *data, client_t *client);
-void dm_received_callback(json_object_t *data, client_t *client);
-void team_created_callback(json_object_t *data, client_t *client);
-void channel_created_callback(json_object_t *data, client_t *client);
-void thread_created_callback(json_object_t *data, client_t *client);
-void thread_replied_callback(json_object_t *data, client_t *client);

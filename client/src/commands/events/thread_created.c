@@ -21,6 +21,7 @@ void thread_created_callback(json_object_t *data, client_t *client)
     json_number_t *timestamp =
         (json_number_t *)json_object_get(data, "timestamp");
 
+    (void)client;
     if (thread_uuid == NULL || user_uuid == NULL || title == NULL ||
         content == NULL || timestamp == NULL)
         return;

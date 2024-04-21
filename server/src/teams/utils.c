@@ -37,6 +37,16 @@ void roundtable_team_add_channel(roundtable_team_t *team,
     team->channel_count++;
 }
 
+void roundtable_create_team_event(roundtable_team_t *team,
+    roundtable_client_t *subscriber)
+{
+    server_event_team_created(uuid_to_string(team->uuid), team->name,
+        uuid_to_string(subscriber->uuid));
+    server_event_user_subscribed(uuid_to_string(team->uuid),
+        uuid_to_string(subscriber->uuid));
+    roundtable_team_add_subscriber(team, subscriber);
+}
+
 void roundtable_team_add_subscriber(roundtable_team_t *team,
     roundtable_client_t *subscriber)
 {

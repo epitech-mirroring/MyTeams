@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "network/dto.h"
 
-void request_add_header(request_t *req, char *key, char *value)
+void request_add_header(request_t *req, const char *key, const char *value)
 {
     header_t *new_headers = realloc(req->headers, sizeof(header_t)
         * (req->headers_count + 1));
@@ -23,7 +23,7 @@ void request_add_header(request_t *req, char *key, char *value)
     req->headers_count++;
 }
 
-void request_add_param(request_t *req, char *key, char *value)
+void request_add_param(request_t *req, const char *key, const char *value)
 {
     param_t *new_params = realloc(req->params, sizeof(param_t)
         * (req->params_count + 1));

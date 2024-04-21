@@ -7,6 +7,7 @@
 
 #include "myclient.h"
 #include "logging_client.h"
+#include "teams_events.h"
 
 const event_binding_t event_bindings[] = {
     {LOGGED_IN, &logged_in_callback},

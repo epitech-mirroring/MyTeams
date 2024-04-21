@@ -15,6 +15,7 @@ void logged_in_callback(json_object_t *data, client_t *client)
     json_string_t *username =
         (json_string_t *)json_object_get(data, "username");
 
+    (void)client;
     if (user_uuid == NULL || username == NULL)
         return;
     client_event_logged_in(user_uuid->value, username->value);

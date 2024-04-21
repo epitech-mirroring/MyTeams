@@ -13,9 +13,10 @@ void dm_received_callback(json_object_t *data, client_t *client)
     json_string_t *sender_uuid =
         (json_string_t *)json_object_get(data, "sender_uuid");
     json_object_t *message =
-        (json_string_t *)json_object_get(data, "message");
+        (json_object_t *)json_object_get(data, "message");
     json_string_t *content = NULL;
 
+    (void)client;
     if (sender_uuid == NULL || message == NULL)
         return;
     content = (json_string_t *)json_object_get(message, "content");
