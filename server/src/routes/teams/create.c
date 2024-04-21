@@ -52,7 +52,7 @@ response_t create_team_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
     json_object_t *body = (json_object_t *) json_parse(request->body);
-    roundtable_client_t *client = NULL;
+    roundtable_client_instance_t *instance = NULL;
     roundtable_team_t *team = NULL;
 
     if (strcmp(request->route.method, "POST") != 0)
@@ -61,13 +61,13 @@ response_t create_team_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (body == NULL || !body_is_valid(body))
         return create_error(400, "Invalid body", get_missing_key(body));
-    client = get_client_from_header(server, request);
-    if (!client)
+    instance = get_instance_from_header(server, request);
+    if (!instance)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     team = roundtable_server_create_team(server,
         ((json_string_t *) json_object_get(body, "name"))->value,
         ((json_string_t *) json_object_get(body, "description"))->value);
     if (!team)
         return create_error(500, "Internal error", "Team creation failed");
-    return create_team_response(team, client);
+    return create_team_response(team, instance->client);
 }

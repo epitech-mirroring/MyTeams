@@ -17,19 +17,19 @@ static client_t *init_struct(api_client_t *api_handler)
 {
     client_t *client = malloc(sizeof(client_t));
 
-    if (client == NULL) {
+    if (client == NULL)
         exit(84);
-    }
     client->is_logged = false;
     client->waiting_for_response = false;
+    client->is_event = true;
     client->running = true;
     client->buffer = calloc(1024, sizeof(char));
     client->user_name = NULL;
     client->user_uuid = NULL;
+    client->instance_id = 0;
     client->context = malloc(sizeof(context_t));
-    if (client->context == NULL || client->buffer == NULL) {
+    if (client->context == NULL || client->buffer == NULL)
         exit(84);
-    }
     client->context->team_uuid = NULL;
     client->context->channel_uuid = NULL;
     client->context->thread_uuid = NULL;
@@ -104,7 +104,6 @@ int main_loop(client_t *client)
         client->api_handler->ws_manager->ws, 0, READ, &callback);
 
     ws->data = client;
-    client->is_event = true;
     send_events(client);
     while (client->running) {
         send_running_events(client);
@@ -112,7 +111,6 @@ int main_loop(client_t *client)
     }
     if (client->is_logged == true) {
         logout_when_leaving(client);
-        send_events(client);
     }
     while (client->user_uuid != NULL) {
         ws_manager_run_once(client->api_handler->ws_manager);

@@ -77,7 +77,7 @@ void list_threads_response(response_t *response, request_data_t *request_data)
 void list_threads(client_t *client)
 {
     request_t *request = calloc(1, sizeof(request_t));
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (request == NULL || bearer == NULL) {
         printf("Error: malloc failed\n");

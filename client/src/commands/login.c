@@ -13,20 +13,20 @@ void login_resp(response_t *response, request_data_t *request_data)
 {
     client_t *cli = (client_t *)request_data->data;
     json_object_t *jobj = NULL;
-    json_string_t *str = NULL;
+    json_string_t *uuid = NULL;
+    json_number_t *instance_id = NULL;
 
     cli->waiting_for_response = false;
-    if (response->status == 200 ||
-        response->status == 201) {
+    if (response->status == 200 || response->status == 201) {
         jobj = (json_object_t *)json_parse(response->body);
-        if (jobj == NULL)
-            return;
-        str = (json_string_t *)json_object_get(jobj, "user_uuid");
-        if (str == NULL) {
+        uuid = (json_string_t *)json_object_get(jobj, "user_uuid");
+        instance_id = (json_number_t *)json_object_get(jobj, "instance_id");
+        if (uuid == NULL || instance_id == NULL) {
             printf("Error: invalid response\n");
             return;
         }
-        cli->user_uuid = strdup(str->value);
+        cli->user_uuid = strdup(uuid->value);
+        cli->instance_id = instance_id->value;
         cli->is_logged = true;
         printf("CLI : Successfully logged in as %s with uuid %s\n",
             cli->user_name, cli->user_uuid);

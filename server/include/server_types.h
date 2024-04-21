@@ -123,10 +123,17 @@ typedef struct roundtable_client_s {
     uuid_t uuid;
     char *username;
     roundtable_status_t status;
-    events_t **events;
-    size_t event_count;
 } roundtable_client_t;
 
+/**
+ * @brief A client instance
+ */
+typedef struct roundtable_client_instance_s {
+    roundtable_client_t *client;
+    size_t instance_number;
+    events_t **events;
+    size_t event_count;
+} roundtable_client_instance_t;
 
 /**
  * @brief The server containing all the data
@@ -138,5 +145,7 @@ typedef struct roundtable_server_s {
     size_t client_count;
     roundtable_direct_message_t **direct_messages;
     size_t message_count;
+    roundtable_client_instance_t **instances;
+    size_t instance_count;
     router_t *router;
 } roundtable_server_t;

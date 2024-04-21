@@ -44,7 +44,7 @@ static void send_subscribe(client_t *client, char *team_uuid)
     request_t *request = calloc(1, sizeof(request_t));
     json_object_t *jobj = json_object_create("root");
     json_string_t *uuid = json_string_create("team_uuid", team_uuid);
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL || jobj == NULL || uuid == NULL) {
         printf("Error: malloc failed\n");

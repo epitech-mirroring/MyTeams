@@ -16,13 +16,17 @@ size_t tab_len(char **tab)
     return i;
 }
 
-char *add_bearer(const char *uuid)
+char *add_bearer(const char *uuid, size_t instance_id)
 {
-    char *bearer = malloc(sizeof(char) * (strlen(uuid) + 8));
+    char *instance_id_str = calloc(11, sizeof(char));
+    char *bearer = calloc((strlen(uuid) + 8 + 11), sizeof(char));
 
-    if (bearer == NULL)
+    if (instance_id_str == NULL || bearer == NULL)
         return NULL;
+    sprintf(instance_id_str, "%ld", instance_id);
     strcpy(bearer, "Bearer ");
     strcat(bearer, uuid);
+    strcat(bearer, "_");
+    strcat(bearer, instance_id_str);
     return bearer;
 }

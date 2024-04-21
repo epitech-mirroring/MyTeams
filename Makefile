@@ -20,7 +20,7 @@ CLIENT 			=   client/
 LOG				=	./build.log
 
 .PHONY: all clean fclean re tests_run clean_test \
-	$(LIBRARIES) $(SERVER) $(CLIENT) libraries
+	$(LIBRARIES) $(SERVER) $(CLIENT) libraries prod
 
 # Colors and formatting
 GREEN =		\033[1;32m
@@ -57,6 +57,10 @@ failed$(RESET)\n"; \
 			exit 1; \
 		fi
 
+prod: fclean
+	@printf "$(SUCCESS) $(BLUE) 🎬  Building in production mode$(RESET)\n"
+	@export IS_PROD=1 && make all
+
 libraries: $(LIBRARIES)
 
 $(LIBRARIES):
@@ -77,10 +81,10 @@ $@/$${LIB_NAME})$(RESET)"; \
 	fi; \
 	printf "$(RUNNING) $(BLUE) 🖇️   Linking include/\
 $${LOWERCASE_DIR}$(RESET)"; \
-	if [ -d include/$${LOWERCASE_DIR} ]; then \
+	if [ -e include/$${LOWERCASE_DIR} ]; then \
 		printf "\r$(SKIPPED)\n"; \
 	else \
-		ln -s $(shell pwd)/$@/include/* include/ \
+		ln -fs $(shell pwd)/$@/include/* include/ \
 		&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 	fi;
 
@@ -146,7 +150,7 @@ $(RESET)"; \
 			fi; \
 			printf "$(RUNNING) $(RED) 🗑️   Deleting \
 include/$${LOWERCASE_DIR}$(RESET)"; \
-			if [ -d include/$${LOWERCASE_DIR} ]; then \
+			if [ -e include/$${LOWERCASE_DIR} ]; then \
 				rm -f include/$${LOWERCASE_DIR} >> $(LOG) 2>&1 \
 				&& printf "\r$(SUCCESS)\n" || printf "\r$(FAILURE)\n"; \
 			else \

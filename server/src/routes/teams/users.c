@@ -38,7 +38,7 @@ static char *serialize_users(roundtable_server_t *server,
 response_t team_users_route(request_t *request, void *data)
 {
     roundtable_server_t *server = (roundtable_server_t *) data;
-    roundtable_client_t *client = NULL;
+    roundtable_client_instance_t *instance = NULL;
     roundtable_team_t *team = NULL;
 
     if (!IS_METHOD(request, "GET"))
@@ -47,14 +47,14 @@ response_t team_users_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (!request_has_param(request, "team-uuid"))
         return create_error(400, "Invalid params", "Missing 'team-uuid'");
-    client = get_client_from_header(server, request);
-    if (!client)
+    instance = get_instance_from_header(server, request);
+    if (!instance)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     team = get_team_from_string(server,
         request_get_param(request, "team-uuid"));
     if (!team)
         return create_error(404, "Team not found", "Team not found");
-    if (!roundtable_team_has_subscriber(team, client))
+    if (!roundtable_team_has_subscriber(team, instance->client))
         return create_error(403, "Forbidden", "Client not a subscriber");
     return create_success(200, serialize_users(server, team));
 }

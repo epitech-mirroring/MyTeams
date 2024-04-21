@@ -7,7 +7,7 @@ export const getConversationList = async (): Promise<string[]> => {
   return await fetch(`${useRuntimeConfig().public.SERVER_URL}/messages/conversations`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     }
   }).then(res => res.json())
 }
@@ -21,7 +21,7 @@ export const refreshConversations = async () => {
     const conv: Conversation = await fetch(`${useRuntimeConfig().public.SERVER_URL}/messages?uuid=${c}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+        'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}_${userStore.currentUser?.instance_id}`
       }
     }).then(res => res.json())
       .then((messages: {timestamp: number, sender_uuid: string, content: string}[]) => {
@@ -65,7 +65,7 @@ export const sendMessage = async (target: User, content: string) => {
   const resp = await fetch(`${useRuntimeConfig().public.SERVER_URL}/messages/send`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`,
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({

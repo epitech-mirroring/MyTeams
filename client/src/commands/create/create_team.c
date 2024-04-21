@@ -10,7 +10,7 @@
 #include "json/json.h"
 
 void create_team_response_success(response_t *response,
-    request_data_t *request_data)
+    request_data_t *request_data, client_t *client)
 {
     json_object_t *jobj_resp = (json_object_t *)json_parse(response->body);
     json_object_t *jobj_send =
@@ -27,6 +27,7 @@ void create_team_response_success(response_t *response,
         return;
     client_print_team_created(team_uuid->value, team_name->value,
         team_desc->value);
+    client_print_subscribed(client->user_uuid, team_uuid->value);
 }
 
 void create_team_response(response_t *response, request_data_t *request_data)
@@ -35,7 +36,7 @@ void create_team_response(response_t *response, request_data_t *request_data)
 
     cli->waiting_for_response = false;
     if (response->status == 201) {
-        create_team_response_success(response, request_data);
+        create_team_response_success(response, request_data, cli);
     }
     if (response->status == 401) {
         client_error_unauthorized();
@@ -49,7 +50,7 @@ static void send_create_team(client_t *client, char *team_name,
     json_object_t *jobj = json_object_create("root");
     json_string_t *name = json_string_create("name", team_name);
     json_string_t *desc = json_string_create("description", team_desc);
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL || jobj == NULL ||
         name == NULL || desc == NULL) {

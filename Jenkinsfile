@@ -6,7 +6,7 @@ pipeline {
         PUBLIC_KEY = credentials('EPITECH_SSH_PUBKEY')
         GHCR_TOKEN = credentials('github-packages-token')
         IMAGE_NAME = 'epitech-mirroring/rountable-server'
-        IMAGE_VERSION = '1.02.3'
+        IMAGE_VERSION = '1.02.4'
         MIRROR_URL = 'git@github.com:EpitechPromo2027/B-NWP-400-NAN-4-1-myteams-marius.pain.git'
     }
     stages {
@@ -156,17 +156,22 @@ pipeline {
             }
         }
         stage('📦 Push Package') {
-            when {
-               branch 'main'
-            }
             steps {
                 script {
+                    // add '-preview' to the version if the branch is not main
+                    if (env.BRANCH_NAME != 'main') {
+                        IMAGE_VERSION += '-preview'
+                    }
                     // login to the GitHub Container Registry
                     sh 'echo $GHCR_TOKEN_PSW | docker login ghcr.io -u $GHCR_TOKEN_USR --password-stdin'
                     // Build the image
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} ."
                     // tag the image
                     sh "docker tag ${IMAGE_NAME}:${IMAGE_VERSION} ghcr.io/${IMAGE_NAME}:${IMAGE_VERSION}"
+                    // Add the latest tag
+                    if (env.BRANCH_NAME == 'main') {
+                        sh "docker tag ${IMAGE_NAME}:${IMAGE_VERSION} ghcr.io/${IMAGE_NAME}:latest"
+                    }
                     // push the image
                     sh "docker push ghcr.io/${IMAGE_NAME}:$IMAGE_VERSION"
                 }

@@ -37,16 +37,16 @@ static response_t create_response(roundtable_direct_message_t **dm,
 
 response_t list_direct_messages_route(request_t *request, void *data)
 {
-    roundtable_client_t *client = NULL;
+    roundtable_client_instance_t *instance = NULL;
     roundtable_direct_message_t **dm = NULL;
 
     if (!IS_METHOD(request, "GET"))
         return create_error(405, "Method not allowed", "Only GET");
     if (!request_has_header(request, "Authorization"))
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
-    client = get_client_from_header(data, request);
-    if (!client)
+    instance = get_instance_from_header(data, request);
+    if (!instance)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
-    dm = roundtable_server_get_messages_from_client(data, client);
-    return create_response(dm, client);
+    dm = roundtable_server_get_messages_from_client(data, instance->client);
+    return create_response(dm, instance->client);
 }

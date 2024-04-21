@@ -54,13 +54,13 @@ void events_response(response_t *response, request_data_t *request_data)
     client_t *cli = (client_t *)request_data->data;
     json_array_t *arr = NULL;
 
+    cli->is_event = false;
     if (response->status == 200) {
         arr = (json_array_t *)json_parse(response->body);
         if (arr == NULL || arr->size == 0)
             return;
         handle_events(arr, cli);
     }
-    cli->is_event = false;
 }
 
 void send_events(client_t *client)
@@ -73,7 +73,7 @@ void send_events(client_t *client)
     request->route = (route_t){"GET", "/events"};
     request->body = strdup("");
     if (client->user_uuid != NULL) {
-        bearer = add_bearer(client->user_uuid);
+        bearer = add_bearer(client->user_uuid, client->instance_id);
         if (bearer != NULL)
             request_add_header(request, "Authorization", bearer);
     }
