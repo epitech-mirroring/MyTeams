@@ -37,7 +37,6 @@ response_t login_route(request_t *request, void *data)
     json_object_t *body = (json_object_t *) json_parse(request->body);
     roundtable_client_t *c = NULL;
     json_object_t *response_body = json_object_create(NULL);
-    char *response_body_str = NULL;
 
     if (strcmp(request->route.method, "POST") != 0)
         return create_error(405, "Method not allowed", "Only POST");
@@ -49,6 +48,6 @@ response_t login_route(request_t *request, void *data)
         json_string_create("user_uuid", uuid_to_string(c->uuid)));
     r.body = strdup(json_serialize((json_t *) response_body));
     response_add_header(&r, "Content-Type", "application/json");
-    destroy(response_body_str, (json_t *) body, (json_t *) response_body);
+    destroy(NULL, (json_t *) body, (json_t *) response_body);
     return r;
 }
