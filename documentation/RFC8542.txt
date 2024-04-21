@@ -1,0 +1,790 @@
+Internet Engineering Task Force (ETFE)             Simon Ganier-lombard,
+                                                          Axel Eckenberg,
+                                                             Marius Pain
+
+Request for Comments: 9342                                       EPITECH
+                                                           15 Avril 2024
+Category: Standards Track
+ISSN: 2070-1721
+
+                    TheRoundTable Chatting Service
+
+Abstract
+
+        TheRoundTable is a chatting service that allows users to
+        communicate with each other.
+
+Status of This Memo
+
+    Status of This Memo This is an Internet Standards Track document.
+
+    This  document is a product of the EPITECH Internet Engineering Task
+    Force (IETF). It represents the consensus of the IETF community.
+
+Copyright Notice
+
+    Copyright (c) 2024 IETFTrust and the persons identified as the
+    document authors.  All rights reserved.
+
+    This document is subject to BCP 78 and the IETF Trust's Legal
+    Provisions Relating to IETF Documents (https://trustee.ietf
+    .org/license-info) in effect on the date of publication of this
+    document.  Please review these documents carefully, as they describe
+    your rights and restrictions with respect to this document.  Code
+    Components extracted from this document must include Simplified BSD
+    License text as described in Section 4.e of the Trust Legal
+    Provisions and are provided without warranty as described in the
+    Simplified BSD License.
+
+Table of Contents
+
+    1. Introduction ...................................................3
+        1.1 Purpose  ..................................................3
+        1.2 Requirement ...............................................3
+        1.3 Terminology ...............................................3
+    2. Protocol .......................................................4
+        2.1. Authentication ...........................................4
+            2.1.1 Login ...............................................4
+            2.1.2 Logout ..............................................4
+        2.2 Direct Message ............................................5
+            2.2.1 Get .................................................5
+            2.2.3 Send ................................................5
+        2.3. Team .....................................................6
+            2.3.1 Create ..............................................6
+            2.3.2 Join ................................................6
+            2.3.3 Leave ...............................................6
+            2.3.4 List ................................................6
+               2.3.4.1 Teams ..........................................6
+               2.3.4.2 Users ..........................................6
+        2.4. Channel ..................................................7
+            2.4.1 Create ..............................................7
+            2.4.2 List ................................................7
+        2.5. Thread ...................................................8
+            2.5.1 Create ..............................................8
+            2.5.2 Get reply ...........................................8
+            2.5.3 Make a reply ........................................8
+    3. Error Response  ................................................9
+    4. Data Saving / Load ............................................10
+    5. Security Considerations .......................................10
+        5.1 User Authentication ......................................10
+        5.2 Data Encryption ..........................................10
+
+
+1.  Introduction
+
+    Epitech is an engineering school that we are a part of. We each
+    follow the network module that ask us to re-create a Microsoft©
+    Teams like software. We are asked to write an RFC (Request For
+    Comment) to explain how our protocol works and how other users /
+    developers shall interact with any server or client made with this
+    rfc. This RFC also help the developers to understand how the
+    protocol works and how to implement it.
+
+    The goal of this project is to create a chat service that allows
+    users to communicate with each other. The service will allow users
+    to create or join teams, create channels, threads, and replies.
+    Users will be able to send direct messages to other users. The
+    service will also provide a way to authenticate users to the server.
+
+1.1.  Purpose
+
+    The purpose of this RFC is to explain how the protocol works and how
+    to interact with it. This RFC is also here to help the developers
+    to understand how the protocol works and how to implement it.
+
+1.2.  Requirement
+
+ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+ "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+ document are to be interpreted as described in RFC 2119
+
+ An implementation is not compliant if it fails to satisfy one or more
+ of the MUST or REQUIRED level requirements for the protocols it
+ implements. An implementation that satisfies all the MUST or REQUIRED
+ level and all the SHOULD level requirements for its protocols is said
+ to be "unconditionally compliant"; one that satisfies all the MUST
+ level requirements but not all the SHOULD level requirements for its
+ protocols is said to be "conditionally compliant."
+
+1.3.  Terminology
+
+    This specification uses a number of terms to refer to the roles
+    played by participants in, and objects of, the protocol.
+
+    User
+        A person or entity who interacts with the system or sevice
+        being described in this document.
+
+    Client
+        A software application that interacts with the server to
+        send and receive messages.
+
+    Server
+        A software application that listens for incoming connections
+        from clients and processes messages sent by clients.
+        A server can't be, at the same time, a client.
+
+    Team
+        A team is a group of users that can communicate with each other.
+        A team can be composed of one or more channels, user SHOULD be
+        part of a team to create or join channels.
+
+    Channel
+        A channel is a place where users can create threads and
+        replies. A channel MUST be a part of a teams.
+
+    Thread
+        A thread is a conversation between users of a channel. A thread
+        MUST be a part of a channel.
+
+    Reply
+        A reply is a message that is part of a thread. A reply MUST be
+        a part of a thread.
+
+    Direct Message
+        A direct message is a message sent from one user to another
+        user. A direct message is not part of a team, channel, thread,
+        or reply.
+
+    UUID
+        A universally unique identifier is a 128-bit number used to
+        identify information in computer systems.
+
+    JSON
+        JavaScript Object Notation is a lightweight data-interchange
+        format. It is easy for humans to read and write. It is easy for
+        machines to parse and generate.
+
+    Response
+        A response is a message sent by the server to the client in
+        response to a request.
+        A response is based on an HTTP response.
+        defined in RFC 2616 (https://tools.ietf.org/html/rfc2616)
+
+        response = 	((Status-line
+                    Response-header
+                    Message-body))
+
+    Request
+        A request is a message sent by the client to the server.
+        A request is based on an HTTP request.
+        defined in RFC 2616 (https://tools.ietf.org/html/rfc2616)
+
+        request = 	((Request-line
+                    Request-header
+                    Message-body))
+
+    POST
+        The request of type POST is used to send data to a server to
+        create/update a resource (like a file, a user, etc.).
+
+    GET
+        The request of type GET is used to request data from a
+        specified resource.
+
+2. Protocol
+
+    The protocol is based on HTTP and JSON. The server listens for
+    incoming connections on port you chosen. The server accepts
+    requests from clients and sends responses back to clients. The
+    server processes requests and sends responses based on the
+    request.
+
+    The protocol defines the following operations:
+
+    - Authentication
+    - Direct Message
+    - Team
+    - Channel
+    - Thread
+    - Reply
+
+    Each operation is defined by a request and a response.
+
+2.1. Authentication
+
+    The authentication operation allows a user to authenticate with the
+    server. The user must provide a username to authenticate
+    with the server, no password is required.
+
+    All the user have a UUID that is generated by the server when the
+    user is created. The UUID is used to authenticate the user with the
+    server.
+
+   To make a request to the server, the client must have a user login
+   to it (expect for the login operation).
+
+2.1.1. Login
+
+    The login operation allows a user to authenticate with the server.
+    The user must provide a username to authenticate with the server.
+    The server will generate a UUID for the user and return it in the
+    response.
+
+    Method:
+        Because we based on the http protocol to do this request, the
+        method used is POST.
+        (POST is used to send data to a server to create/update a
+        resource.)
+
+    Request
+        Must have a route to access this operation: "/login" for example
+        No parameters are required.
+        The request must contain a JSON body with
+        Username
+            The username of the user that want to login. the user
+            labeled 'username'.
+
+    Response:
+       The response will be a JSON with
+       UUID of the user
+            The UUID of the user that is login labeled 'user_uuid'.
+       if the response is not a UUID, so it's an error.
+
+    Status code:
+       The status code follow the HTTP status code pattern.
+       when you send an error to the client you must send a status code
+       as status line, correct header and a message body that explain the
+       error. Section 3
+       For this request the possible status code are:
+       200 OK
+            The user is login and the UUID is returned
+       201 Created
+            The user is Created and login and the UUID is returned
+       400 Bad Request
+            The request is malformed
+       405 Method Not Allowed
+            The method of the request is not allowed
+
+2.1.2. Logout
+
+    The logout operation allows a user to logout from the server.
+    The user must provide a UUID to logout from the server.
+
+    Method:
+        The method used for this request is POST.
+
+    Request
+        Must have a route to access this operation: "/logout" for example
+        No parameters are required.
+        The request must contain a JSON body with
+       UUID
+            The UUID of the user that want to log out labeled 'user_uuid'
+
+    Response:
+        No response body is return for this request.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        204 No Content
+            The user is logout
+        400 Bad Request
+            The request is malformed
+        401 Unauthorized
+            The user is not authenticated
+        409 Conflict
+            The user is already logout
+        405 Method Not Allowed
+            The method of the request is not allowed
+
+2.2. Direct Message
+
+    The direct message operation allow a user to send a direct message
+    to another user. The user MUST provide the UUID of the recipient
+    and the message to send.
+
+    To send the direct message the user no need to be part of a team.
+
+2.2.1 Get
+
+    The get operation allows a user to get all the direct messages
+    that have been sent to the user.
+
+    Method:
+        The method used for this request is GET.
+
+    Request
+        Must have a route to access this operation: "/messages" for
+        example
+        The client MUST send parameters to the server to get the direct
+        messages.
+        UUID
+            The user you should get message from labeled 'user_uuid'.
+
+    Response:
+        The response will be a JSON with the direct messages that have
+        been sent to the user.
+        the JSON body response can be contained this type of information:
+        The UUID of the sender
+            The uuid of the sender labeled 'sender_uuid'.
+        The message
+            The content of message labeled 'message'.
+        Timestamp
+            The timestamp of the message labeled 'timestamp'.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 200 OK (the direct messages are returned)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the user is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.2.3 Send
+
+    The send operation allows a user to send a direct message to
+     another
+    user. The user must provide the UUID of the recipient and the message
+    to send.
+
+    Method:
+        The method used for this request is POST.
+
+    Request
+        Must have a route to access this operation: "/messages/send" for
+        example. No specific parameters are required.
+        The request must contain a JSON body with,
+        UUID of the recipient
+            The UUID of the recipient labeled 'recipient_uuid'.
+        Message to send
+            The message to send labeled 'message'.
+        Content of the message
+            The content of the message labeled 'content' inside the
+            message.
+
+    Response:
+        No response body is return for this request.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 204 No Content (the message is sent)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the recipient is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.3. Team
+
+    The team operation allows a user to create, join, leave, or list
+    teams. A team is a group of users that can communicate with each
+    other. A team can be composed of one or more channels.
+
+2.3.1 Create
+
+    The create operation allows a user to create a team. The user of
+    this operation must provide a name for the team who want to create.
+
+    Method:
+        The method used for this request is POST.
+
+    Request
+        Must have a route to access this operation: "/teams/create"
+        for example.
+        No specific parameters are required.
+        The request must contain a JSON body with,
+        Name
+            The name of the team labeled 'name'.
+        Description
+            The description of the team labeled 'description'.
+
+    Response:
+        The response can be a JSON with
+        UUID of the team
+           The UUI of the team created
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 201 Created (the team is created and the UUID is returned)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 500 Internal Server Error (the server encountered an error)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.3.2 Join
+
+    The join operation allows a user to join a team. The user must
+    provide the UUID of the team to join. The user must be authenticated
+
+    Method:
+        The method used for this request is POST.
+
+    Request
+        Must have a route to access this operation: "/teams/join" for
+        example.
+        No specific parameters are required.
+        The request must contain a JSON body with
+         UUID of the team
+            The UUID of the team to join labeled 'team_uuid'.
+
+    Response:
+        No response body is return for this request.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 204 No Content (the user is join the team)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the team is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.3.3 Leave
+
+        The leave operation allows a user to leave a team. The user must
+        provide the UUID of the team to leave. The user must be
+        authenticated
+        The user must be part of the team to leave it. if the user is
+        not part of the team, the server will return an error message.
+
+        Method:
+            The method used for this request is POST.
+
+        Request
+            Must have a route to access this operation: "/teams/leave"
+            for example. No specific parameters are required.
+            The request must contain a JSON body with
+            UUID of the team
+                The UUID of the team to leave labeled 'team_uuid'.
+
+        Response:
+            No response body is return for this request.
+
+        Status code:
+            For this request the possible status code are:
+            - 204 No Content (the user is leave the team)
+            - 400 Bad Request (the request is malformed)
+            - 401 Unauthorized (the user is not authenticated)
+            - 409 Conflict (the user is not part of the team)
+            - 404 Target Not Found (the team is not found)
+            - 405 Method Not Allowed (the method of the request is not
+                allowed)
+
+2.3.4 List
+
+    The list operation allows a user to list all the teams that the user
+    is part of. The user must be authenticated. The user must be part of
+    a team to list it. if the user is not part of a team, the server
+    will return an error message.
+
+    Method:
+        The method used for this request is GET.
+
+    Request
+        Must have a route to access this operation: "/teams" for example.
+        No mandatory parameters are required.
+        Optional parameters can be used to filter the list of teams.
+        team parameter
+            The UUID of the team to list labeled 'team_uuid'.
+        only joined parameter
+            The list of teams the user joined labeled 'only_joined'.
+
+    Response:
+        The response will be a JSON with the teams that the user is part
+        of. The JSON body response can be contained this type of
+        information:
+        UUID of the team
+             The uuid of the team the user is part of labeled
+             'team_uuid'.
+        the name of the team
+            The name of the team labeled 'team_name'.
+        the description of the team
+            The description of the team labeled 'team_description'.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 200 OK (the list of teams are returned)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the team is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.4. Channel
+
+    The channel operation allows a user to create or list channels. A
+    channel is a place where users can create threads and replies. A
+    channel must be part of a team. So the user must be part of a  same
+    team to create or list channels.
+
+2.4.1 Create
+
+    The create operation allows a user to create a channel in a specific
+    team. The user must provide the UUID of the team that the channel
+    will be part of and the name of the channel to create.
+
+    Method:
+        The method used for this request is POST.
+
+    Request
+        Must have a route to access this operation: "/channels/create"
+        for example.
+        No specific parameters are required.
+        The request must contain a JSON body with,
+        The user MUST be part of the team to create a channel.
+        UUID of the team
+            The UUID of the team that label 'team_uuid'
+        Name of the channel
+            The name of the channel that label 'name'.
+        Description of the channel
+            The description of the channel that label 'description'.
+
+    Response:
+        The response can be a JSON with
+        UUID of the channel
+            The UUID of the channel created labeled 'channel_uuid'.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 201 Created (the channel is created and the UUID is returned)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the team is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.4.2 List
+
+    The list operation allows a user to list all the channels that the
+    user is part of. The user must be authenticated. The user must be
+    part of a team to list the channels. if the user is not part of a
+    team, the server will return an error message.
+
+    Method:
+        The method used for this request is GET.
+
+    Request
+        Must have a route to access this operation: "teams/channels" for
+        example.
+        mandatory parameters are required.
+        Team parameter
+            The UUID of the team to list labeled 'team-uuid'.
+        Optional parameters can be used to filter the list of channels.
+        Channel parameter
+            The UUID of the channel to list labeled 'channel_uuid'.
+            to display info about specific channel.
+
+    Response:
+        The response will be a JSON with the channels of a team that the
+        user is part of. The JSON body response can be contained this
+        type of information:
+        UUID of the channel
+            The uuid of the channel the user is part of labeled
+            'uuid'.
+        Name of the channel
+            The name of the channel labeled 'name'.
+        Description of the channel
+            The description of the channel labeled 'description'.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 200 OK (the list of channels are returned)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the team is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.5. Thread
+
+        The thread operation allows a user to create or list threads. A
+        thread is a conversation between users of a channel. A thread must
+        be part of a channel. So the user must be part of a same channel to
+        create or list threads.
+
+2.5.1 Create
+
+    The create operation allows a user to create a thread in a specific
+    channel. The user must provide the UUID of the channel that the
+    thread will be part of and the content of the thread to create.
+
+    Method:
+        The method used for this request is POST.
+
+    Request
+        Must have a route to access this operation: "/threads/create"
+        for example.
+        No specific parameters are required.
+        The user MUST be part of the channel to create a thread.
+        The request must contain a JSON body with,
+        UUID of the team
+            The UUID of the team that label 'team_uuid'.
+        UUID of the channel
+            The UUID of the channel that label 'channel_uuid'
+        Title of the thread
+            The title of the thread that label 'title'.
+        Content of the thread
+            The content of the thread that label 'content'.
+
+    Response:
+        The response can be a JSON with
+        UUID of the thread
+            The UUID of the thread created labeled 'thread_uuid'.
+        Time of the thread
+            The time of the thread created labeled 'time'.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 201 Created (the thread is created and the UUID is returned)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the channel is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.5.2 Get reply
+
+    The get reply operation allows a user to get all the replies that
+    have been sent to a thread.
+
+    Method:
+        The method used for this request is GET.
+
+    Request
+        Must have a route to access this operation:
+        "/teams/channels/threads/messages" for example.
+        The client MUST send parameters to the server to get the replies.
+        Team UUID
+            The UUID of the team you should get replies from labeled
+            'team-uuid'.
+        Channel UUID
+            The UUID of the channel you should get replies from labeled
+            'channel-uuid'.
+        UUID of the thread
+            The UUID of the thread you should get replies from labeled
+            'thread-uuid'.
+
+    Response:
+        The response will be a JSON with the replies that have been sent
+        to the thread.
+        the JSON body response can be contained this type of information:
+        UUID of the sender
+            The uuid of the sender labeled 'sender_uuid'.
+        The message
+            The content of message labeled 'message'.
+        Timestamp
+            The timestamp of the message labeled 'timestamp'.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 200 OK (the replies are returned)
+        - 400 Bad Request (the request is malformed)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the thread is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+2.5.3 Make a reply
+
+    The create operation allows a user to create a reply in a specific
+    thread. The user must provide the UUID of the thread inside of a
+    channel that is part of a team that the reply will be part of and
+    the content of the reply to create.
+
+    Method:
+        The method used for this request is POST.
+
+    Request
+        Must have a route to access this operation: "/replies/create"
+        for example.
+        No specific parameters are required.
+        The user MUST be part of the thread to create a reply.
+        The request must contain a JSON body with,
+        UUID of the team
+            The UUID of the team that label 'team_uuid'.
+        UUID of the channel
+            The UUID of the channel that label 'channel_uuid'
+        UUID of the thread
+            The UUID of the thread that label 'thread_uuid'
+        Message of the reply
+            The content of the reply that label 'message'.
+        Content of the reply
+            The content of the reply that label 'content' inside the
+            message label.
+
+    Response:
+        The response can be a JSON with
+        UUID of the reply
+            The UUID of the reply created labeled 'reply_uuid'.
+        Time of the reply
+            The time of the reply created labeled 'time'.
+
+    Status code:
+        See Section 3 for more information how to do an error message
+        For this request the possible status code are:
+        - 201 Created (the reply is created and the UUID is returned)
+        - 400 Bad Request (the request is malformed)
+        - 403 Forbidden (the user is not part of the team)
+        - 401 Unauthorized (the user is not authenticated)
+        - 404 Target Not Found (the thread is not found)
+        - 405 Method Not Allowed (the method of the request is not
+            allowed)
+
+3. Error Response
+
+        The server will return an error response if the request is
+        malformed, the user is not authenticated, the user is not part
+        of a team, the team is not found, the recipient is not found,
+        the method of the request is not allowed, or the server
+        encountered an error.
+
+        The error response will be a JSON with an error message and a
+        status code, send with the response.
+
+        The status code follow the HTTP status code pattern. when you
+        send an error to the client you must send a status code as
+        status line, correct header and a message body that explain the
+        error.
+
+        if it's a success response, the status code will send no body
+        response but a status code instead.
+
+        For other possible error the response will be a JSON with the
+        name of the error and a message that explain the error.
+
+        for example if the user is not authenticated, the server will
+        return a 401 Unauthorized status code with a JSON body that
+        contain the name of the error and a message that explain the
+        error.
+        {
+            "error_name": "Unauthorized",
+            "error_message": "The user is not authenticated"
+        }
+
+4. Data Saving / Load
+
+    The server MUST be save the data in a database. The database format
+    will be a JSON file. The server MUST be able to load the data from
+    the database when the server starts. The server MUST be able to save
+    the data to the database when the server stops.
+
+    If a server start and the database is empty, the server MUST be able
+    to create the database with the default data.
+
+5. Security Considerations
+
+5.1 User Authentication
+
+    The security of the protocol is important. The server MUST be able
+    to authenticate users.
+    But in this RFC the server only authenticate the user with a UUID
+    and no password. If you want to improve the security of the protocol
+    you can add a password to the user and hash it with a secure
+    algorithm like bcrypt.
+
+5.2 Data Encryption
+
+    You can also encrypt the data that is sent between the client and
+    the server with a secure algorithm like AES.
