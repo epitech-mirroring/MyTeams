@@ -14,14 +14,12 @@ static void should_set_status_offline(roundtable_server_t *server,
     roundtable_client_instance_t *instance)
 {
     roundtable_client_t *client = instance->client;
-    size_t instance_count = get_instance_count(server, client);
 
-    if (instance_count > 1)
-        return;
-    client->status = OFFLINE;
+    roundtable_client_instance_remove(server, instance);
+    if (get_instance_count(server, client) == 0)
+        client->status = OFFLINE;
     server_event_user_logged_out(uuid_to_string(client->uuid));
     roundtable_event_logged_out(server, client);
-    roundtable_client_instance_remove(server, instance);
 }
 
 response_t logout_route(request_t *request, void *data)
@@ -41,6 +39,5 @@ response_t logout_route(request_t *request, void *data)
     if (client->status == OFFLINE)
         return create_error(409, "Conflict", "Client already offline");
     should_set_status_offline(server, instance);
-    return create_success(200, client->status == OFFLINE ?
-        "Has logged out" : "Still logged in");
+    return create_success(204, "");
 }
