@@ -57,11 +57,6 @@ void destroy_channel(roundtable_channel_t channel);
  */
 void destroy_thread(roundtable_thread_t thread);
 /**
- * @brief Destroy a list of instances and free their memory
- * @param instances the list of instances to destroy
- */
-void destroy_instances(roundtable_client_instance_t **instances);
-/**
  * @brief Destroy an instance and free its memory
  * @param instance the instance to destroy
  * @note This function does not free the instance's client

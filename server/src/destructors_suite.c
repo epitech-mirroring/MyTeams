@@ -51,11 +51,11 @@ void destroy_instance(roundtable_client_instance_t *instance)
     free(instance);
 }
 
-void destroy_instances(roundtable_client_instance_t **instances)
+static void destroy_instances(roundtable_client_instance_t **instances,
+    size_t size)
 {
-    while (*instances) {
-        destroy_instance(*instances);
-        instances++;
+    for (size_t i = 0; i < size; i++) {
+        destroy_instance(instances[i]);
     }
     free(instances);
 }
@@ -74,7 +74,7 @@ void destroy_server(roundtable_server_t *server)
     destroy_clients(server->clients, server->client_count);
     destroy_teams(server->teams, server->team_count);
     destroy_direct_messages(server->direct_messages, server->message_count);
-    destroy_instances(server->instances);
+    destroy_instances(server->instances, server->instance_count);
     router_destroy(server->router);
     free(server);
 }
