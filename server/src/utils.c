@@ -102,10 +102,5 @@ response_t *options_middleware(request_t *req, void *data)
         response = calloc(1, sizeof(response_t));
         *response = create_success(204, "");
     }
-    fprintf(stderr, "%s %s\n", req->route.method, req->route.path);
-    for (size_t i = 0; i < req->headers_count; i++) {
-        fprintf(stderr, "%s: %s\n", req->headers[i].key, req->headers[i].value);
-    }
-    fprintf(stderr, "\n%s\n", req->body);
     return response;
 }
