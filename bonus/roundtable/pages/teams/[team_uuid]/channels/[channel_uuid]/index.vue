@@ -82,7 +82,8 @@ const handleCreateReply = (thread: Thread) => {
           </div>
         </div>
         <div class="thread-replies">
-          <div class="thread-reply" v-for="(reply, index) in thread.messages" :key="index">
+          <!-- We ignore the first reply as it's the thread itself -->
+          <div class="thread-reply" v-for="(reply, index) in thread.messages.slice(1)" :key="index">
             <div class="thread-reply-head">
               <div class="thread-reply-author">
                 <img class="author-avatar" :src="getAvatar(userStore.getUser(reply.sender_uuid))"  alt=""/>
