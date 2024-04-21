@@ -81,7 +81,7 @@ $@/$${LIB_NAME})$(RESET)"; \
 	fi; \
 	printf "$(RUNNING) $(BLUE) 🖇️   Linking include/\
 $${LOWERCASE_DIR}$(RESET)"; \
-	if [ -d include/$${LOWERCASE_DIR} ]; then \
+	if [ -d include/$${LOWERCASE_DIR} || -f include/$${LOWERCASE_DIR} ];then \
 		printf "\r$(SKIPPED)\n"; \
 	else \
 		ln -s $(shell pwd)/$@/include/* include/ \
