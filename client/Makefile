@@ -40,6 +40,7 @@ SOURCES			= 	src/main.c											\
 					src/commands/list/list_teams.c 						\
 					src/commands/list/list_channels.c 					\
 					src/commands/list/list_threads.c 					\
+					src/commands/list/list_replies.c 					\
 					\
 					src/commands/events/events.c 						\
 					src/commands/events/logged_in.c 					\
