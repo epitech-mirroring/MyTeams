@@ -101,7 +101,7 @@ static void send_running_events(client_t *client)
 int main_loop(client_t *client)
 {
     waiting_socket_t *ws = waiting_sockets_add_socket(
-            client->api_handler->ws_manager->ws, 0, READ, &callback);
+        client->api_handler->ws_manager->ws, 0, READ, &callback);
 
     ws->data = client;
     client->is_event = true;
