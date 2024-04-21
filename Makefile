@@ -58,7 +58,7 @@ failed$(RESET)\n"; \
 		fi
 
 prod: fclean
-	printf "$(SUCCESS) $(BLUE) 🎬  Building in production mode$(RESET)\n"
+	@printf "$(SUCCESS) $(BLUE) 🎬  Building in production mode$(RESET)\n"
 	@export IS_PROD=1 && make all
 
 libraries: $(LIBRARIES)
@@ -81,7 +81,8 @@ $@/$${LIB_NAME})$(RESET)"; \
 	fi; \
 	printf "$(RUNNING) $(BLUE) 🖇️   Linking include/\
 $${LOWERCASE_DIR}$(RESET)"; \
-	if [ -d include/$${LOWERCASE_DIR} || -f include/$${LOWERCASE_DIR} ];then \
+	if [ -d include/$${LOWERCASE_DIR} ] || \
+	[ -f include/$${LOWERCASE_DIR} ]; then \
 		printf "\r$(SKIPPED)\n"; \
 	else \
 		ln -s $(shell pwd)/$@/include/* include/ \
