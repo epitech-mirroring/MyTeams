@@ -11,7 +11,7 @@
 #include "logging_client.h"
 #include "network/manager.h"
 #include "network/sockets.h"
-#include <time.h>
+#include <sys/time.h>
 
 static client_t *init_struct(api_client_t *api_handler)
 {
@@ -84,12 +84,16 @@ bool callback(waiting_socket_t *socket)
 
 static void send_running_events(client_t *client)
 {
-    clock_t current_time = clock();
-    static clock_t client_time = 0;
-    double time_spent = (double)(current_time - client_time) / CLOCKS_PER_SEC;
+    struct timeval tv;
+    long current_time = 0;
+    static long client_time = 0;
+    long time_spent = 0;
 
-    if (time_spent >= 0.002 && client->is_event == false) {
-        client_time = clock();
+    gettimeofday(&tv, NULL);
+    current_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    time_spent = (current_time - client_time);
+    if (time_spent >= TIME_BETWEEN_REQUESTS && client->is_event == false) {
+        client_time = current_time;
         send_events(client);
     }
 }
@@ -97,7 +101,7 @@ static void send_running_events(client_t *client)
 int main_loop(client_t *client)
 {
     waiting_socket_t *ws = waiting_sockets_add_socket(
-        client->api_handler->ws_manager->ws, 0, READ, &callback);
+            client->api_handler->ws_manager->ws, 0, READ, &callback);
 
     ws->data = client;
     client->is_event = true;
