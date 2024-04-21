@@ -100,6 +100,8 @@ void info_team(client_t *client);
 void info_channel(client_t *client);
 void info_thread(client_t *client);
 
+void list(char **parsed_cmd, client_t *client);
+
 void send_events(client_t *client);
 void logged_in_callback(json_object_t *data, client_t *client);
 void logged_out_callback(json_object_t *data, client_t *client);

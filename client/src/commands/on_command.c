@@ -19,6 +19,8 @@ void on_command_2(char **parsed_cmd, client_t *client)
         return use(parsed_cmd, client);
     if (strcmp(parsed_cmd[0], "/create") == 0)
         return create(parsed_cmd, client);
+    if (strcmp(parsed_cmd[0], "/list") == 0)
+        return list(parsed_cmd, client);
     if (strcmp(parsed_cmd[0], "/info") == 0)
         return info(parsed_cmd, client);
     printf("Unknown command\n");
