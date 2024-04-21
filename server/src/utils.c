@@ -10,6 +10,7 @@
 #include "network/dto.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 const status_message_t status_messages[] = {
     {200, "OK"},

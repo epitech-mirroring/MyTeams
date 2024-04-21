@@ -27,7 +27,7 @@ bool request_has_param(request_t *req, char *key)
 
     for (size_t i = 0; i < req->params_count; i++) {
         tmp_key = to_lower(req->params[i].key);
-        if (strcmp(req->params[i].key, key) == 0) {
+        if (strcmp(tmp_key, new_key) == 0) {
             free(new_key);
             free(tmp_key);
             return true;

@@ -6,7 +6,7 @@ pipeline {
         PUBLIC_KEY = credentials('EPITECH_SSH_PUBKEY')
         GHCR_TOKEN = credentials('github-packages-token')
         IMAGE_NAME = 'epitech-mirroring/rountable-server'
-        IMAGE_VERSION = '1.02.5'
+        IMAGE_VERSION = '1.02.6'
         MIRROR_URL = 'git@github.com:EpitechPromo2027/B-NWP-400-NAN-4-1-myteams-marius.pain.git'
     }
     stages {
@@ -17,7 +17,7 @@ pipeline {
                     if (response.status != 200 ) {
                         error "Failed to get the list of versions from the GitHub Container Registry"
                     }
-                    if (response.status == 200) {
+                    if (response.status == 200 && env.BRANCH_NAME != 'main') {
                         def versions = readJSON text: response.content
                         def version = versions.find { it.metadata.container.tags.contains(IMAGE_VERSION) }
                         if (version != null) {
