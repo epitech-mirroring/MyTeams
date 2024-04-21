@@ -6,7 +6,7 @@ pipeline {
         PUBLIC_KEY = credentials('EPITECH_SSH_PUBKEY')
         GHCR_TOKEN = credentials('github-packages-token')
         IMAGE_NAME = 'epitech-mirroring/rountable-server'
-        IMAGE_VERSION = '1.02.3'
+        IMAGE_VERSION = '1.02.5'
         MIRROR_URL = 'git@github.com:EpitechPromo2027/B-NWP-400-NAN-4-1-myteams-marius.pain.git'
     }
     stages {
