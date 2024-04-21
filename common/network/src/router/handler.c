@@ -76,8 +76,7 @@ bool waiting_socket_send_response(waiting_socket_t *socket)
 {
     char *res = socket->data;
 
-    if (send(socket->socket, res, strlen(res), 0) <= 0) {
-        return false;
-    }
+    send(socket->socket, res, strlen(res), 0);
+    free(res);
     return false;
 }
