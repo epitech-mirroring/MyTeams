@@ -95,7 +95,7 @@ void users_subscribed_response(response_t *response,
 static void send_subscribed(client_t *client)
 {
     request_t *request = calloc(1, sizeof(request_t));
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL) {
         printf("Error: malloc failed\n");
@@ -113,7 +113,7 @@ static void send_subscribed(client_t *client)
 static void send_users_subscribed(client_t *client, char *team_uuid)
 {
     request_t *request = calloc(1, sizeof(request_t));
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL) {
         printf("Error: malloc failed\n");

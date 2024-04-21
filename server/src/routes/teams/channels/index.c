@@ -69,24 +69,24 @@ static response_t check_connection_request(request_t *request)
 
 response_t get_channels_route(request_t *request, void *data)
 {
-    roundtable_server_t *server = (roundtable_server_t *)data;
-    roundtable_client_t *client = get_client_from_header(server, request);
+    roundtable_server_t *s = (roundtable_server_t *)data;
+    roundtable_client_instance_t *i = get_instance_from_header(s, request);
     uuid_t *channel_uuid = get_channel_uuid_param(request);
     roundtable_team_t *team = NULL;
     response_t rep = check_connection_request(request);
 
     if (rep.status != 0)
         return rep;
-    if (!client)
+    if (!i)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (!request_has_param(request, "team-uuid"))
         return create_error(403, "Forbidden", "Missing 'team-uuid'");
     if (request_has_param(request, "channel-uuid") && !channel_uuid)
         return create_error(404, "Channel not found", "Channel not found");
-    team = get_team_from_param(request, server, "team-uuid");
+    team = get_team_from_param(request, s, "team-uuid");
     if (!team)
         return create_error(404, "Team not found", "Team not found");
-    if (!roundtable_team_has_subscriber(team, client))
+    if (!roundtable_team_has_subscriber(team, i->client))
         return create_error(403, "Forbidden", "Client not a subscriber");
     return get_channels_list(team, channel_uuid, rep);
 }

@@ -23,7 +23,7 @@ static response_t server_event_success(roundtable_client_t *client,
 response_t leave_team_route(request_t *request, void *data)
 {
     json_object_t *body = (json_object_t *) json_parse(request->body);
-    roundtable_client_t *client = NULL;
+    roundtable_client_instance_t *instance = NULL;
     roundtable_team_t *team = NULL;
 
     if (!IS_METHOD(request, "POST"))
@@ -32,14 +32,14 @@ response_t leave_team_route(request_t *request, void *data)
         return create_error(401, "Unauthorized", "Missing 'Authorization'");
     if (!body || !json_object_has_key(body, "team_uuid"))
         return create_error(400, "Invalid body", "Missing 'team_uuid'");
-    client = get_client_from_header(data, request);
-    if (!client)
+    instance = get_instance_from_header(data, request);
+    if (!instance)
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     team = get_team_from_json(data, body, "team_uuid");
     if (!team)
         return create_error(404, "Team not found", "Team not found");
-    if (!roundtable_team_has_subscriber(team, client))
+    if (!roundtable_team_has_subscriber(team, instance->client))
         return create_error(409, "Not joined", "Client not a subscriber");
-    roundtable_team_remove_subscriber(team, client);
-    return server_event_success(client, team);
+    roundtable_team_remove_subscriber(team, instance->client);
+    return server_event_success(instance->client, team);
 }

@@ -12,6 +12,7 @@ SOURCES			= 	src/main.c										\
 					src/destructors.c								\
 					src/destructors_suite.c							\
 					src/clients/composables.c   					\
+					src/clients/instances.c   						\
 					src/clients/utils.c								\
 					src/teams/utils.c								\
 					src/teams/composables.c							\
@@ -68,7 +69,7 @@ TESTS			=
 # Compiler and linker settings
 NAME 			=   myteams_server
 CC				= 	gcc
-FLAGS			= 	-W -Wall -Wextra --coverage -L../libs \
+FLAGS			= 	-W -Wall -Wextra -L../libs \
 					-I../libs/myteams -L../libs/myteams -lnetwork \
 					-ljson -I../include -lmy -luuid  -I./include \
 					$(shell [ `uname` == "Linux" ] && echo "-lmyteams")
@@ -91,6 +92,14 @@ RUNNING = [$(YELLOW)~$(RESET)]
 SUCCESS = [$(GREEN)✔$(RESET)]
 FAILURE = [$(RED)✘$(RESET)]
 SKIPPED = [$(MAGENTA)@$(RESET)]
+
+# If the IS_PROD variable is set to 1, the binary will be optimized
+# with the -O3 flag and if it is set to 0, the binary we add --coverage -g3
+ifeq ($(IS_PROD), 1)
+	FLAGS	+= -O3
+else
+	FLAGS	+= --coverage -g3
+endif
 
 all:		$(NAME)
 

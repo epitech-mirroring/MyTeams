@@ -10,7 +10,7 @@ export const refreshThreadsOfChannel = async (team: Team, channel: Channel) => {
   const resp: Thread[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads?team-uuid=${team.uuid}&channel-uuid=${channel.uuid}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     }
   }).then(res => res.json())
     .then(threads => {
@@ -41,7 +41,7 @@ export const replyToThread = async (team: Team, channel: Channel, thread: Thread
   const created: { timestamp: number } = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads/reply`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`,
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`,
     },
     body: JSON.stringify({
       team_uuid: team.uuid,
@@ -69,7 +69,7 @@ export const createThread = async (team: Team, channel: Channel, title: string, 
   const created: { thread_uuid: string, timestamp: number } = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads/create`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`,
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`,
     },
     body: JSON.stringify({
       team_uuid: team.uuid,
@@ -101,7 +101,7 @@ export const refreshMessagesOfThread = async (team: Team, channel: Channel) => {
     const resp: Message[] = await fetch(`${useRuntimeConfig().public.SERVER_URL}/teams/channels/threads/messages?team-uuid=${team.uuid}&channel-uuid=${channel.uuid}&thread-uuid=${thread.uuid}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+        'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
       }
     }).then(res => res.json())
       .then((messages: { sender_uuid: string, content: string, timestamp: number }[]) => {

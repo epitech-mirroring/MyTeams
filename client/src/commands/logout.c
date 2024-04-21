@@ -17,12 +17,15 @@ void logout_rep(response_t *response, request_data_t *request_data)
     if (response->status == 204) {
         cli->is_logged = false;
         printf("CLI : Successfully logged out\n");
+        client_event_logged_out(cli->user_uuid, cli->user_name);
+        cli->user_uuid = NULL;
+        cli->user_name = NULL;
     }
 }
 
 static void request_logout(client_t *client)
 {
-    char *uuid = add_bearer(client->user_uuid);
+    char *uuid = add_bearer(client->user_uuid, client->instance_id);
     request_t *request = calloc(1, sizeof(request_t));
 
     if (uuid == NULL || request == NULL) {

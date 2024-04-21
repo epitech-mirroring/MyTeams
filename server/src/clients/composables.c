@@ -41,8 +41,6 @@ roundtable_client_t *roundtable_server_create_client(
     uuid_copy(new_client->uuid, *uuid_generate());
     new_client->username = strdup(username);
     new_client->status = OFFLINE;
-    new_client->events = calloc(1, sizeof(events_t *));
-    new_client->event_count = 0;
     roundtable_server_add_client(server, new_client);
     return new_client;
 }
@@ -55,16 +53,43 @@ roundtable_client_t *get_client_from_json(
         key))->value));
 }
 
-roundtable_client_t *get_client_from_header(
+static roundtable_client_instance_t *get_instance_from_strings(
+    roundtable_server_t *server, char *uuid_str, char *instance_str)
+{
+    uuid_t *uuid = uuid_from_string(uuid_str);
+    roundtable_client_t *client = NULL;
+    size_t instance_number = 0;
+
+    if (uuid == NULL)
+        return NULL;
+    client = roundtable_server_get_client_by_uuid(server, *uuid);
+    if (client == NULL)
+        return NULL;
+    instance_number = atoi(instance_str);
+    for (size_t i = 0; i < server->instance_count; i++) {
+        if (server->instances[i]->instance_number == instance_number &&
+            server->instances[i]->client == client)
+            return server->instances[i];
+    }
+    return NULL;
+}
+
+roundtable_client_instance_t *get_instance_from_header(
     roundtable_server_t *server, request_t *request)
 {
+    char *header = NULL;
     char *uuid_str = NULL;
+    char *instance_str = NULL;
+    roundtable_client_instance_t *instance = NULL;
 
     if (!request_has_header(request, "Authorization"))
         return NULL;
-    uuid_str = request_get_header(request, "Authorization");
-    if (uuid_str == NULL || strlen(uuid_str) != strlen("Bearer ") + 32)
+    header = request_get_header(request, "Authorization");
+    if (header == NULL)
         return NULL;
-    return roundtable_server_get_client_by_uuid(server,
-        *uuid_from_string(uuid_str + strlen("Bearer ")));
+    uuid_str = strndup(header + strlen("Bearer "), 32);
+    instance_str = header + strlen("Bearer ") + 32 + 1;
+    instance = get_instance_from_strings(server, uuid_str, instance_str);
+    free(uuid_str);
+    return instance;
 }

@@ -69,6 +69,7 @@ typedef struct context_s {
  * @param is_event The status of the client
  * (true if the client is waiting for an event else false)
  * @param buffer The buffer for the command of the client
+ * @param instance_nb The number of the instance
  * @param api_handler The api_handler
  * (to send requests to the server)
  * @author @Marius-P1
@@ -82,6 +83,7 @@ typedef struct client_s {
     bool running;
     bool is_event;
     char *buffer;
+    size_t instance_id;
     api_client_t *api_handler;
 } client_t;
 
@@ -166,12 +168,13 @@ size_t tab_len(char **tab);
  * The bearer token is used to authenticate the client
  * when he sends requests to the server
  * The bearer token is created by adding "Bearer " before
- * the uuid of the client
+ * the uuid of the client and the instance_id of the client
  * The bearer token is used in the header of the request
  * to authenticate the client
  *
  * @param uuid The uuid of the client
+ * @param instance_id The instance_id of the client
  * @return char* The bearer token of the client
  * @author @Marius-P1
  */
-char *add_bearer(const char *uuid);
+char *add_bearer(const char *uuid, size_t instance_id);

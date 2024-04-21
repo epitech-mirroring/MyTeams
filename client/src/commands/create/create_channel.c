@@ -53,7 +53,7 @@ static void send_create_channel(client_t *client, char *name,
         client->context->team_uuid);
     json_string_t *chan_name = json_string_create("name", name);
     json_string_t *chan_desc = json_string_create("description", description);
-    char *bearer = add_bearer(client->user_uuid);
+    char *bearer = add_bearer(client->user_uuid, client->instance_id);
 
     if (bearer == NULL || request == NULL || jobj == NULL ||
         team_uuid == NULL || chan_name == NULL || chan_desc == NULL)
