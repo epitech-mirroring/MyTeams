@@ -43,7 +43,7 @@ static void send_event(roundtable_server_t *server,
 }
 
 void roundtable_event_thread_reply(roundtable_server_t *server,
-                                   roundtable_thread_t *thread)
+    roundtable_thread_t *thread)
 {
     roundtable_client_t *client = NULL;
     roundtable_message_t msg = thread->messages[thread->message_count - 1];
