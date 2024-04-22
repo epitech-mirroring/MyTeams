@@ -34,12 +34,15 @@ static char *parse_param(request_t *req, char *param)
     regex_t regex;
     regmatch_t matches[3];
 
-    regcomp(&regex, "([^=]+)=([^&]+)", REG_EXTENDED);
+    regcomp(&regex, "([^=]+)=?([^&]+)?", REG_EXTENDED);
     if (regexec(&regex, param, 3, matches, 0) == 0) {
         key = strndup(param + matches[1].rm_so,
             matches[1].rm_eo - matches[1].rm_so);
-        value = strndup(param + matches[2].rm_so,
-            matches[2].rm_eo - matches[2].rm_so);
+        if (matches[2].rm_so != -1)
+            value = strndup(param + matches[2].rm_so,
+                matches[2].rm_eo - matches[2].rm_so);
+        if (value == NULL)
+            value = strdup("");
     }
     regfree(&regex);
     request_add_param(req, key, value);
