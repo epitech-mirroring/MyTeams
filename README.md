@@ -1,4 +1,4 @@
-# 📨 MyTeams (Roundatble) 📨
+# 📨 MyTeams (Rountable) 📨
 
 <p align="center">
 <img width="800" height="350" src="https://github.com/epitech-mirroring/MyTeams/assets/46846093/2f422f96-1230-4096-bc18-cb7fad31e5a6">
@@ -48,7 +48,7 @@ The program was developed using the following technologies:
 ### **👨‍💻 Developer:**
 - [⛵ Marius](https://github.com/Marius-P1)
 - [🐟 Simon](https://github.com/6im0n)
-- [🦁 Antoine](https://github.com/RenardFute)
+- [🦁 Axel](https://github.com/RenardFute)
 
 
 ## **🎮 How to Use:**
