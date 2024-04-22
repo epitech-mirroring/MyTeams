@@ -88,6 +88,8 @@ roundtable_client_instance_t *get_instance_from_header(
     if (header == NULL)
         return NULL;
     uuid_str = strndup(header + strlen("Bearer "), 32);
+    if (strlen(header) < strlen("Bearer ") + 32 + 2)
+        return NULL;
     instance_str = header + strlen("Bearer ") + 32 + 1;
     instance = get_instance_from_strings(server, uuid_str, instance_str);
     free(uuid_str);
