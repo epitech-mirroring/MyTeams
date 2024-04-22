@@ -52,7 +52,7 @@ export const createChannel = async (team: Team, name: string, description: strin
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${userStore.currentUser?.uuid}`
+      'Authorization': `Bearer ${userStore.currentUser?.uuid}_${userStore.currentUser?.instance_id}`
     },
     body: JSON.stringify({
       team_uuid: team.uuid,
