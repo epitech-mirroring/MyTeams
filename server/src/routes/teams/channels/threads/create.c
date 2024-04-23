@@ -69,7 +69,7 @@ static response_t create_thread_response(roundtable_channel_t *channel,
 }
 
 static response_t validate_request(request_t *req, roundtable_server_t *srv,
-    roundtable_client_t *client, json_object_t *body)
+    roundtable_client_instance_t *client, json_object_t *body)
 {
     roundtable_team_t *team = get_team_from_json(srv, body, "team_uuid");
     roundtable_channel_t *channel = NULL;
@@ -80,13 +80,13 @@ static response_t validate_request(request_t *req, roundtable_server_t *srv,
         return create_error(401, "Unauthorized", "Invalid 'Authorization'");
     if (!team)
         return create_error(404, "Team not found", "Team not found");
-    if (!roundtable_team_has_subscriber(team, client))
+    if (!roundtable_team_has_subscriber(team, client->client))
         return create_error(403, "Forbidden", "Client not a subscriber");
     channel = get_channel_from_json(team, body,
     "channel_uuid");
     if (!channel)
         return create_error(404, "Channel not found", "Channel not found");
-    return create_thread_response(channel, body, client);
+    return create_thread_response(channel, body, client->client);
 }
 
 response_t create_thread_route(request_t *request, void *data)
@@ -100,5 +100,5 @@ response_t create_thread_route(request_t *request, void *data)
         return create_error(405, "Method not allowed", "Only POST");
     if (!body || !body_is_valid(body))
         return create_error(400, "Invalid body", get_missing_key(body));
-    return validate_request(request, server, instance->client, body);
+    return validate_request(request, server, instance, body);
 }
